@@ -3,66 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UserSignup</title>
+    <title>User Signup</title>
 
 </head>
 <body >
     <div class="background-login container-fluid min-vh-100 d-flex align-items-center justify-content-center">
-        <div class="row justify-content-center w-100">
-            <div class="col-11 col-sm-8 col-md-6 col-lg-5 col-xl-4">
-              {{#if signupMessage}}
-                <div id="signupAlert" class="alert alert-success" style="z-index: 1000; ">
-                  {{signupMessage}}
-                </div>
-              {{/if}}
-            <div class="card-box-signup shadow-lg">
-                <div class="card-value">
-                    <form action="/user/signup" method="post">
-                        <h2 class="head-card-login-user">Signup</h2>
-                        <div class="inputbox-signup-user"> 
-                          <ion-icon name="person-circle-outline" type="button"></ion-icon>
-                          {{#if Exist}}
-                            <p class="error" style="color: red; font-weight: 400;">{{Exist}}</p>
-                          {{/if}}
-                          <input type="text" required id="username" name="Username"  >
-                          <label for="username">Username</label>
-                        </div>   
-                        <div class="inputbox-signup-user"> 
-                        
-                          <ion-icon name="mail-outline"></ion-icon>
-                          {{#if Email}}
-                            <p class="error" style="color: rgb(0, 185, 0); font-weight: 500;padding:5px;">{{Email}}</p>
-                          {{/if}}
-                        
-                          <input type="email" name="Email" required >
-                          
-                          <label>Email</label>
-                        </div>
-                        <div class="inputbox-signup-user"> 
-                          <ion-icon name="eye-outline" id="eyetogglesignup"></ion-icon>
-                          <input type="password" name="Password" required id="passwordtogglesignup" placeholder="Enter your password"> 
-                          <p id="passworderror" class="error" style="font-weight: 400; color: red; display: none;"></p>
-                          <label>Password</label>
-                        </div>
-                        <div class="inputbox-signup-user"> 
-                          <ion-icon name="lock-closed-outline"></ion-icon>
-                          <input type="password" name="confirmPassword" required id="confirmPassword"> 
-                          <p id="passwordError" class="error" style="font-weight: 400; color: red; display: none;"></p>
-                          <label>Confirm Password</label>
-                        </div>
-                        <div class="forget-login-user">
-                            <label>
-                              <input id="pripolicyCheckbox" type="checkbox" required> By checking this you accept our <br><a href="">Privacy Policy</a> and <a href="">Terms and conditions</a>
-                            </label>
-                        </div> 
-                        <button class="button-login-user ml-3" onclick="window.location.href=''">Sign up</button>
-                        <div class="register-login-user ml-3">
-                            <p>Already have an account? <a href="/user/login">Log in</a></p>
-                        </div>
-                    </form>
-                </div>
-            </div>
+      <div class="login-container">
+        <div class="card-box-login">
+          <form action="/user/signup" method="post">
+              <h2 class="head-card-login-user">Signup</h2>
+              <div class="inputbox-signup-user"> 
+                <ion-icon name="person-circle-outline" type="button"></ion-icon>
+                {{#if Exist}}
+                  <p class="error" style="color: red; font-weight: 400;">{{Exist}}</p>
+                {{/if}}
+                <input type="text" required id="username" name="Username"  >
+                <label for="username">Username</label>
+              </div>   
+              <div class="inputbox-signup-user"> 
+              
+                <ion-icon name="mail-outline"></ion-icon>
+                {{#if Email}}
+                  <p class="error" style="color: rgb(0, 185, 0); font-weight: 500;padding:5px;">{{Email}}</p>
+                {{/if}}
+              
+                <input type="email" name="Email" required >
+                
+                <label>Email</label>
+              </div>
+              <div class="inputbox-signup-user"> 
+                <ion-icon name="eye-outline" id="eyetogglesignup"></ion-icon>
+                <input type="password" name="Password" required id="passwordtogglesignup" placeholder="Enter your password"> 
+                <p id="passworderror" class="error" style="font-weight: 400; color: red; display: none;"></p>
+                <label>Password</label>
+              </div>
+              <div class="inputbox-signup-user"> 
+                <ion-icon name="lock-closed-outline"></ion-icon>
+                <input type="password" name="confirmPassword" required id="confirmPassword"> 
+                <p id="passwordError" class="error" style="font-weight: 400; color: red; display: none;"></p>
+                <label>Confirm Password</label>
+              </div>
+              <div class="forget-login-user">
+                  <label>
+                    <input id="pripolicyCheckbox" type="checkbox" required> By checking this you accept our <br><a href="">Privacy Policy</a> and <a href="">Terms and conditions</a>
+                  </label>
+              </div> 
+              <button class="button-login-user ml-3" onclick="window.location.href=''">Sign up</button>
+              <div class="register-login-user ml-3">
+                  <p>Already have an account? <a href="/user/login">Log in</a></p>
+              </div>
+          </form>
         </div>
+      </div>
+      {{#if signupMessage}}
+        <div id="signupAlert" class="alert alert-success" style="z-index: 1000; ">
+          {{signupMessage}}
+        </div>
+      {{/if}}
     </div>
     <script>
         let eyetogglesignup =     document.getElementById('eyetogglesignup');
