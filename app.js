@@ -84,12 +84,12 @@ app.use(session({
     path: '/'
   },
   store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost:27017/readora',
-    ttl: 14 * 24 * 60 * 60, // 14 days seconds
+    mongoUrl: process.env.MONGO_URI, // use same env var as connection.js
+    ttl: 14 * 24 * 60 * 60, // 14 days
     collectionName: 'sessions',
     autoRemove: 'interval',
     autoRemoveInterval: 60 // minutes
-  })
+})
 }));
 
 // ADD FLASH MIDDLEWARE - MUST COME AFTER SESSION

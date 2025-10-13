@@ -5,10 +5,22 @@ let client;
 let db;
 
 async function connect() {
-  client = await MongoClient.connect("mongodb://localhost:27017/");
-  db = client.db("readora");
-  console.log("Connected to database successfully");
-  return db;
+  if (!process.env.MONGO_URI) {
+    throw new Error("MONGO_URI environment variable not set!");
+  }
+
+  try {
+    client = await MongoClient.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    db = client.db("readora"); // your database name
+    console.log("Connected to database successfully");
+    return db;
+  } catch (err) {
+    console.error("Failed to connect to MongoDB:", err);
+    process.exit(1); // stop the server if DB fails
+  }
 }
 
 function get() {
