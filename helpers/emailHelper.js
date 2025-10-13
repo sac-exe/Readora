@@ -1,29 +1,30 @@
-const nodemailer = require('nodemailer');
+const formData = require("form-data");
+const Mailgun = require("mailgun.js");
+const mailgun = new Mailgun(formData);
+
+const mg = mailgun.client({
+  username: "api",
+  key: process.env.MAILGUN_API_KEY,
+});
 
 const sendVerificationEmail = async (email, token) => {
   try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: "readoraofficial@gmail.com",
-        pass: process.env.GMAIL_APP_PASSWORD, // use env variable instead of hardcoding
-      },
-    });
+    const link = `https://readora.onrender.com/user/verify?token=${token}`;
 
-    const mailOptions = {
-      from: "Readora <readoraofficial@gmail.com>",
+    const messageData = {
+      from: `Readora <${process.env.MAILGUN_FROM}>`,
       to: email,
       subject: "Readora Email Verification",
       html: `
         <p>Welcome to Readora!</p>
         <p>Please verify your email address by clicking the link below:</p>
-        <a href="https://readora.onrender.com/user/verify?token=${token}">Verify your account</a>
+        <a href="${link}">Verify your account</a>
         <p>If you did not sign up, you can ignore this email.</p>
-      `
+      `,
     };
 
-    await transporter.sendMail(mailOptions);
-    console.log("✅ Verification email sent successfully!");
+    await mg.messages.create(process.env.MAILGUN_DOMAIN, messageData);
+    console.log("✅ Verification email sent successfully to:", email);
   } catch (error) {
     console.error("❌ Error sending verification email:", error);
   }
