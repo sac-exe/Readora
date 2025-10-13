@@ -133,7 +133,7 @@ body{
 .card-box-login {
    max-width: 400px;
    width: 25rem;
-   height: 34.375rem;
+   height: auto;
    min-height: 500px; 
    background: transparent;
    border: 4px solid #d1fae5;
