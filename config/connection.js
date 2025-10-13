@@ -10,10 +10,8 @@ async function connect() {
   }
 
   try {
-    client = await MongoClient.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    client = await MongoClient.connect(process.env.MONGO_URI);
+
     db = client.db("readora"); // your database name
     console.log("Connected to database successfully");
     return db;
