@@ -845,7 +845,6 @@ router.post("/user/signup", async (req, res) => {
       return res.render("user/user-signup", { Email: "Already registered with this email" });
     }
 
-    const verificationToken = crypto.randomBytes(32).toString("hex");
     const hashed = await bcrypt.hash(req.body.Password, 10);
 
     const userDoc = {
@@ -895,62 +894,62 @@ router.post("/user/login", async (req, res) => {
   req.session.save(() => res.redirect("/"));
 });
 
-// Forgot password
-router.get("/forgot-user", (req, res) => {
-  res.render("user/forgot-user");
-});
+// // Forgot password
+// router.get("/forgot-user", (req, res) => {
+//   res.render("user/forgot-user");
+// });
 
-router.post("/password-reset-user", async (req, res) => {
-  const { email } = req.body;
-  if (!email) return res.status(400).send("Email is required.");
-  try {
-    const usersCol = db.get().collection("user");
-    const user = await usersCol.findOne({ Email: email });
-    if (!user) return res.status(400).send("User not found.");
+// router.post("/password-reset-user", async (req, res) => {
+//   const { email } = req.body;
+//   if (!email) return res.status(400).send("Email is required.");
+//   try {
+//     const usersCol = db.get().collection("user");
+//     const user = await usersCol.findOne({ Email: email });
+//     if (!user) return res.status(400).send("User not found.");
 
-    const token = crypto.randomBytes(32).toString("hex");
-    const tokenExpiration = new Date(Date.now() + 10 * 60 * 1000);
+//     const token = crypto.randomBytes(32).toString("hex");
+//     const tokenExpiration = new Date(Date.now() + 10 * 60 * 1000);
 
-    await usersCol.updateOne(
-      { _id: user._id },
-      { $set: { resetToken: token, tokenExpiration } }
-    );
+//     await usersCol.updateOne(
+//       { _id: user._id },
+//       { $set: { resetToken: token, tokenExpiration } }
+//     );
 
-    const mailer = require("../helpers/emailHelper");
-    await mailer.sendResetEmail(email, token, false);
+//     const mailer = require("../helpers/emailHelper");
+//     await mailer.sendResetEmail(email, token, false);
 
-    res.status(200).send("Password reset email sent successfully.");
-  } catch (err) {
-    console.error("Error during sending reset email:", err);
-    res.status(500).send("An error occurred while sending the email.");
-  }
-});
+//     res.status(200).send("Password reset email sent successfully.");
+//   } catch (err) {
+//     console.error("Error during sending reset email:", err);
+//     res.status(500).send("An error occurred while sending the email.");
+//   }
+// });
 
-router.get('/user/reset-password', (req, res) => {
-  const { token } = req.query;
-  res.render("user/Email-reset-user", { token });
-});
+// router.get('/user/reset-password', (req, res) => {
+//   const { token } = req.query;
+//   res.render("user/Email-reset-user", { token });
+// });
 
-router.post('/update-password-user', async (req, res) => {
-  const { token, newPassword } = req.body;
-  if (!token || !newPassword) return res.status(400).send("Token and new password are required.");
-  try {
-    const usersCol = db.get().collection("user");
-    const user = await usersCol.findOne({ resetToken: token });
-    if (!user || new Date() > user.tokenExpiration) {
-      return res.status(400).send("Token is invalid or expired.");
-    }
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    await usersCol.updateOne(
-      { _id: user._id },
-      { $set: { Password: hashedPassword }, $unset: { resetToken: "", tokenExpiration: "" } }
-    );
-    res.status(200).send("Password reset successful.");
-  } catch (err) {
-    console.error("Error during password update:", err.message);
-    res.status(500).send("An error occurred while updating the password.");
-  }
-});
+// router.post('/update-password-user', async (req, res) => {
+//   const { token, newPassword } = req.body;
+//   if (!token || !newPassword) return res.status(400).send("Token and new password are required.");
+//   try {
+//     const usersCol = db.get().collection("user");
+//     const user = await usersCol.findOne({ resetToken: token });
+//     if (!user || new Date() > user.tokenExpiration) {
+//       return res.status(400).send("Token is invalid or expired.");
+//     }
+//     const hashedPassword = await bcrypt.hash(newPassword, 10);
+//     await usersCol.updateOne(
+//       { _id: user._id },
+//       { $set: { Password: hashedPassword }, $unset: { resetToken: "", tokenExpiration: "" } }
+//     );
+//     res.status(200).send("Password reset successful.");
+//   } catch (err) {
+//     console.error("Error during password update:", err.message);
+//     res.status(500).send("An error occurred while updating the password.");
+//   }
+// });
 
 // User profile
 router.get("/user/profile", async (req, res) => {
