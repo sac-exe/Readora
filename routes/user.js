@@ -7,7 +7,6 @@ const path = require("path");
 const fs = require("fs");
 const db = require("../config/connection");
 const crypto = require("crypto");
-const { sendVerificationEmail } = require("../helpers/emailHelper");
 
 function startOfUTCDay(d){
   return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
@@ -894,62 +893,76 @@ router.post("/user/login", async (req, res) => {
   req.session.save(() => res.redirect("/"));
 });
 
-// // Forgot password
-// router.get("/forgot-user", (req, res) => {
-//   res.render("user/forgot-user");
-// });
+// Forgot password
+router.get("/forgot-user", (req, res) => {
+  res.render("user/forgot-user"); // form posts to /password-reset-user
+});
 
-// router.post("/password-reset-user", async (req, res) => {
-//   const { email } = req.body;
-//   if (!email) return res.status(400).send("Email is required.");
-//   try {
-//     const usersCol = db.get().collection("user");
-//     const user = await usersCol.findOne({ Email: email });
-//     if (!user) return res.status(400).send("User not found.");
+// POST: request reset (no email)
+router.post("/password-reset-user", async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).send("Email is required.");
+  try {
+    const usersCol = db.get().collection("user");
+    const user = await usersCol.findOne({ Email: email });
+    if (!user) return res.status(400).send("User not found.");
 
-//     const token = crypto.randomBytes(32).toString("hex");
-//     const tokenExpiration = new Date(Date.now() + 10 * 60 * 1000);
+    // create random token and store hashed version
+    const rawToken = crypto.randomBytes(16).toString("hex"); // 32 chars
+    const tokenHash = crypto.createHash("sha256").update(rawToken).digest("hex");
+    const tokenExpiration = new Date(Date.now() + 10 * 60 * 1000);
 
-//     await usersCol.updateOne(
-//       { _id: user._id },
-//       { $set: { resetToken: token, tokenExpiration } }
-//     );
+    await usersCol.updateOne(
+      { _id: user._id },
+      { $set: { resetTokenHash: tokenHash, tokenExpiration } }
+    );
 
-//     const mailer = require("../helpers/emailHelper");
-//     await mailer.sendResetEmail(email, token, false);
+    // Show token directly to the user (no email)
+    // Render a page that displays rawToken and a link to /user/reset-password?token=...
+    return res.status(200).render("user/reset-token-show", {
+      token: rawToken,
+      resetUrl: `/user/reset-password?token=${rawToken}`
+    });
+  } catch (err) {
+    console.error("Error preparing reset token:", err);
+    res.status(500).send("An error occurred while preparing the reset token.");
+  }
+});
 
-//     res.status(200).send("Password reset email sent successfully.");
-//   } catch (err) {
-//     console.error("Error during sending reset email:", err);
-//     res.status(500).send("An error occurred while sending the email.");
-//   }
-// });
+// GET: reset page (with token field prefilled if present)
+router.get("/user/reset-password", (req, res) => {
+  const { token } = req.query;
+  res.render("user/Email-reset-user", { token: token || "" });
+});
 
-// router.get('/user/reset-password', (req, res) => {
-//   const { token } = req.query;
-//   res.render("user/Email-reset-user", { token });
-// });
+// POST: complete reset with token + new password
+router.post("/update-password-user", async (req, res) => {
+  const { token, newPassword } = req.body;
+  if (!token || !newPassword) return res.status(400).send("Token and new password are required.");
+  try {
+    const usersCol = db.get().collection("user");
+    const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
 
-// router.post('/update-password-user', async (req, res) => {
-//   const { token, newPassword } = req.body;
-//   if (!token || !newPassword) return res.status(400).send("Token and new password are required.");
-//   try {
-//     const usersCol = db.get().collection("user");
-//     const user = await usersCol.findOne({ resetToken: token });
-//     if (!user || new Date() > user.tokenExpiration) {
-//       return res.status(400).send("Token is invalid or expired.");
-//     }
-//     const hashedPassword = await bcrypt.hash(newPassword, 10);
-//     await usersCol.updateOne(
-//       { _id: user._id },
-//       { $set: { Password: hashedPassword }, $unset: { resetToken: "", tokenExpiration: "" } }
-//     );
-//     res.status(200).send("Password reset successful.");
-//   } catch (err) {
-//     console.error("Error during password update:", err.message);
-//     res.status(500).send("An error occurred while updating the password.");
-//   }
-// });
+    const user = await usersCol.findOne({ resetTokenHash: tokenHash });
+    if (!user || new Date() > user.tokenExpiration) {
+      return res.status(400).send("Token is invalid or expired.");
+    }
+
+    const hashedPassword = await bcrypt.hash(String(newPassword), 10);
+    await usersCol.updateOne(
+      { _id: user._id },
+      { 
+        $set: { Password: hashedPassword },
+        $unset: { resetTokenHash: "", tokenExpiration: "" }
+      }
+    );
+    res.status(200).send("Password reset successful.");
+  } catch (err) {
+    console.error("Error during password update:", err.message);
+    res.status(500).send("An error occurred while updating the password.");
+  }
+});
+
 
 // User profile
 router.get("/user/profile", async (req, res) => {
@@ -1052,51 +1065,6 @@ router.post("/user/profile/remove-photo", async (req, res) => {
   );
   res.json({ success: true });
 });
-
-// // Book Library View
-// router.get("/user/library", async (req, res) => {
-//   const books = await db.get().collection("books").find().toArray();
-//   res.render("user/books/library", { books });
-// });
-
-// // Book Details
-// router.get("/user/book/:id", async (req, res) => {
-//   const bookId = req.params.id;
-//   if (!ObjectId.isValid(bookId)) return res.status(400).send("Invalid book ID");
-//   const book = await db.get().collection("books").findOne({ _id: new ObjectId(bookId) });
-//   if (!book) return res.status(404).send("Book not found");
-//   res.render("user/books/book-details", { book });
-// });
-
-// // Purchase Book with Coins
-// router.post("/user/book/purchase", async (req, res) => {
-//   const userIdRaw = req.session.userId;
-//   if (!userIdRaw) return res.status(401).json({ success: false, message: "Login required" });
-
-//   const { bookId, coinCost } = req.body;
-//   if (!ObjectId.isValid(bookId)) return res.status(400).json({ success: false, message: "Invalid book" });
-
-//   const userId = new ObjectId(userIdRaw);
-//   const user = await db.get().collection("user").findOne({ _id: userId });
-//   if (!user) return res.status(404).json({ success: false, message: "User not found" });
-
-//   const cost = parseInt(coinCost, 10);
-//   if (Number.isNaN(cost)) return res.status(400).json({ success: false, message: "Invalid amount" });
-//   if (user.coins < cost) return res.json({ success: false, message: "Not enough coins" });
-
-//   await db.get().collection("user").updateOne(
-//     { _id: userId },
-//     { $inc: { coins: -cost } }
-//   );
-
-//   await db.get().collection("purchases").insertOne({
-//     userId,
-//     bookId: new ObjectId(bookId),
-//     purchasedAt: new Date(),
-//   });
-
-//   res.json({ success: true });
-// });
 
 // Claim daily reward: +1 coin once per UTC day
 router.post("/user/rewards/daily", async (req, res) => {
