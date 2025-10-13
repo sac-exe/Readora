@@ -852,8 +852,6 @@ router.post("/user/signup", async (req, res) => {
       Username: req.body.Username,
       Email: req.body.Email,
       Password: hashed,
-      isVerified: false,
-      verificationToken,
       coins: 10,
       plan: { name: "Free", expires: null },
       createdAt: new Date()
@@ -861,10 +859,8 @@ router.post("/user/signup", async (req, res) => {
 
     await usersCol.insertOne(userDoc);
 
-    await sendVerificationEmail(userDoc.Email, verificationToken);
-
     return res.render("user/user-signup", {
-      signupMessage: "Registration successful! Please check your email to verify your account."
+      signupMessage: "Registration successful! You can now log in."
     });
   } catch (err) {
     console.error("An error occurred during signup:", err);
@@ -885,10 +881,6 @@ router.post("/user/login", async (req, res) => {
     req.session.Loginerr = "Invalid username or password";
     return res.redirect("/user/login");
   }
-  if (!user.isVerified) {
-    req.session.Loginerr = "Please verify your email before logging in.";
-    return res.redirect("/user/login");
-  }
   const isMatch = await bcrypt.compare(req.body.Password, user.Password);
   if (!isMatch) {
     req.session.Loginerr = "Invalid username or password";
@@ -901,20 +893,6 @@ router.post("/user/login", async (req, res) => {
 
   // Ensure session is saved before redirect in some store setups
   req.session.save(() => res.redirect("/"));
-});
-
-// Email Verification
-router.get("/user/verify", async (req, res) => {
-  const { token } = req.query;
-  if (!token) return res.send("Invalid verification link.");
-  const usersCol = db.get().collection("user");
-  const user = await usersCol.findOne({ verificationToken: token });
-  if (!user) return res.send("Invalid or expired verification token.");
-  await usersCol.updateOne(
-    { _id: user._id },
-    { $set: { isVerified: true }, $unset: { verificationToken: "" } }
-  );
-  res.render("user/login-user", { Loginerr: "Email verified! You can now log in." });
 });
 
 // Forgot password
