@@ -6,11 +6,12 @@ const sendVerificationEmail = async (email, token) => {
       service: "gmail",
       auth: {
         user: "readoraofficial@gmail.com",
-        pass: "hjyqvspkssmpwryk",
+        pass: process.env.GMAIL_APP_PASSWORD, // use env variable instead of hardcoding
       },
     });
+
     const mailOptions = {
-      from: "readora",
+      from: "Readora <readoraofficial@gmail.com>",
       to: email,
       subject: "Readora Email Verification",
       html: `
@@ -20,11 +21,12 @@ const sendVerificationEmail = async (email, token) => {
         <p>If you did not sign up, you can ignore this email.</p>
       `
     };
+
     await transporter.sendMail(mailOptions);
-    console.log("Verification email sent successfully!");
+    console.log("✅ Verification email sent successfully!");
   } catch (error) {
-    console.error("Error sending verification email:", error);
+    console.error("❌ Error sending verification email:", error);
   }
 };
 
-module.exports = { sendResetEmail, sendVerificationEmail };
+module.exports = { sendVerificationEmail };
