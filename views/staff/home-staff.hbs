@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Readora-Home: {{staff.Username}}</title>
+  
+</head>
+<body>
+  <div class="bg-user-home ">
+    <div class="container-home">
+      <nav class="navbar">
+        <!-- Left Section - Home Icon -->
+        <div class="nav-home">
+          <a href="/staff" class="icon-navbar">
+            <i class="fas fa-home"></i>
+          </a>
+        </div>
+        
+        <!-- Middle Section - Search Bar -->
+        <div class="nav-search">
+          <div class="rd-search-wrap">
+            <input 
+              type="text" 
+              id="rd-search-input"
+              class="search-bar-navbar" 
+              placeholder="Search for novels..."
+              autocomplete="off"
+              role="combobox"
+              aria-expanded="false"
+              aria-controls="rd-search-results"
+              aria-autocomplete="list"
+            />
+            <div id="rd-search-results" class="rd-search-dropdown" role="listbox" hidden></div>
+          </div>
+        </div>
+        <i class="fa-solid fa-filter icon-navbar"></i>
+        
+        <!-- Right Section - Buttons (visible on laptop) -->
+        <div class="nav-buttons">
+          <div class="navbar-coins">
+            <i class="fa-duotone fa-solid fa-coins" style="color:#ffca0a;"></i>
+            <span id="navbarCoinCount">{{coinCount}}</span>
+          </div>
+          <button class="icon-navbar"  id="theme-switch">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/></svg>
+          </button>
+          <button class="icon-navbar" onclick="window.open('/staff-shop')"><i class="fa-solid fa-cart-shopping"></i></button>
+          <button class="icon-navbar"><i class="fab fa-discord"></i></button>
+          <button class="icon-navbar" onclick="window.location.href='/staff/bookmarks'">
+            <i class="fa-solid fa-book-bookmark"></i>
+          </button>
+          <button class="icon-navbar" onclick="window.location.href='/staff/list'">
+            <i class="fa-solid fa-users"></i>
+          </button>
+          <div class="profile-button">
+            {{#if staff}}
+            <div class="user-dropdown">
+              <div class="user-avatar" style="position:relative;display:inline-block;width:48px;height:48px;" onclick="toggleStaffCarddesktop()">
+                  {{#if profileFrame}}
+                      <img class="avatar-frame" src="/frames/{{profileFrame}}.png" alt="Frame">
+                  {{/if}}
+                  {{#if profileImageUrl}}
+                      <img class="avatar-img" src="{{profileImageUrl}}" alt="Profile">
+                  {{else}}
+                      <div class="avatar-initial">{{staff.Username.[0]}}</div>
+                  {{/if}}
+              </div>
+              <div id="userCarddesktop" class="user-card">
+                  <div class="user-card-header">
+                      <div class="user-avatar-large">
+                          {{#if profileImageUrl}}
+                              <img src="{{profileImageUrl}}?{{now}}" alt="Profile" style="width:65px;height:65px;border-radius:50%;object-fit:cover;">
+                          {{else}}
+                              {{staff.Username.[0]}}
+                          {{/if}}
+                      </div>
+                  <div>
+                      <div class="user-name">{{staff.Username}}</div>
+                  </div>
+              </div>
+              <div class="user-card-actions">
+                  <a href="/staff/profile" class="user-card-link"><i class="fa-solid fa-user"></i> Profile</a>
+                  <a href="/staff/dash" class="user-card-link"><i class="fa-solid fa-pen-fancy"></i> Author Dashboard</a>
+                  <a href="/staff/logout" class="user-card-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+              </div>
+          </div>
+            </div>
+            {{else}}
+            <button class="btn-navnar d-flex align-items-center gap-1" onclick="window.open('/staff/login')">
+              <i class="fas fa-user"></i> Sign in/up
+            </button>
+            {{/if}}
+          </div>
+        </div>
+        
+        <!-- Mobile Right Section (hidden on laptop) -->
+        <div class="mobile-right">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+          </button>
+          <div class="profile-button">
+            {{#if staff}}
+
+            <div class="user-dropdown">
+              <div class="user-avatar" style="position:relative;display:inline-block;width:48px;height:48px;" onclick="toggleStaffCardmobile()">
+                  {{#if profileFrame}}
+                      <img class="avatar-frame" src="/frames/{{profileFrame}}.png" alt="Frame">
+                  {{/if}}
+                  {{#if profileImageUrl}}
+                      <img class="avatar-img" src="{{profileImageUrl}}" alt="Profile">
+                  {{else}}
+                      <div class="avatar-initial">{{staff.Username.[0]}}</div>
+                  {{/if}}
+              </div>
+              <div id="userCardmobile" class="user-card">
+                <div class="user-card-header">
+                  <div class="user-avatar-large">
+                      {{#if profileImageUrl}}
+                          <img src="{{profileImageUrl}}?{{now}}" alt="Profile" style="width:65px;height:65px;border-radius:50%;object-fit:cover;">
+                      {{else}}
+                          {{staff.Username.[0]}}
+                      {{/if}}
+                  </div>
+                  <div>
+                    <div class="user-name">{{staff.Username}}</div>
+                  </div>
+                </div>
+                <div class="user-card-actions">
+                  <a href="/user/profile" class="user-card-link"><i class="fa-solid fa-user"></i> Profile</a>
+                  <a href="/staff/dash" class="user-card-link"><i class="fa-solid fa-pen-fancy"></i> Author Dashboard</a>
+                  <a href="/staff/logout" class="user-card-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                </div>
+              </div>
+            </div>
+            {{else}}
+            <button class="btn-navnar d-flex align-items-center gap-1" onclick="window.open('/staff/login')">
+              <i class="fas fa-user"></i> Sign in/up
+            </button>
+            {{/if}}
+          </div>
+        </div>
+        <!-- Mobile Dropdown Menu Content -->
+        <div class="mobile-menu" id="mobileMenu">
+          <div class="mobile-menu-row">
+            <div class="navbar-coins">
+            <i class="fa-duotone fa-solid fa-coins" style="color:#ffca0a;"></i>
+            <span id="navbarCoinCount">{{coinCount}}</span>
+          </div>
+            <button class="icon-navbar" id="theme-switch">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                <path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                <path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/>
+              </svg>
+            </button>
+            <button class="icon-navbar" onclick="window.open('/staff-shop')"><i class="fa-solid fa-cart-shopping"></i></button>
+            <button class="icon-navbar"><i class="fab fa-discord"></i></button>
+            <button class="icon-navbar" onclick="window.location.href='/staff/bookmarks'" ><i class="fa-solid fa-book-bookmark"></i></button>
+            <button class="icon-navbar"  onclick="window.location.href='/staff/list'"><i class="fa-solid fa-users"></i></button>
+          </div>
+        </div>
+      </nav>
+
+      <section class="rd-hero">
+        <div class="rd-hero-badge">Random Novels</div>
+        <div class="rd-hero-wrap" id="heroWrap">
+          <h1 class="rd-detail-title" id="heroTitle"></h1>
+          <p class="rd-hero-desc" id="heroDesc"></p>
+          <div class="rd-hero-cta">
+          <button class="rd-btn rd-btn-primary" id="heroReadBtnS">
+            <ion-icon name="library-outline"></ion-icon> View More
+          </button>
+          <form method="POST" action="/staff/bookmark" style="display:inline;">
+            <input type="hidden" name="novelId" id="heroBookmarkNovelId" value="{{HERO_NOVELS.[0]._id}}">
+            <button class="rd-btn rd-btn-ghost" type="submit">
+              <i class="fa-regular fa-bookmark"></i> Add to Bookmark
+            </button>
+          </form>
+        </div>
+          <div class="rd-hero-meta">
+            <span class="rd-chip rd-chip-soft" id="heroAudience"></span>
+            <span class="rd-chip rd-chip-soft" id="heroCateg"></span>
+            <span class="rd-chip rd-chip-soft" id="heroStatus"></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="rd-shelf rd-shelf-alt">
+        <div class="rd-sec-head">
+          <h2 class="rd-sec-title">New Releases</h2>
+        </div>
+        <div class="rd-carousel" aria-label="New releases">
+          
+          <div class="rd-track">
+            {{#each staffNovels}}
+              <a href="/novelS/{{this._id}}" style="text-decoration:none;color:inherit;">
+                <article class="rd-slide" style="cursor:pointer;">
+                  <div class="rd-slide-cover" style="--cover:url('{{this.imageUrl}}')"></div>
+                  <h3 class="rd-slide-title">{{this.title}}</h3>
+                  <p class="rd-slide-sub">{{this.status}} • <ion-icon name="book-outline"></ion-icon> {{this.chapters}}</p>
+                </article>
+              </a>
+            {{/each}}
+          </div>
+          
+        </div>
+      </section>
+
+    </div>
+    <div class=" bottom-card">
+      <div class="sec-1-bottom-card">
+        <div class="logo-bottom"></div>
+        <div>
+          <h4>Explore books, embrace stories</h4>
+          <p>
+            REDORA is a user-friendly book translation platform designed to make global reading accessible.
+          </p>
+        </div>
+        {{!-- <div class="d-flex flex-row  sub-card-sec-1-bottom " >
+            <a href="https://www.instagram.com/"> <ion-icon name="logo-instagram"></ion-icon> </a>
+            <a href="https://www.facebook.com/"> <ion-icon name="logo-facebook"></ion-icon> </a>
+            <a href="https://x.com/"> <ion-icon name="logo-twitter"></ion-icon> </a>
+        </div> --}}
+      </div>
+      <div class="d-flex flex-column sec-2-bottom-card">
+          <h5>Quick Links</h5>
+          <a href="/">Home</a>
+          <a href="about.html">About</a>
+      </div>
+      <div class="d-flex flex-column sec-2-bottom-card">
+          <h5>Policies</h5>
+          <a href="/terms/privacy policy.pdf" target="_blank">Privacy Policy</a>
+          <a href="/terms/terms and service.pdf" target="_blank">Terms of Service</a>
+          <a href="/terms/Translation Policy READORA.pdf" target="_blank">Translation Policy</a>
+      </div>
+      <div class="d-flex flex-column sec-2-bottom-card">
+          <h5>Help</h5>
+          <a href="mailto:readoraofficial@gmail.com">Support</a>
+      </div>
+      <!-- Footer -->
+    </div>
+    <div class="footer-bottom ">
+      <small>
+        © 2025 READORA LLC, an Expedia Group company. All rights reserved.
+      </small>
+    </div>
+  </div>
+  
+  {{#if loginSuccess}}
+    <div id="loginSuccessPopup" class="popup-message show">
+      <i class="fa-solid fa-circle-check" style="color:#28a745; font-size:22px; margin-right:8px;"></i>
+      {{loginSuccess}}
+    </div>
+    <script>
+      setTimeout(() => {
+        const popup = document.getElementById('loginSuccessPopup');
+        if (popup) {
+          popup.classList.remove('show');
+          popup.classList.add('hide');
+        }
+      }, 2000);
+    </script>
+  {{/if}}
+
+  {{#if signinSuccess}}
+    <div id="signinSuccessPopup" class="popup-message show">
+      <i class="fa-solid fa-circle-check" style="color:#28a745; font-size:22px; margin-right:8px;"></i>
+      {{signinSuccess}}
+    </div>
+    <script>
+      setTimeout(() => {
+        const popup = document.getElementById('signinSuccessPopup');
+        if (popup) {
+          popup.classList.remove('show');
+          popup.classList.add('hide');
+        }
+      }, 2000);
+    </script>
+  {{/if}}
+
+  <script>
+    (() => {
+      const input = document.getElementById('rd-search-input');
+      const dropdown = document.getElementById('rd-search-results');
+      if (!input || !dropdown) return;
+
+      let timer = null;
+      let activeIndex = -1;
+
+      // Debounced fetch
+      function debounce(fn, delay) {
+        return function(...args) {
+          clearTimeout(timer);
+          timer = setTimeout(() => fn.apply(this, args), delay);
+        };
+      }
+
+      async function fetchResults(query) {
+        if (!query || query.length < 2) {
+          dropdown.hidden = true;
+          input.setAttribute('aria-expanded', 'false');
+          return;
+        }
+
+        try {
+          const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+          const data = await res.json();
+          renderResults(data);
+        } catch (err) {
+          console.error('Search error:', err);
+          dropdown.hidden = true;
+        }
+      }
+
+      function renderResults(novels) {
+        if (!novels.length) {
+          dropdown.innerHTML = '<div class="rd-search-empty">No novels found</div>';
+          dropdown.hidden = false;
+          input.setAttribute('aria-expanded', 'true');
+          return;
+        }
+
+        dropdown.innerHTML = novels.map((n, i) => `
+          <a href="/novel/${n._id}" 
+            class="rd-search-item" 
+            role="option" 
+            id="rd-search-opt-${i}"
+            aria-selected="false">
+            <div class="rd-search-cover" style="--cover:url('${n.imageUrl}')"></div>
+            <div class="rd-search-info">
+              <div class="rd-search-title">${n.title}</div>
+              <div class="rd-search-meta">
+                <span><i class="fa-solid fa-user"></i> ${n.author || 'Unknown'}</span>
+                ${n.categ ? `<span><i class="fa-solid fa-tag"></i> ${n.categ}</span>` : ''}
+              </div>
+            </div>
+          </a>
+        `).join('');
+
+        dropdown.hidden = false;
+        input.setAttribute('aria-expanded', 'true');
+        activeIndex = -1;
+      }
+
+      // Input event
+      input.addEventListener('input', debounce((e) => {
+        fetchResults(e.target.value.trim());
+      }, 300));
+
+      // Keyboard navigation
+      input.addEventListener('keydown', (e) => {
+        const items = dropdown.querySelectorAll('.rd-search-item');
+        if (!items.length) return;
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          activeIndex = Math.min(activeIndex + 1, items.length - 1);
+          updateActive(items);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          activeIndex = Math.max(activeIndex - 1, -1);
+          updateActive(items);
+        } else if (e.key === 'Enter' && activeIndex >= 0) {
+          e.preventDefault();
+          items[activeIndex].click();
+        } else if (e.key === 'Escape') {
+          dropdown.hidden = true;
+          input.setAttribute('aria-expanded', 'false');
+          activeIndex = -1;
+        }
+      });
+
+      function updateActive(items) {
+        items.forEach((item, i) => {
+          if (i === activeIndex) {
+            item.setAttribute('aria-selected', 'true');
+            item.focus();
+            input.setAttribute('aria-activedescendant', item.id);
+          } else {
+            item.setAttribute('aria-selected', 'false');
+          }
+        });
+        if (activeIndex === -1) input.removeAttribute('aria-activedescendant');
+      }
+
+      // Close on outside click
+      document.addEventListener('click', (e) => {
+        if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+          dropdown.hidden = true;
+          input.setAttribute('aria-expanded', 'false');
+        }
+      });
+    })();
+  </script>
+
+
+  <script id="heroData" type="application/json">{{{randomNovelsJson}}}</script>
+  <script>
+    const dataTag = document.getElementById('heroData');
+    const HERO_NOVELS = JSON.parse(dataTag.textContent || '[]');
+
+    const titleEl = document.getElementById('heroTitle');
+    const descEl  = document.getElementById('heroDesc');
+    const audEl   = document.getElementById('heroAudience');
+    const catEl   = document.getElementById('heroCateg');
+    const statusEl= document.getElementById('heroStatus');
+    const readBtnS  = document.getElementById('heroReadBtnS');
+
+    const bookmarkInput = document.getElementById('heroBookmarkNovelId');
+    if (HERO_NOVELS.length) {
+      let i = 0;
+      const show = (n) => {
+        titleEl.textContent  = n.title || '';
+        descEl.textContent   = n.description || '';
+        audEl.textContent    = n.audience || '';
+        catEl.textContent    = n.categ || '';
+        statusEl.textContent = n.status || '';
+        readBtnS.onclick = () => window.location.href = `/novelS/${n._id}`;
+        // Update the hidden input value for the bookmark form
+        if (bookmarkInput) bookmarkInput.value = n._id;
+      };
+      show(HERO_NOVELS[0]);
+      setInterval(() => {
+        i = (i + 1) % HERO_NOVELS.length;
+        show(HERO_NOVELS[i]);
+      }, 8000);
+    }
+  </script>
+
+  <script>
+    function toggleStaffCarddesktop() {
+      const card = document.getElementById('userCarddesktop');
+      card.style.display = card.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function toggleStaffCardmobile() {
+      const card = document.getElementById('userCardmobile');
+      card.style.display = card.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Close BOTH cards if clicked outside
+    document.addEventListener('click', function(event) {
+      const avatarDesktop = document.querySelector('#userCarddesktop')?.previousElementSibling;
+      const cardDesktop = document.getElementById('userCarddesktop');
+
+      const avatarMobile = document.querySelector('#userCardmobile')?.previousElementSibling;
+      const cardMobile = document.getElementById('userCardmobile');
+
+      const clickedInsideDesktop = cardDesktop?.contains(event.target) || avatarDesktop?.contains(event.target);
+      const clickedInsideMobile = cardMobile?.contains(event.target) || avatarMobile?.contains(event.target);
+
+      if (!clickedInsideDesktop && cardDesktop) cardDesktop.style.display = 'none';
+      if (!clickedInsideMobile && cardMobile) cardMobile.style.display = 'none';
+    });
+  </script>
+
+  <script>
+    let darkmode = localStorage.getItem('darkmode')
+    const themeSwitches = document.querySelectorAll('#theme-switch')
+
+    const enableDarkmode = () => {
+      document.body.classList.add('darkmode') 
+      localStorage.setItem('darkmode', 'active')
+    }
+
+    const disableDarkmode = () => {
+      document.body.classList.remove('darkmode')
+      localStorage.setItem('darkmode', null)
+    }
+
+    if (darkmode === "active") enableDarkmode()
+
+    themeSwitches.forEach(btn => {
+      btn.addEventListener("click", () => {
+        darkmode = localStorage.getItem('darkmode')
+        darkmode !== "active" ? enableDarkmode() : disableDarkmode()
+      })
+    })
+  </script>
+
+  <script>
+    // Toggle mobile menu
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    mobileMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent immediate closing
+      mobileMenu.classList.toggle('active');
+    });
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!mobileMenu.contains(e.target) && e.target !== mobileMenuBtn) {
+        mobileMenu.classList.remove('active');
+      }
+    });
+    
+    // Prevent mobile menu from closing when clicking inside it
+    mobileMenu.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+  </script>
+</body>
+</html>

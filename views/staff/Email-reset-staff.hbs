@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Forgot password page for user account recovery.">
+    <title>Forgot Password</title>
+    <!-- ### Bootstrap CSS CDN ### -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Ionicons CDN (for icons you use) -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+    <div class="background-login container-fluid min-vh-100 d-flex flex-column align-items-center justify-content-center">
+        <div class="login-container">
+            <div class="card-box-login shadow-lg">
+                    
+                <form method="post" action="/update-password-staff" autocomplete="off">
+                    <h2 class="head-card-forgot-user mb-4 text-center">Forgot Password</h2>
+                    <input type="hidden" name="token" value="{{token}}">
+                    <div class="inputbox-forgot-user">
+                        <!-- New Password -->
+                        <input type="password" name="newPassword" id="passwordtoggleuser" required placeholder="New Password">
+                        <label for="passwordtoggleuser">New Password</label>
+                        <ion-icon name="eye-outline" id="eyetogglepassuser"></ion-icon>
+                    </div>
+                    <div class="inputbox-forgot-user">
+                        <!-- Confirm Password -->
+                        <input type="password" id="conpass" placeholder="Confirm Password" required>
+                        <label for="conpass">Confirm Password</label>
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                    </div>
+                    <button type="submit" class="button-forgot-user" id="send-button">Submit</button>
+                </form>
+                    
+            </div>
+            
+        </div>
+    </div>
+    <script>
+        // Password visibility toggle
+        let eyetogglepassuser = document.getElementById('eyetogglepassuser');
+        let passwordtoggleuser = document.getElementById('passwordtoggleuser');
+
+        eyetogglepassuser.onclick = function() {
+            if (passwordtoggleuser.type === "password") {   
+                passwordtoggleuser.type = "text";
+                eyetogglepassuser.setAttribute("name", "eye-off-outline");
+            } else {
+                passwordtoggleuser.type = "password";
+                eyetogglepassuser.setAttribute("name", "eye-outline");
+            }
+        };
+
+        // Optional: Client-side password match validation
+        document.querySelector('form').onsubmit = function(e) {
+            const pass = document.getElementById('passwordtoggleuser').value;
+            const conpass = document.getElementById('conpass').value;
+            if (pass !== conpass) {
+                alert("Passwords do not match!");
+                e.preventDefault();
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>

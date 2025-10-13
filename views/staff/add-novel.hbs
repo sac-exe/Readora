@@ -1,0 +1,959 @@
+<!DOCTYPE html>                                <!--ADD NOVEL-->
+<html lang="en">                               <!--ADD NOVEL-->
+<head>                                         <!--ADD-NOVEL-->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Readora: {{staff.Username}} Add Novel</title>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+  <div class="bg-staff-dash">
+    <div class="container-home">
+      <nav class="navbar">
+        <!-- Left Section - Home Icon -->
+        <div class="nav-home">
+          <a href="/staff" class="icon-navbar">
+            <i class="fas fa-home"></i>
+          </a>
+        </div>
+        
+        <!-- Right Section - Buttons (visible on laptop) -->
+        <div class="nav-buttons">
+          <div class="navbar-coins">
+            <i class="fa-duotone fa-solid fa-coins" style="color:#ffca0a;"></i>
+            <span id="navbarCoinCount">{{coinCount}}</span>
+          </div>
+          <button class="icon-navbar"  id="theme-switch">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/></svg>
+          </button>
+          <button class="icon-navbar" onclick="window.open('/staff-shop')"><i class="fa-solid fa-cart-shopping"></i></button>
+          <button class="icon-navbar"><i class="fab fa-discord"></i></button>
+          <button class="icon-navbar" onclick="window.location.href='/staff/bookmarks'"><i class="fa-solid fa-book-bookmark"></i></button>
+          <button class="icon-navbar"><i class="fa-solid fa-users"></i></button>
+          <div class="profile-button">
+            {{#if staff}}
+            <div class="user-dropdown">
+              <div class="user-avatar" style="position:relative;display:inline-block;width:48px;height:48px;" onclick="toggleStaffCarddesktop()">
+                  {{#if profileFrame}}
+                      <img class="avatar-frame" src="/frames/{{profileFrame}}.png" alt="Frame">
+                  {{/if}}
+                  {{#if profileImageUrl}}
+                      <img class="avatar-img" src="{{profileImageUrl}}" alt="Profile">
+                  {{else}}
+                      <div class="avatar-initial">{{staff.Username.[0]}}</div>
+                  {{/if}}
+              </div>
+              <div id="userCarddesktop" class="user-card">
+                <div class="user-card-header">
+                  <div class="user-avatar-large">
+                      {{#if profileImageUrl}}
+                          <img src="{{profileImageUrl}}?{{now}}" alt="Profile" style="width:65px;height:65px;border-radius:50%;object-fit:cover;">
+                      {{else}}
+                          {{staff.Username.[0]}}
+                      {{/if}}
+                  </div>
+                  <div>
+                    <div class="user-name">{{staff.Username}}</div>
+                  </div>
+                </div>
+                <div class="user-card-actions">
+                  <a href="/staff/profile" class="user-card-link"><i class="fa-solid fa-user"></i> Profile</a>
+                  <a href="/staff/dash" class="user-card-link"><i class="fa-solid fa-pen-fancy"></i> Author Dashboard</a>
+                  <a href="/staff/logout" class="user-card-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                </div>
+              </div>
+            </div>
+            {{else}}
+            <button class="btn-navnar d-flex align-items-center gap-1" onclick="window.open('/staff/login')">
+              <i class="fas fa-user"></i> Sign in/up
+            </button>
+            {{/if}}
+          </div>
+        </div>
+        
+        <!-- Mobile Right Section (hidden on laptop) -->
+        <div class="mobile-right">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+          </button>
+          <div class="profile-button">
+            {{#if staff}}
+
+            <div class="user-dropdown">
+              <div class="user-avatar" style="position:relative;display:inline-block;width:48px;height:48px;" onclick="toggleStaffCardmobile()">
+                  {{#if profileFrame}}
+                      <img class="avatar-frame" src="/frames/{{profileFrame}}.png" alt="Frame">
+                  {{/if}}
+                  {{#if profileImageUrl}}
+                      <img class="avatar-img" src="{{profileImageUrl}}" alt="Profile">
+                  {{else}}
+                      <div class="avatar-initial">{{staff.Username.[0]}}</div>
+                  {{/if}}
+              </div>
+              <div id="userCardmobile" class="user-card">
+                <div class="user-card-header">
+                  <div class="user-avatar-large">
+                      {{#if profileImageUrl}}
+                          <img src="{{profileImageUrl}}?{{now}}" alt="Profile" style="width:65px;height:65px;border-radius:50%;object-fit:cover;">
+                      {{else}}
+                          {{staff.[0]}}
+                      {{/if}}
+                  </div>
+                  <div>
+                    <div class="user-name">{{staff.Usernmae}}</div>
+                  </div>
+                </div>
+                <div class="user-card-actions">
+                  <a href="/staff/profile" class="user-card-link"><i class="fa-solid fa-user"></i> Profile</a>
+                  <a href="/staff/dash" class="user-card-link"><i class="fa-solid fa-pen-fancy"></i> Author Dashboard</a>
+                  <a href="/logout" class="user-card-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                </div>
+              </div>
+            </div>
+            {{else}}
+            <button class="btn-navnar d-flex align-items-center gap-1" onclick="window.open('/staff/login')">
+              <i class="fas fa-user"></i> Sign in/up
+            </button>
+            {{/if}}
+          </div>
+        </div>
+        <!-- Mobile Dropdown Menu Content -->
+        <div class="mobile-menu" id="mobileMenu">
+          <div class="mobile-menu-row">
+            <div class="navbar-coins">
+              <i class="fa-duotone fa-solid fa-coins" style="color:#ffca0a;"></i>
+              <span id="navbarCoinCount">{{coinCount}}</span>
+            </div>
+            <button class="icon-navbar" id="theme-switch">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                <path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                <path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/>
+              </svg>
+            </button>
+            <button class="icon-navbar" onclick="window.open('/staff-shop')"><i class="fa-solid fa-cart-shopping"></i></button>
+            <button class="icon-navbar"><i class="fab fa-discord"></i></button>
+            <button class="icon-navbar" onclick="window.location.href='/staff/bookmarks'"><i class="fa-solid fa-book-bookmark"></i></button>
+            <button class="icon-navbar"><i class="fa-solid fa-users"></i></button>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content Area -->
+      <main class="main-content-staff-dashs">
+        <div id="section-manage-novels" class="dashboard-section">
+          <form action="/staff/novels" method="POST" enctype="multipart/form-data" id="create-novel-form">
+            <div class="create-novel-container">
+              <!-- Header -->
+              <div class="create-novel-header">
+                <button class="collapse-btn-staff-dash" onclick="window.location.href='/staff/dash'">
+                  <i class="fas fa-chevron-left icon-navbar"></i>
+                </button>
+                <button type="submit" class="create-btn">Create Novel  <i class="fa-brands fa-firstdraft"></i></button>
+              </div>
+              <div class="novel-form-container">
+                <div >
+
+                  <!-- Upload Cover -->
+                  <div class="upload-cover">
+                    <label for="cover-upload" class="upload-box">
+                      <i class="fas fa-image"></i>
+                      <p>Upload JPG, or PNG (max 5MB)</p>
+                      <input type="file" id="cover-upload" name="image" accept=".webp,.jpg,.jpeg,.png" hidden>
+                      <img id="cover-preview" src="" class="img-cover-staff"/>
+                    </label>
+                  </div>
+
+                </div>
+                <div class="novel-form-section">
+
+                  <!-- Title & Author -->
+                  <input type="text" name="title" placeholder="Enter your novel title" class="novel-title" required>
+                  <input type="text" name="author" placeholder="Enter original author name" class="author-name" required>
+                  <div class="tag-container" id="hashtagBox">
+                    <div class="tag-input-wrap">
+                      <input type="text" id="tagsInput" name="tags" class="tag-input" data-group="tag" placeholder="Add tags… (press Enter)" aria-label="Add hashtags" />
+                    </div>
+                    <input type="hidden" name="hashtags" id="hashtagsInput" />
+                  </div>
+
+                  <!-- Categories & Tags -->
+                  <div class="meta-buttons">
+                    <button type="button" class="category-btn" id="btn-category" data-group="categ"><span>Add Categories</span></button>
+                    <input type="hidden" name="category" id="categoryInput" required>
+                  </div>
+
+                  <div class="form-options-container">
+                    <!-- Status Options -->
+                    <div class="status-options">
+                      <button type="button" class="status-btn active" data-group="status"><i class="fa-solid fa-pencil"></i> <span>Ongoing</span></button>
+                      <button type="button" class="status-btn" data-group="status"><i class="fa-solid fa-circle-check"></i> <span>Completed</span></button>
+                      <button type="button" class="status-btn" data-group="status"><i class="fa-solid fa-circle-pause"></i> <span>Hiatus</span></button>
+                      <button type="button" class="status-btn" data-group="status"><i class="fa-solid fa-circle-xmark"></i> <span>Dropped</span></button>
+                      <input type="hidden" name="status" id="status-input" value="Ongoing" required>
+                    </div>
+
+                    <div class="language-options">
+                      <button type="button" class="translate-btn" id="btn-original" data-group="orglang">
+                        <i class="fa-solid fa-language"></i>
+                        <span>Original Language</span>
+                      </button>
+                      
+                      <button type="button" class="translate-btn" id="btn-translated" data-group="tralang">
+                        <i class="fa-solid fa-language"></i>
+                        <span>Translated Language</span>
+                      </button>
+                      <input type="hidden" name="originalLanguage" id="originalLanguageInput" required>
+                      <input type="hidden" name="translatedLanguage" id="translatedLanguageInput" required>
+                    </div>
+
+                    <!-- Age Rating -->
+                    <div class="audience-options">
+                      <button type="button" class="audience-btn active" data-group="audience"><i class="fa-solid fa-users"></i><span>Everyone</span></button>
+                      <button type="button" class="audience-btn" data-group="audience"><i class="fa-solid fa-user-graduate"></i><span>Teen</span></button>
+                      <button type="button" class="audience-btn" data-group="audience"><i class="fa-solid fa-user-plus"></i><span>Mature</span></button>
+                      <button type="button" class="audience-btn" data-group="audience"><i class="fa-solid fa-user-tie"></i><span>Adult</span></button>
+                      <input type="hidden" name="audience" id="audience-input" value="Everyone" required>
+                    </div>
+                  </div>
+                
+                </div>
+                
+              </div>
+              <div class="description-box">
+                <textarea class="description" placeholder="Enter your novel description here…" name="description" required></textarea>
+              </div>
+              
+            </div>
+
+          </form>
+        </div>
+        
+      </main>
+    </div>
+  </div>
+  <!-- Category Popup -->
+  <div id="categoryModal" class="appoint-modal" aria-hidden="true" role="dialog" aria-modal="true" style="display:none;">
+    <div class="appoint-modal-inner" role="document">
+      <span class="appoint-modal-close" id="categoryModalCloseBtn" aria-label="Close">&times;</span>
+      <div class="lang-title" id="categoryModalTitle">Choose Categories</div>
+      <div class="lang-search">
+        <input id="categorySearch" class="appoint-input" type="text" placeholder="Search categories..." />
+      </div>
+      <div id="categoryList" class="lang-list" role="listbox" aria-label="Categories"></div>
+      <div class="btn-row">
+        <button id="categoryApply" class="appoint-btn btn-primary" disabled>Apply</button>
+      </div>
+      <div id="categoryStatus" class="appoint-status"></div>
+    </div>
+  </div>
+
+  <!-- Language Popup  -->
+  
+  <div id="languageModal" class="appoint-modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="appoint-modal-inner" role="document">
+      <span class="appoint-modal-close" id="languageModalCloseBtn" aria-label="Close">&times;</span>
+
+      <div class="lang-title" id="languageModalTitle">Choose Language</div>
+
+      <div class="lang-search">
+        <input id="languageSearch" class="appoint-input" type="text" placeholder="Search languages..." />
+      </div>
+
+      <div id="languageList" class="lang-list" role="listbox" aria-label="Languages"></div>
+
+      <div class="btn-row">
+        
+        <button id="languageApply" class="appoint-btn btn-primary" disabled>Apply</button>
+      </div>
+
+      <div id="languageStatus" class="appoint-status"></div>
+    </div>
+  </div>
+
+  <script>
+    function toggleStaffCarddesktop() {
+      const card = document.getElementById('userCarddesktop');
+      card.style.display = card.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function toggleStaffCardmobile() {
+      const card = document.getElementById('userCardmobile');
+      card.style.display = card.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Close BOTH cards if clicked outside
+    document.addEventListener('click', function(event) {
+      const avatarDesktop = document.querySelector('#userCarddesktop')?.previousElementSibling;
+      const cardDesktop = document.getElementById('userCarddesktop');
+
+      const avatarMobile = document.querySelector('#userCardmobile')?.previousElementSibling;
+      const cardMobile = document.getElementById('userCardmobile');
+
+      const clickedInsideDesktop = cardDesktop?.contains(event.target) || avatarDesktop?.contains(event.target);
+      const clickedInsideMobile = cardMobile?.contains(event.target) || avatarMobile?.contains(event.target);
+
+      if (!clickedInsideDesktop && cardDesktop) cardDesktop.style.display = 'none';
+      if (!clickedInsideMobile && cardMobile) cardMobile.style.display = 'none';
+    });
+  </script>
+
+  <script>
+    // Toggle mobile menu
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    mobileMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent immediate closing
+      mobileMenu.classList.toggle('active');
+    });
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!mobileMenu.contains(e.target) && e.target !== mobileMenuBtn) {
+        mobileMenu.classList.remove('active');
+      }
+    });
+    
+    // Prevent mobile menu from closing when clicking inside it
+    mobileMenu.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+  </script>
+
+  <script>//small client side validation
+    document.getElementById('create-novel-form').addEventListener('submit', function(e) {
+      const requiredFields = [
+        'title',
+        'author',
+        'category',
+        'status',
+        'originalLanguage',
+        'translatedLanguage',
+        'audience'
+      ];
+      let valid = true;
+      requiredFields.forEach(id => {
+        const el = document.getElementsByName(id)[0];
+        if (!el || !el.value.trim()) {
+          valid = false;
+          el && el.classList.add('input-error');
+        } else {
+          el && el.classList.remove('input-error');
+        }
+      });
+      if (!valid) {
+        alert('Please fill all required fields.');
+        e.preventDefault();
+      }
+    });
+    </script>
+
+  <script>
+    const CATEGORIES = [
+      { code: 'action', name: 'Action' },
+      { code: 'adventure', name: 'Adventure' },
+      { code: 'comedy', name: 'Comedy' },
+      { code: 'drama', name: 'Drama' },
+      { code: 'fantasy', name: 'Fantasy' },
+      { code: 'romance', name: 'Romance' },
+      { code: 'sci-fi', name: 'Sci‑Fi' },
+      { code: 'mystery', name: 'Mystery' },
+      { code: 'thriller', name: 'Thriller' },
+      { code: 'horror', name: 'Horror' },
+      { code: 'slice-of-life', name: 'Slice of Life' },
+      { code: 'historical', name: 'Historical' },
+      { code: 'supernatural', name: 'Supernatural' },
+      { code: 'sports', name: 'Sports' },
+      { code: 'parody', name: 'Parody' },
+      { code: 'boys-love', name: 'Boys Love' },
+      { code: 'girls-love', name: 'Girls Love' },
+      { code: 'smut', name: 'Smut' },
+      { code: 'harem', name: 'Harem' },
+      { code: 'adult', name: 'Adult' },
+      { code: 'mecha', name: 'Mecha' },
+      { code: 'psychological', name: 'Psychological' },
+      { code: 'wuxia', name: 'Wuxia' },
+      { code: 'tragedy', name: 'Tragedy' },
+      { code: 'gender-bender', name: 'Gender Bender' }
+    ];
+
+    const categoryModal = document.getElementById('categoryModal');
+    const categoryModalClose = document.getElementById('categoryModalCloseBtn');
+    const categoryListEl = document.getElementById('categoryList');
+    const categorySearchEl = document.getElementById('categorySearch');
+    const categoryStatusEl = document.getElementById('categoryStatus');
+    const categoryApplyBtn = document.getElementById('categoryApply');
+    const btnCategory = document.getElementById('btn-category');
+    const categoryInput = document.getElementById('categoryInput');
+
+    let selectedCategories = [];
+
+    function renderCategoryList(items) {
+      categoryListEl.innerHTML = '';
+      items.forEach(cat => {
+        const row = document.createElement('div');
+        row.className = 'lang-item';
+        row.setAttribute('role', 'option');
+        row.setAttribute('data-code', cat.code);
+        row.innerHTML = `
+          <label>
+            <input type="checkbox" value="${cat.code}" />
+            <span class="lang-name">${cat.name}</span>
+            <span class="lang-sub">${cat.code}</span>
+          </label>
+        `;
+        const checkbox = row.querySelector('input[type="checkbox"]');
+        checkbox.checked = selectedCategories.includes(cat.code);
+        checkbox.addEventListener('change', () => {
+          if (checkbox.checked) {
+            if (!selectedCategories.includes(cat.code)) selectedCategories.push(cat.code);
+          } else {
+            selectedCategories = selectedCategories.filter(c => c !== cat.code);
+          }
+          categoryApplyBtn.disabled = selectedCategories.length === 0;
+        });
+        categoryListEl.appendChild(row);
+      });
+    }
+
+    // Filter
+    categorySearchEl.addEventListener('input', () => {
+      const q = categorySearchEl.value.trim().toLowerCase();
+      const filtered = CATEGORIES.filter(c =>
+        c.name.toLowerCase().includes(q) ||
+        (c.code && c.code.toLowerCase().includes(q))
+      );
+      renderCategoryList(filtered);
+    });
+
+    // Apply -> set button label, mark as selected, store hidden value, close
+    categoryApplyBtn.addEventListener('click', () => {
+      if (!selectedCategories.length) return;
+
+      // Show count instead of names:
+      const span = btnCategory.querySelector('span');
+      if (selectedCategories.length === 1) {
+        const cat = CATEGORIES.find(c => c.code === selectedCategories[0]);
+        span.textContent = cat ? cat.name : selectedCategories[0];
+      } else {
+        span.textContent =  `${selectedCategories.length} categories`;
+      }
+
+      btnCategory.classList.add('selected');
+      categoryInput.value = selectedCategories.join(',');
+      categoryStatusEl.textContent = selectedCategories.length + ' categories selected!';
+      categoryStatusEl.style.color = '#4ef272';
+      setTimeout(closeCategoryModal, 250);
+    });
+
+    // Openers/closers
+    btnCategory.addEventListener('click', () => {
+      renderCategoryList(CATEGORIES);
+      categoryModal.style.display = 'block';
+      categoryModal.classList.add('show');
+      categoryModal.setAttribute('aria-hidden', 'false');
+      setTimeout(() => categorySearchEl.focus(), 40);
+    });
+    categoryModalClose.addEventListener('click', closeCategoryModal);
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && categoryModal.classList.contains('show')) closeCategoryModal();
+    });
+    categoryModal.addEventListener('click', (e) => {
+      if (e.target === categoryModal) closeCategoryModal();
+    });
+
+    function closeCategoryModal() {
+      categoryModal.classList.remove('show');
+      categoryModal.setAttribute('aria-hidden', 'true');
+      categoryModal.style.display = 'none';
+    }
+  </script>
+
+  <script>
+    // Language data (sample; extend as needed)
+    const LANGUAGES = [
+      { code: 'en', name: 'English', native: 'English' },
+      { code: 'hi', name: 'Hindi', native: 'हिन्दी' },
+      { code: 'es', name: 'Spanish', native: 'Español' },
+      { code: 'fr', name: 'French', native: 'Français' },
+      { code: 'de', name: 'German', native: 'Deutsch' },
+      { code: 'zh', name: 'Chinese (Simplified)', native: '简体中文' },
+      { code: 'zh-TW', name: 'Chinese (Traditional)', native: '繁體中文' },
+      { code: 'ja', name: 'Japanese', native: '日本語' },
+      { code: 'ko', name: 'Korean', native: '한국어' },
+      { code: 'ar', name: 'Arabic', native: 'العربية' },
+      { code: 'pt', name: 'Portuguese', native: 'Português' },
+      { code: 'ru', name: 'Russian', native: 'Русский' },
+      { code: 'it', name: 'Italian', native: 'Italiano' },
+      { code: 'bn', name: 'Bengali', native: 'বাংলা' },
+      { code: 'te', name: 'Telugu', native: 'తెలుగు' },
+      { code: 'ta', name: 'Tamil', native: 'தமிழ்' },
+      { code: 'mr', name: 'Marathi', native: 'मराठी' },
+      { code: 'tr', name: 'Turkish', native: 'Türkçe' },
+      { code: 'vi', name: 'Vietnamese', native: 'Tiếng Việt' },
+      { code: 'ur', name: 'Urdu', native: 'اردو' }
+    ];
+
+    // Elements
+    const modal = document.getElementById('languageModal');
+    const modalClose = document.getElementById('languageModalCloseBtn');
+    const modalTitle = document.getElementById('languageModalTitle');
+    const listEl = document.getElementById('languageList');
+    const searchEl = document.getElementById('languageSearch');
+    const statusEl = document.getElementById('languageStatus');
+    const applyBtn = document.getElementById('languageApply');
+    const btnOriginal = document.getElementById('btn-original');
+    const btnTranslated = document.getElementById('btn-translated');
+
+    // State
+    let activeTarget = null; // 'original' | 'translated'
+    let selected = null;
+
+    function openModal(target) {
+      activeTarget = target;
+      modalTitle.textContent = target === 'original' ? 'Choose Original Language' : 'Choose Translated Language';
+      selected = null;
+      applyBtn.disabled = true;
+      statusEl.textContent = '';
+      searchEl.value = '';
+      renderList(LANGUAGES);
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden', 'false');
+      setTimeout(() => searchEl.focus(), 40);
+    }
+
+    function closeModal() {
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden', 'true');
+      selected = null;
+    }
+
+    function renderList(items) {
+      listEl.innerHTML = '';
+      items.forEach(lang => {
+        const row = document.createElement('div');
+        row.className = 'lang-item';
+        row.setAttribute('role', 'option');
+        row.setAttribute('data-code', lang.code);
+        row.innerHTML = `
+          <div>
+            <div class="lang-name">${lang.name}</div>
+            <div class="lang-sub">${lang.native}${lang.code ? ' · ' + lang.code : ''}</div>
+          </div>
+          <div class="lang-right"><i class="fa-solid fa-check"></i></div>
+        `;
+        row.addEventListener('click', () => {
+          selected = lang;
+          applyBtn.disabled = false;
+          // Mark active
+          [...listEl.querySelectorAll('.lang-item')].forEach(el => el.classList.remove('active'));
+          row.classList.add('active');
+        });
+        listEl.appendChild(row);
+      });
+    }
+
+    // Filter
+    searchEl.addEventListener('input', () => {
+      const q = searchEl.value.trim().toLowerCase();
+      const filtered = LANGUAGES.filter(l =>
+        l.name.toLowerCase().includes(q) ||
+        l.native.toLowerCase().includes(q) ||
+        (l.code && l.code.toLowerCase().includes(q))
+      );
+      renderList(filtered);
+    });
+
+    // Apply -> set the button label and close
+    applyBtn.addEventListener('click', () => {
+      if (!selected || !activeTarget) return;
+      const targetBtn = activeTarget === 'original' ? btnOriginal : btnTranslated;
+      targetBtn.querySelector('span').textContent = selected.name;
+      targetBtn.classList.add('selected');
+      if (activeTarget === 'original') {
+        document.getElementById('originalLanguageInput').value = selected.code;
+      } else {
+        document.getElementById('translatedLanguageInput').value = selected.code;
+      }
+      statusEl.textContent = 'Language selected!';
+      statusEl.style.color = '#4ef272';
+      setTimeout(closeModal, 250);
+    });
+
+    // Close / Escape / backdrop
+    
+    modalClose.addEventListener('click', closeModal);
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('show')) closeModal();
+    });
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    // Openers
+    btnOriginal.addEventListener('click', () => openModal('original'));
+    btnTranslated.addEventListener('click', () => openModal('translated'));
+  </script>
+
+  <script>// Toggle active section based on link click
+    document.querySelectorAll('.nav-link-staff-dash').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        // Remove active from all
+        document.querySelectorAll('.nav-link-staff-dash').forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+        // Hide all sections
+        document.querySelectorAll('.dashboard-section').forEach(sec => sec.style.display = 'none');
+        // Show the selected section
+        const section = this.getAttribute('data-section');
+        document.getElementById('section-' + section).style.display = 'block';
+        // Save to localStorage
+        localStorage.setItem('staffDashSection', section);
+      });
+    });
+
+    // On page load, restore last section
+    document.addEventListener('DOMContentLoaded', function() {
+      const lastSection = localStorage.getItem('staffDashSection') || 'manage-novels';
+      // Remove active from all
+      document.querySelectorAll('.nav-link-staff-dash').forEach(l => l.classList.remove('active'));
+      // Hide all sections
+      document.querySelectorAll('.dashboard-section').forEach(sec => sec.style.display = 'none');
+      // Show last section
+      document.getElementById('section-' + lastSection).style.display = 'block';
+      // Set active link
+      const activeLink = document.querySelector('.nav-link-staff-dash[data-section="' + lastSection + '"]');
+      if (activeLink) activeLink.classList.add('active');
+    });
+  </script>
+
+  <script>// Status and Audience Selection
+    document.querySelectorAll('.status-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById('status-input').value = this.innerText.trim();
+      });
+    });
+
+    document.querySelectorAll('.audience-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.audience-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById('audience-input').value = this.innerText.trim();
+      });
+    });
+    </script>
+
+  <script>// Cover Image Preview and Validation
+    document.getElementById('cover-upload').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const preview = document.getElementById('cover-preview');
+      if (file) {
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        if (!allowedTypes.includes(file.type)) {
+          alert('Only JPG, PNG, or WebP files are allowed.');
+          e.target.value = '';
+          preview.style.display = 'none';
+          preview.src = '';
+          return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+          alert('File size must be less than 5MB.');
+          e.target.value = '';
+          preview.style.display = 'none';
+          preview.src = '';
+          return;
+        }
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          preview.src = evt.target.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      } else {
+        preview.style.display = 'none';
+        preview.src = '';
+      }
+    });
+    </script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuToggle = document.getElementById('menuToggle');
+      const sidebar = document.getElementById('sidebar');
+      const collapseBtn = document.getElementById('collapseBtn');
+      
+      // Desktop behavior
+      function handleDesktop() {
+        // Hide hamburger in desktop view
+        menuToggle.style.display = 'none';
+        
+        // Collapse button functionality for desktop
+        collapseBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          sidebar.classList.toggle('collapsed');
+          
+          // Change icon direction
+          const icon = collapseBtn.querySelector('i');
+          if (sidebar.classList.contains('collapsed')) {
+            icon.classList.remove('fa-chevron-left');
+            icon.classList.add('fa-chevron-right');
+          } else {
+            icon.classList.remove('fa-chevron-right');
+            icon.classList.add('fa-chevron-left');
+          }
+        });
+      }
+      
+      // Mobile behavior
+      function handleMobile() {
+        // Show hamburger in mobile view
+        menuToggle.style.display = 'block';
+        
+        // Hide collapse button in mobile view
+        collapseBtn.style.display = 'none';
+        
+        // Hamburger toggle functionality
+        menuToggle.addEventListener('click', function() {
+          sidebar.classList.add('show');
+        });
+        
+        // Close sidebar when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!sidebar.contains(e.target) && e.target !== menuToggle) {
+            sidebar.classList.remove('show');
+          }
+        });
+      }
+      
+      // Check screen size and set appropriate behavior
+      function checkScreenSize() {
+        if (window.innerWidth > 768) {
+          handleDesktop();
+        } else {
+          handleMobile();
+        }
+      }
+      
+      // Initial check
+      checkScreenSize();
+      
+      // Update on resize
+      window.addEventListener('resize', checkScreenSize);
+    });
+  </script>
+  <script>
+    let darkmode = localStorage.getItem('darkmode')
+    const themeSwitches = document.querySelectorAll('#theme-switch')
+
+    const enableDarkmode = () => {
+      document.body.classList.add('darkmode') 
+      localStorage.setItem('darkmode', 'active')
+    }
+
+    const disableDarkmode = () => {
+      document.body.classList.remove('darkmode')
+      localStorage.setItem('darkmode', null)
+    }
+
+    if (darkmode === "active") enableDarkmode()
+
+    themeSwitches.forEach(btn => {
+      btn.addEventListener("click", () => {
+        darkmode = localStorage.getItem('darkmode')
+        darkmode !== "active" ? enableDarkmode() : disableDarkmode()
+      })
+    })
+  </script>
+
+  <script>
+    (function() {
+      const box = document.getElementById('hashtagBox');
+      const input = document.getElementById('tagsInput');
+      const hidden = document.getElementById('hashtagsInput');
+
+      // Optional: preload suggestions; keep empty if not needed.
+      // Example: const SUGGESTIONS = ['action','romance','fantasy','sci-fi','thriller','drama','comedy','wuxia','xianxia'];
+      const SUGGESTIONS = [];
+
+      let tags = [];
+
+      function normalizeTag(str) {
+        // Trim, collapse spaces, remove leading #, lowercase for uniqueness but keep original casing for display
+        const raw = str.trim().replace(/\s+/g, ' ');
+        const noHash = raw.replace(/^#/, '');
+        return noHash;
+      }
+
+      function isValidTag(str) {
+        // Basic rules: letters, numbers, spaces and dashes/underscores, 1–30 chars after normalization
+        const n = normalizeTag(str);
+        if (!n) return false;
+        if (n.length > 30) return false;
+        // Customize allowed chars here
+        return /^[A-Za-z0-9 _-]+$/.test(n);
+      }
+
+      function existsTag(str) {
+        const key = normalizeTag(str).toLowerCase();
+        return tags.some(t => t.toLowerCase() === key);
+      }
+
+      function updateHidden() {
+        hidden.value = tags.join(',');
+      }
+
+      function createChip(label) {
+        const chip = document.createElement('span');
+        chip.className = 'tag-chip';
+        chip.innerHTML = `<span class="hash">#</span><span class="text"></span><span class="tag-remove" title="Remove">&times;</span>`;
+        chip.querySelector('.text').textContent = label;
+        chip.querySelector('.tag-remove').addEventListener('click', () => {
+          // Remove from state
+          tags = tags.filter(t => t.toLowerCase() !== label.toLowerCase());
+          // Remove from DOM
+          chip.remove();
+          updateHidden();
+        });
+        // Insert before input wrapper so input stays at the end
+        const inputWrap = box.querySelector('.tag-input-wrap');
+        box.insertBefore(chip, inputWrap);
+        return chip;
+      }
+
+      function addTag(str) {
+        if (!isValidTag(str)) {
+          pulseInput();
+          return;
+        }
+        if (existsTag(str)) {
+          pulseDuplicate(str);
+          return;
+        }
+        const normalized = normalizeTag(str);
+        tags.push(normalized);
+        createChip(normalized);
+        updateHidden();
+      }
+
+      function pulseInput() {
+        input.style.transition = 'box-shadow 0.15s';
+        input.style.boxShadow = '0 0 0 2px #ff2f5c66';
+        setTimeout(() => { input.style.boxShadow = 'none'; }, 180);
+      }
+
+      function pulseDuplicate(str) {
+        // Find chip for duplicate and pulse it
+        const chips = box.querySelectorAll('.tag-chip .text');
+        for (const el of chips) {
+          if (el.textContent.toLowerCase() === normalizeTag(str).toLowerCase()) {
+            const chip = el.closest('.tag-chip');
+            chip.classList.add('pulse');
+            setTimeout(() => chip.classList.remove('pulse'), 250);
+            break;
+          }
+        }
+      }
+
+      function handleSubmitTokenization(value) {
+        // Split on commas, or treat whole string as single tag
+        const parts = value.split(',').map(s => s.trim()).filter(Boolean);
+        if (parts.length === 0) return;
+        parts.forEach(addTag);
+        input.value = '';
+      }
+
+      // Key handling: Enter or comma to add; Backspace on empty to remove last
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ',') {
+          e.preventDefault();
+          const val = input.value.trim();
+          if (val) handleSubmitTokenization(val);
+        } else if (e.key === 'Backspace' && input.value === '') {
+          // remove last tag
+          const last = box.querySelector('.tag-chip:last-of-type');
+          if (last) {
+            const text = last.querySelector('.text').textContent;
+            tags = tags.filter(t => t.toLowerCase() !== text.toLowerCase());
+            last.remove();
+            updateHidden();
+          }
+        }
+      });
+
+      // If user types a comma (in input), also handle via input event
+      input.addEventListener('input', () => {
+        // If contains a comma, split immediately
+        if (input.value.includes(',')) {
+          const val = input.value;
+          handleSubmitTokenization(val);
+        }
+      });
+
+      // Optional: basic suggestions dropdown (appears below input)
+      // Keep this simple; only shows when SUGGESTIONS has items.
+      let suggBox;
+      function ensureSuggBox() {
+        if (suggBox) return suggBox;
+        suggBox = document.createElement('div');
+        suggBox.className = 'tag-suggestion';
+        suggBox.style.display = 'none';
+        box.appendChild(suggBox);
+        return suggBox;
+      }
+
+      function showSuggestions(q) {
+        if (!SUGGESTIONS.length) return hideSuggestions();
+        const list = SUGGESTIONS
+          .filter(s => s.toLowerCase().includes(q.toLowerCase()))
+          .filter(s => !existsTag(s))
+          .slice(0, 8);
+        const sb = ensureSuggBox();
+        sb.innerHTML = '';
+        if (!q || list.length === 0) return hideSuggestions();
+        list.forEach(item => {
+          const row = document.createElement('div');
+          row.className = 'tag-suggestion-item';
+          row.textContent = `# ${item}`;
+          row.addEventListener('click', () => {
+            addTag(item);
+            hideSuggestions();
+            input.value = '';
+            input.focus();
+          });
+          sb.appendChild(row);
+        });
+        sb.style.display = 'block';
+      }
+      function hideSuggestions() {
+        if (suggBox) suggBox.style.display = 'none';
+      }
+
+      input.addEventListener('input', () => {
+        const q = input.value.trim();
+        showSuggestions(q);
+      });
+      input.addEventListener('blur', () => {
+        setTimeout(hideSuggestions, 150);
+      });
+
+      // Public helpers (if you need them later)
+      window.getHashtags = () => [...tags];
+      window.setHashtags = (arr) => {
+        // Clear all
+        box.querySelectorAll('.tag-chip').forEach(el => el.remove());
+        tags = [];
+        (arr || []).forEach(addTag);
+      };
+    })();
+  </script>
+
+</body>
+</html>

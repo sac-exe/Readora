@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- For icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ionicons@7.1.0/dist/ionicons.min.css">
+<style>
+    body {
+      background: #070b1d;
+      color: #fff;
+      font-family: 'Inter', 'Montserrat', Arial, sans-serif;
+      transition: background 0.3s, color 0.3s;
+      width: 100%;
+    }
+    @media (max-width:900px) {
+      body{
+        height: auto;
+        width: 100%;
+      }
+    }
+
+    .appoint-modal {
+      display: none;
+      position: fixed;
+      z-index: 99999;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(10,10,25, 0.68);
+      align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .appoint-modal.show { display: flex; }
+    .appoint-modal-inner {
+      background: #181829;
+      border-radius: 17px;
+      box-shadow: 0 12px 32px #05053d39;
+      padding: 2.2rem 2rem 2.4rem 2rem;
+      width: 95vw; max-width: 390px;
+      display: flex; flex-direction: column; align-items: stretch;
+      position: relative;
+    }
+    .appoint-modal-close {
+      position: absolute; right: 18px; top: 16px;
+      font-size: 1.5rem; color: #ee3366; cursor: pointer;
+      font-weight: bold; transition: color 0.18s;
+    }
+    .appoint-modal-close:hover { color: #ff3377; }
+    .appoint-input {
+      outline: none; border:none;
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      font-size: 1.03rem;
+      background: #232341; color: #fff;
+      margin-bottom: 1.1rem;
+      box-shadow: 0 2px 7px #4a00e013;
+    }
+    .appoint-btn {
+      background: linear-gradient(90deg, #4801fc, #a033ff);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      padding: 0.7rem 0;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 3px 16px #4a00e033;
+      margin-bottom: 1.1rem;
+      transition: background 0.2s;
+    }
+    .appoint-btn:hover { background: linear-gradient(90deg, #a033ff,#fa0000); }
+    .appoint-status {
+      min-height: 21px;
+      font-size: 0.97rem;
+      font-weight: 500;
+      color: #4ef272;
+      margin-top: 0.5rem;
+      text-align: center;
+      word-break: break-all;
+    }
+
+</style>
+</head>
+<body>
+  <div class="dashboard-container-admin">
+    <div class="dashboard-header-admin">
+      <div class="brand-admin">Readora</div>
+      <a href="/logout" class="btn-action-all-users ban-all-users"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+    <div class="dashboard-welcome-admin">Welcome, Admin!</div>
+    <div class="dashboard-sub-admin">Manage your users, staff, and books with ease. Quick stats for today:</div>
+    <div class="stats-row-admin">
+      <!-- Example dynamic stats, replace with backend data -->
+      <div class="stat-card-admin">
+        <div class="stat-title-admin"><i class="fa-solid fa-users"></i>Users</div>
+        <div class="stat-value-admin">{{usersCount}}</div>
+        <div class="stat-note-admin">Total registered users</div>
+      </div>
+      <div class="stat-card-admin">
+        <div class="stat-title-admin"><i class="fa-solid fa-user-group"></i>Staff</div>
+        <div class="stat-value-admin">{{staffCount}}</div>
+        <div class="stat-note-admin">Staff members</div>
+      </div>
+      <div class="stat-card-admin">
+        <div class="stat-title-admin"><i class="fa-solid fa-book-open"></i></ion-icon>Books</div>
+        <div class="stat-value-admin">{{booksCount}}</div>
+        <div class="stat-note-admin">Total books in system</div>
+      </div>
+    </div>
+    <div class="main-actions-admin">
+      <a href="/admin/users"><i class="fa-solid fa-users"></i> &nbsp; All Users</a>
+      <a href="/admin/staffs"><i class="fa-solid fa-user-group"></i> &nbsp; All Staff</a>
+      <a href="/admin/books"><i class="fa-solid fa-book-open"></i> &nbsp; All Books</a>
+      <a href="/admin/coin-transactions"><i class="fa-solid fa-money-check-dollar"></i> &nbsp; Transactions</a>
+      <a href="#appointStaff" id="appointStaffAction"><i class="fa-solid fa-people-arrows"></i> &nbsp; Appoint Staff</a>
+      <a href="/admin/settings"><i class="fa-solid fa-user-slash"></i> &nbsp; Banned U/S</a>
+    </div>
+  </div>
+
+  <!-- Appoint Staff Popup -->
+  <div id="appointStaffModal" class="appoint-modal">
+    <div class="appoint-modal-inner">
+      <span class="appoint-modal-close" id="appointModalCloseBtn">&times;</span>
+      <div style="margin-bottom: 1.5rem;font-size:1.23rem;font-weight:bold;">Appoint User as Staff</div>
+      <input id="appointStaffUsername" class="appoint-input" type="text" placeholder="Enter username..." />
+      <button id="appointStaffBtn" class="appoint-btn">Appoint as Staff</button>
+      <div id="appointStatus" class="appoint-status"></div>
+    </div>
+  </div>
+
+  <script>//appoint staff modal logic
+    document.getElementById('appointStaffAction').onclick = function(e){
+      e.preventDefault();
+      document.getElementById('appointStaffModal').classList.add('show');
+      document.getElementById('appointStaffUsername').focus();
+      document.getElementById('appointStatus').textContent = "";
+    };
+    document.getElementById('appointModalCloseBtn').onclick = function(){
+      document.getElementById('appointStaffModal').classList.remove('show');
+    };
+    window.addEventListener('keydown', function(e){
+      if(e.key==="Escape") document.getElementById('appointStaffModal').classList.remove('show');
+    });
+
+    // On appoint submit
+    document.getElementById('appointStaffBtn').onclick = async function(){
+      const Username = document.getElementById('appointStaffUsername').value.trim();
+      if(!Username){
+        document.getElementById('appointStatus').textContent = "Enter a username!";
+        document.getElementById('appointStatus').style.color = "#ff384e";
+        return;
+      }
+      document.getElementById('appointStatus').textContent = "Processing...";
+      document.getElementById('appointStatus').style.color = "#a4a5bd";
+
+      // Call backend endpoint via fetch
+      try {
+        const res = await fetch('/admin/appoint-staff', {
+          method: "POST",
+          headers: { "Content-Type":"application/json" },
+          body: JSON.stringify({ Username })
+        });
+        const data = await res.json();
+        if(data.success){
+          document.getElementById('appointStatus').textContent = "User appointed as staff!";
+          document.getElementById('appointStatus').style.color = "#4ef272";
+          setTimeout(()=>location.reload(), 1000);
+        } else {
+          document.getElementById('appointStatus').textContent = data.message || "Error!";
+          document.getElementById('appointStatus').style.color = "#ff384e";
+        }
+      } catch (e) {
+        document.getElementById('appointStatus').textContent = "Server error. Try again.";
+        document.getElementById('appointStatus').style.color = "#ff384e";
+      }
+    };
+  </script>
+
+
+
+  <script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://cdn.jsdelivr.net/npm/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+  <script>
+    let darkmode = localStorage.getItem('darkmode')
+    const themeSwitches = document.querySelectorAll('#theme-switch')
+
+    const enableDarkmode = () => {
+      document.body.classList.add('darkmode') 
+      localStorage.setItem('darkmode', 'active')
+    }
+
+    const disableDarkmode = () => {
+      document.body.classList.remove('darkmode')
+      localStorage.setItem('darkmode', null)
+    }
+
+    if (darkmode === "active") enableDarkmode()
+
+    themeSwitches.forEach(btn => {
+      btn.addEventListener("click", () => {
+        darkmode = localStorage.getItem('darkmode')
+        darkmode !== "active" ? enableDarkmode() : disableDarkmode()
+      })
+    })
+  </script>
+  <script>
+    // Theme toggle: persists in localStorage
+    const themeBtn = document.getElementById('themeToggleBtn');
+    const icon = document.getElementById('themeIcon');
+    function setDarkMode(on) {
+      if(on) {
+        document.body.classList.add('darkmode');
+        icon.setAttribute('name', 'sunny-outline');
+        localStorage.setItem('adminTheme','dark');
+      } else {
+        document.body.classList.remove('darkmode');
+        icon.setAttribute('name', 'moon-outline');
+        localStorage.setItem('adminTheme','light');
+      }
+    }
+    const saved = localStorage.getItem('adminTheme');
+    setDarkMode(saved === 'dark');
+    themeBtn.onclick = () => {
+      setDarkMode(!document.body.classList.contains('darkmode'));
+    };
+  </script>
+</body>
+</html>

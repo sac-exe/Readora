@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Readora-Profile: {{user.Username}}</title>
+  
+</head>
+
+<body>
+    <div class="bg-staff-profile ">
+        <div class="container-home">
+            <nav class="navbar">
+                <!-- Left Section - Home Icon -->
+                <div class="nav-home">
+                <a href="/" class="icon-navbar">
+                    <i class="fas fa-home"></i>
+                </a>
+                </div>
+                
+                <!-- Right Section - Buttons (visible on laptop) -->
+                <div class="nav-buttons">
+                <div class="navbar-coins">
+                    <i class="fa-duotone fa-solid fa-coins" style="color:#ffca0a;"></i>
+                    <span id="navbarCoinCount">{{coinCount}}</span>
+                </div>
+                <button class="icon-navbar"  id="theme-switch">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/></svg>
+                </button>
+                <button class="icon-navbar" onclick="window.open('/user-shop')"><i class="fa-solid fa-cart-shopping"></i></button>
+                <button class="icon-navbar"><i class="fab fa-discord"></i></button>
+                <button class="icon-navbar" onclick="window.location.href='/user/bookmarks'">
+                    <i class="fa-solid fa-book-bookmark"></i>
+                </button>
+                <button class="icon-navbar" onclick="window.location.href='/staffs/list'"><i class="fa-solid fa-users"></i></button>
+                <div class="profile-button">
+                    {{#if user}}
+                    <div class="user-dropdown">
+                    <div class="user-avatar" style="position:relative;display:inline-block;width:48px;height:48px;" onclick="toggleUserCarddesktop()">
+                        {{#if profileFrame}}
+                            <img class="avatar-frame" src="/frames/{{profileFrame}}.png" alt="Frame">
+                        {{/if}}
+                        {{#if profileImageUrl}}
+                            <img class="avatar-img" src="{{profileImageUrl}}" alt="Profile">
+                        {{else}}
+                            <div class="avatar-initial">{{user.Username.[0]}}</div>
+                        {{/if}}
+                    </div>
+                    <div id="userCarddesktop" class="user-card">
+                        <div class="user-card-header">
+                            <div class="user-avatar-large">
+                                {{#if profileImageUrl}}
+                                    <img src="{{profileImageUrl}}?{{now}}" alt="Profile" style="width:65px;height:65px;border-radius:50%;object-fit:cover;">
+                                {{else}}
+                                    {{user.Username.[0]}}
+                                {{/if}}
+                            </div>
+                        <div>
+                            <div class="user-name">{{user.Username}}</div>
+                        </div>
+                    </div>
+                    <div class="user-card-actions">
+                        <a href="/user/profile" class="user-card-link"><i class="fa-solid fa-user"></i> Profile</a>
+                        <a href="/user/logout" class="user-card-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                    </div>
+                </div>
+                    </div>
+                    {{else}}
+                    <button class="btn-navnar d-flex align-items-center gap-1" onclick="window.open('/user/login')">
+                    <i class="fas fa-user"></i> Sign in/up
+                    </button>
+                    {{/if}}
+                </div>
+                </div>
+                
+                <!-- Mobile Right Section (hidden on laptop) -->
+                <div class="mobile-right">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="profile-button">
+                    {{#if user}}
+                    <div class="user-dropdown">
+                    <div class="user-avatar" style="position:relative;display:inline-block;width:48px;height:48px;" onclick="toggleUserCardmobile()">
+                        {{#if profileFrame}}
+                            <img class="avatar-frame" src="/frames/{{profileFrame}}.png" alt="Frame">
+                        {{/if}}
+                        {{#if profileImageUrl}}
+                            <img class="avatar-img" src="{{profileImageUrl}}" alt="Profile">
+                        {{else}}
+                            <div class="avatar-initial">{{user.Username.[0]}}</div>
+                        {{/if}}
+                    </div>
+                    <div id="userCardmobile" class="user-card">
+                        <div class="user-card-header">
+                        <div class="user-avatar-large">
+                            {{#if profileImageUrl}}
+                                <img src="{{profileImageUrl}}?{{now}}" alt="Profile" style="width:65px;height:65px;border-radius:50%;object-fit:cover;">
+                            {{else}}
+                                {{user.Username.[0]}}
+                            {{/if}}
+                        </div>
+                        <div>
+                            <div class="user-name">{{user.Username}}</div>
+                        </div>
+                        </div>
+                        <div class="user-card-actions">
+                        <a href="/user/profile" class="user-card-link"><i class="fa-solid fa-user"></i> Profile</a>
+                        <a href="/user/logout" class="user-card-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                        </div>
+                    </div>
+                    </div>
+                    {{else}}
+                    <button class="btn-navnar d-flex align-items-center gap-1" onclick="window.open('/user/login')">
+                    <i class="fas fa-user"></i> Sign in/up
+                    </button>
+                    {{/if}}
+                </div>
+                </div>
+                <!-- Mobile Dropdown Menu Content -->
+                <div class="mobile-menu" id="mobileMenu">
+                <div class="mobile-menu-row">
+                    <div class="navbar-coins">
+                    <i class="fa-duotone fa-solid fa-coins" style="color:#ffca0a;"></i>
+                    <span id="navbarCoinCount">{{coinCount}}</span>
+                </div>
+                    <button class="icon-navbar" id="theme-switch">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                        <path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z"/>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                        <path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/>
+                    </svg>
+                    </button>
+                    <button class="icon-navbar" onclick="window.open('/user-shop')"><i class="fa-solid fa-cart-shopping"></i></button>
+                    <button class="icon-navbar"><i class="fab fa-discord"></i></button>
+                    <button class="icon-navbar" onclick="window.location.href='/user/bookmarks'"><i class="fa-solid fa-book-bookmark"></i></button>
+                    <button class="icon-navbar" onclick="window.location.href='/staffs/list'"><i class="fa-solid fa-users"></i></button>
+                </div>
+                </div>
+            </nav>
+
+            <div class="custom-dashboard-bg">
+                <div class="custom-dashboard-container">
+                    <div class="custom-row">
+                        <div class="custom-plan-card-row">
+                            <div>
+                                <h1 >hello <span class="custom-plan-card-name">{{user.Username}}</span></h1>
+                                <button class="custom-upgrade-btn " onclick="window.open('/user-shop')">Upgrade</button>
+                            </div>
+                            <div class="custom-plan-card">
+                                <div class="custom-plan-header">Your plan</div>
+                                <div class="custom-plan-title">{{plan.name}}</div>
+                            </div>
+                        </div>
+                        <div class="custom-rewards-card">
+                            <div class="custom-rewards-header">Rewards</div>
+                            <div class="custom-reward-item">
+                                <i class="fa-solid fa-gift custom-reward-icon"></i>
+                                <span>Daily Rewards</span>
+                                <i class="fa-solid fa-chevron-right custom-arrow"></i>
+                            </div>
+                            {{!-- <div class="custom-reward-item">
+                                <i class="icon-navbar fa-solid fa-rectangle-ad"></i>
+                                <span>Watch Add</span>
+                                <i class="fa-solid fa-chevron-right custom-arrow"></i>
+                            </div> --}}
+                        </div>
+                    </div>
+                    <div class="custom-account-card">
+                        <div class="custom-account-header">Account</div>
+                        <div class="custom-account-list">
+                            <div class="custom-account-item"> 
+                                <div><i class="fa-solid fa-pen"></i> Edit profile</div>
+                            </div>
+                            <div class="custom-account-item">
+                                <div onclick="window.open('/user/forgot')"><i class="fa-solid fa-lock"></i> Change Password</div>
+                            </div>
+                        </div>
+                    
+                    </div>
+                    <div class="custom-logout-card">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <a href="/user/logout">Log out</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class=" bottom-card">
+                <div class="sec-1-bottom-card">
+                    <div class="logo-bottom"></div>
+                    <div>
+                    <h4>Explore books, embrace stories</h4>
+                    <p>
+                        REDORA is a user-friendly book translation platform designed to make global reading accessible.
+                    </p>
+                    </div>
+                    {{!-- <div class="d-flex flex-row  sub-card-sec-1-bottom " >
+                        <a href="https://www.instagram.com/"> <ion-icon name="logo-instagram"></ion-icon> </a>
+                        <a href="https://www.facebook.com/"> <ion-icon name="logo-facebook"></ion-icon> </a>
+                        <a href="https://x.com/"> <ion-icon name="logo-twitter"></ion-icon> </a>
+                    </div> --}}
+                </div>
+                <div class="d-flex flex-column sec-2-bottom-card">
+                    <h5>Quick Links</h5>
+                    <a href="/">Home</a>
+                    <a href="about.html">About</a>
+                </div>
+                <div class="d-flex flex-column sec-3-bottom-card">
+                    <h5>Policies</h5>
+                    <a href="/terms/privacy policy.pdf" target="_blank">Privacy Policy</a>
+                    <a href="/terms/terms and service.pdf" target="_blank">Terms of Service</a>
+                    <a href="/terms/Translation Policy READORA.pdf" target="_blank">Translation Policy</a>
+                </div>
+                <div class="d-flex flex-column sec-2-bottom-card">
+                    <h5>Help</h5>
+                    <a href="mailto:readoraofficial@gmail.com">Support</a>
+                </div>
+            
+            </div>
+            <!-- Footer -->
+            <div class="footer-bottom ">
+                <small>
+                    © 2025 READORA LLC, an Expedia Group company. All rights reserved.
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeEditProfileModal()">&times;</button>
+            <h2>Update Profile</h2>
+            <form id="editProfileForm" enctype="multipart/form-data">
+                <div class="modal-avatar-section" style="position:relative; display:inline-block;">
+                    <img id="profileImagePreview" src="{{profileImageUrl}}" class="modal-avatar-img" style="cursor:pointer;">
+                    <button type="button" id="deleteProfileImageBtn" class="delete-image-btn" title="Remove photo">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                    <button type="button" id="changePhotoBtn" class="change-photo-btn">
+                        <i class="fa-solid fa-camera"></i> Change Photo
+                    </button>
+                    <input type="file" id="profileImageInput" name="profileImage" accept="image/*" style="display:none;">
+                </div>
+                <div class="modal-field">
+                    <label for="UserName">Display Name</label>
+                    <input type="text" id="UserName" name="Username" maxlength="20" value="{{user.Username}}" required>
+                    <span id="charCount">0/20</span>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="modal-cancel" onclick="closeEditProfileModal()">Cancel</button>
+                    <button type="submit" class="modal-save">Update Profile</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--Daily reward popup modal-->
+    <div class="dr-overlay" id="drOverlay" aria-hidden="true">
+        <div class="dr-modal" role="dialog" aria-labelledby="drTitle" aria-modal="true">
+            <button class="dr-close" id="drClose" aria-label="Close" onclick="closeDailyreward()"><i class="fa-regular fa-circle-xmark"></i></button>
+            <div class="dr-hero">
+                <div class="dr-coin-glow"></div>
+                <div class="dr-coin">
+                    <i class="fa-solid fa-coins"></i>
+                </div>
+            </div>
+            <h2 class="dr-title" id="drTitle">Daily Reward</h2>
+            <p class="dr-sub">Claim 1 coin every day</p>
+
+            <div class="dr-card">
+                <div class="dr-row">
+                    <span class="dr-label">Today’s reward</span>
+                    <span class="dr-value">+1 coin</span>
+                </div>
+                <div class="dr-row">
+                    <span class="dr-label">Current balance</span>
+                    <span class="dr-balance" id="drBalance">{{coinCount}}</span>
+                </div>
+            </div>
+
+            <button class="dr-claim" id="drClaim">
+            <i class="fa-solid fa-gift"></i> Claim now
+            </button>
+
+            <div class="dr-note" id="drNote">One claim per day (UTC)</div>
+        </div>
+    </div>
+
+    <!--Daily ad popup modal-->
+    {{!-- <div class="rw-overlay" id="rwOverlay" aria-hidden="true">
+        <div class="rw-modal" role="dialog" aria-labelledby="rwTitle" aria-modal="true">
+            <button class="rw-close" id="rwClose" type="button" aria-label="Close"><i class="fa-regular fa-circle-xmark"></i></button>
+
+            <h2 class="rw-title" id="rwTitle">Watch & Earn</h2>
+            <p class="rw-sub">Watch the ad to earn 5 coins. 2 ads per day.</p>
+
+            <div class="rw-card">
+            <div class="rw-row">
+                <span class="rw-label">Completed today</span>
+                <span class="rw-value"><span id="rwDone">0</span> / <span id="rwLimit">2</span></span>
+            </div>
+            <div class="rw-row">
+                <span class="rw-label">Reward per ad</span>
+                <span class="rw-value">5 coins</span>
+            </div>
+            <div class="rw-row">
+                <span class="rw-label">Balance</span>
+                <span class="rw-value" id="rwBalance">{{coinCount}}</span>
+            </div>
+            </div>
+
+            <div class="rw-player">
+            <div class="rw-screen" id="rwScreen">
+                <div class="rw-art">
+                <div class="rw-pulse"></div>
+                <i class="fa-solid fa-rectangle-ad"></i>
+                </div>
+            </div>
+            <div class="rw-timer">
+                <span id="rwTimer">00:20</span>
+            </div>
+            </div>
+
+            <div class="rw-actions">
+            <button class="rw-start" id="rwStart"><i class="fa-solid fa-play"></i> Start ad</button>
+            <button class="rw-collect" id="rwCollect" disabled><i class="fa-solid fa-coins"></i> Collect 5 coins</button>
+            </div>
+
+            <div class="rw-note" id="rwNote">Ads per day reset at 00:00 UTC</div>
+        </div>
+    </div> --}}
+
+
+    <script>
+        function toggleUserCarddesktop() {
+            const card = document.getElementById('userCarddesktop');
+            card.style.display = card.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function toggleUserCardmobile() {
+            const card = document.getElementById('userCardmobile');
+            card.style.display = card.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Close BOTH cards if clicked outside
+        document.addEventListener('click', function(event) {
+            const avatarDesktop = document.querySelector('#userCarddesktop')?.previousElementSibling;
+            const cardDesktop = document.getElementById('userCarddesktop');
+
+            const avatarMobile = document.querySelector('#userCardmobile')?.previousElementSibling;
+            const cardMobile = document.getElementById('userCardmobile');
+
+            const clickedInsideDesktop = cardDesktop?.contains(event.target) || avatarDesktop?.contains(event.target);
+            const clickedInsideMobile = cardMobile?.contains(event.target) || avatarMobile?.contains(event.target);
+
+            if (!clickedInsideDesktop && cardDesktop) cardDesktop.style.display = 'none';
+            if (!clickedInsideMobile && cardMobile) cardMobile.style.display = 'none';
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const originalUsername = "{{user.Username}}".trim();
+
+        // Open modal when Edit Profile is clicked
+        document.querySelectorAll('.custom-account-item > div').forEach(item => {
+            if (item.textContent.includes('Edit profile')) {
+            item.onclick = () => {
+                        document.getElementById('editProfileModal')?.classList.add('active');
+                const input = document.getElementById('UserName');
+                if (input) {
+                input.value = originalUsername;
+                document.getElementById('charCount').textContent = input.value.length + "/20";
+                }
+            };
+            }
+        });
+
+        // Char count live update
+        const nameInput = document.getElementById('UserName');
+        nameInput?.addEventListener('input', function () {
+            const cc = document.getElementById('charCount');
+            if (cc) cc.textContent = this.value.length + "/20";
+        });
+
+        // Elements for image change
+        const imgPreview = document.getElementById('profileImagePreview');
+        const fileInput  = document.getElementById('profileImageInput');
+        const changeBtn  = document.getElementById('changePhotoBtn');
+        const form       = document.getElementById('editProfileForm');
+
+        // Avatar opens picker
+        imgPreview?.addEventListener('click', () => fileInput?.click());
+            if (changeBtn && fileInput) {
+                changeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+                    fileInput.click();
+        });
+            }
+
+        // Image preview on file select
+        fileInput?.addEventListener('change', function (e) {
+            const file = e.target.files?.[0];
+            if (file && imgPreview) {
+            imgPreview.src = URL.createObjectURL(file);
+            }
+        });
+
+        // AJAX submit for profile update
+        form && (form.onsubmit = async function (e) {
+            e.preventDefault();
+            const fd = new FormData(this);
+            const incoming = (fd.get('Username') || '').toString().trim();
+            if (incoming === originalUsername) fd.delete('Username');
+            try {
+            const res = await fetch('/user/profile/edit', { method:'POST', body: fd });
+            const ct = res.headers.get('content-type') || '';
+            if (ct.includes('application/json')) {
+                const data = await res.json();
+                if (res.ok) location.reload(); else alert(data.error || 'Update failed');
+            } else {
+                        await res.text(); alert('Session may have expired. Please log in again.');
+            }
+            } catch(err) {
+                    console.error(err); alert('Something went wrong while updating.');
+            }
+        });
+
+        // Delete profile image
+        const deleteBtn = document.getElementById('deleteProfileImageBtn');
+        if (deleteBtn && imgPreview) {
+            deleteBtn.addEventListener('click', async function () {
+            if (!confirm("Remove your profile photo?")) return;
+            try {
+                const res = await fetch('/user/profile/remove-photo', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include'
+                });
+                const result = await res.json();
+                if (result.success) {
+                            imgPreview.src = ""; // Remove image preview
+                imgPreview.alt = "No profile photo";
+                deleteBtn.style.display = "none";
+                } else {
+                alert("Failed to remove photo.");
+                }
+            } catch (err) {
+                alert("Error removing photo.");
+            }
+            });
+        }
+
+        // Modal close logic
+        window.closeEditProfileModal = function () {
+                document.getElementById('editProfileModal')?.classList.remove('active');
+        };
+
+            // Prevent clicks inside the modal content from closing or interfering
+            const modalOverlay = document.getElementById('editProfileModal');
+            const modalContent = modalOverlay?.querySelector('.modal-content');
+
+            // Click on overlay (outside content) closes modal
+            modalOverlay?.addEventListener('click', (e) => {
+                if (!modalContent?.contains(e.target)) {
+                window.closeEditProfileModal();
+            }
+        });
+
+            // Stop propagation when clicking inside modal
+            modalContent?.addEventListener('click', (e) => e.stopPropagation());
+
+        // Wire Cancel button
+        const cancelBtn = modalOverlay?.querySelector('.modal-cancel');
+        cancelBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.closeEditProfileModal();
+        });
+        });
+    </script>
+
+    <script>
+        function toggleStaffCarddesktop() {
+            const card = document.getElementById('userCarddesktop');
+            card.style.display = card.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function toggleStaffCardmobile() {
+            const card = document.getElementById('userCardmobile');
+            card.style.display = card.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Close BOTH cards if clicked outside
+        document.addEventListener('click', function(event) {
+            const avatarDesktop = document.querySelector('#userCarddesktop')?.previousElementSibling;
+            const cardDesktop = document.getElementById('userCarddesktop');
+
+            const avatarMobile = document.querySelector('#userCardmobile')?.previousElementSibling;
+            const cardMobile = document.getElementById('userCardmobile');
+
+            const clickedInsideDesktop = cardDesktop?.contains(event.target) || avatarDesktop?.contains(event.target);
+            const clickedInsideMobile = cardMobile?.contains(event.target) || avatarMobile?.contains(event.target);
+
+            if (!clickedInsideDesktop && cardDesktop) cardDesktop.style.display = 'none';
+            if (!clickedInsideMobile && cardMobile) cardMobile.style.display = 'none';
+        });
+    </script>
+
+    <script>
+        let darkmode = localStorage.getItem('darkmode')
+        const themeSwitches = document.querySelectorAll('#theme-switch')
+
+    const enableDarkmode = () => {
+            document.body.classList.add('darkmode') 
+            localStorage.setItem('darkmode', 'active')
+        }
+
+    const disableDarkmode = () => {
+            document.body.classList.remove('darkmode')
+            localStorage.setItem('darkmode', null)
+        }
+
+        if (darkmode === "active") enableDarkmode()
+
+    themeSwitches.forEach(btn => {
+      btn.addEventListener("click", () => {
+            darkmode = localStorage.getItem('darkmode')
+            darkmode !== "active" ? enableDarkmode() : disableDarkmode()
+            })
+        })
+  </script>
+
+  <script>
+        // Toggle mobile menu
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        mobileMenuBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent immediate closing
+        mobileMenu.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+        if (!mobileMenu.contains(e.target) && e.target !== mobileMenuBtn) {
+            mobileMenu.classList.remove('active');
+        }
+        });
+        
+        // Prevent mobile menu from closing when clicking inside it
+        mobileMenu.addEventListener('click', (e) => {
+        e.stopPropagation();
+        });
+    </script>
+    <script>
+        (() => {
+            const tile = document.querySelector('.custom-reward-item');
+            const overlay = document.getElementById('drOverlay');
+            const closeBtn = document.getElementById('drClose');
+            const claimBtn = document.getElementById('drClaim');
+            const balanceEl = document.getElementById('drBalance');
+            const noteEl = document.getElementById('drNote');
+
+            if (!tile || !overlay || !closeBtn || !claimBtn || !balanceEl) return;
+
+            function openModal(){
+                overlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+            function closeModal(){
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+
+            tile.addEventListener('click', openModal);
+            
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) closeModal();
+            });
+
+            claimBtn.addEventListener('click', async () => {
+                claimBtn.disabled = true;
+                claimBtn.textContent = 'Claiming...';
+                try {
+                const res = await fetch('/user/rewards/daily', { method: 'POST', credentials: 'include' });
+                const data = await res.json();
+                if (!data.ok && res.status === 401) {
+                    noteEl.textContent = 'Login required to claim.';
+                    return;
+                }
+                if (data.ok) {
+                    balanceEl.textContent = data.coins;
+                    const navbar = document.getElementById('navbarCoinCount');
+                    if (navbar) navbar.textContent = data.coins;
+                    if (data.claimed) {
+                    claimBtn.textContent = 'Claimed';
+                    noteEl.textContent = 'Come back tomorrow!';
+                    } else {
+                    claimBtn.textContent = 'Already claimed';
+                    noteEl.textContent = data.message || 'Already claimed today';
+                    }
+                } else {
+                    claimBtn.textContent = 'Try again';
+                    noteEl.textContent = data.error || 'Something went wrong';
+                    claimBtn.disabled = false;
+                }
+                } catch (e) {
+                claimBtn.textContent = 'Try again';
+                noteEl.textContent = 'Network error';
+                claimBtn.disabled = false;
+                }
+            });
+            closeBtn?.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.closeDailyreward();
+            });
+            window.closeDailyreward = window.closeDailyreward || function () {
+                const overlay = document.getElementById('drOverlay');
+                if (!overlay) return;
+                overlay.classList.remove('show');
+                document.body.style.overflow = '';
+            };
+        })();
+    </script>
+
+    {{!-- <script>
+        (() => {
+        const watchTile = Array.from(document.querySelectorAll('.custom-reward-item'))
+            .find(el => el.textContent.trim().toLowerCase().includes('watch'));
+
+        const overlay = document.getElementById('rwOverlay');
+        const closeBtn = document.getElementById('rwClose');
+        const doneEl = document.getElementById('rwDone');
+        const limitEl = document.getElementById('rwLimit');
+        const balEl = document.getElementById('rwBalance');
+        const screen = document.getElementById('rwScreen');
+        const timerEl = document.getElementById('rwTimer');
+        const startBtn = document.getElementById('rwStart');
+        const collectBtn = document.getElementById('rwCollect');
+        const noteEl = document.getElementById('rwNote');
+
+        if (!watchTile || !overlay || !closeBtn) return;
+
+        let activeToken = null;
+        let counting = false;
+        let countdown = 20; // seconds
+
+        function fmt(sec){
+            const s = Math.max(0, sec|0);
+            const m = Math.floor(s/60).toString().padStart(2,'0');
+            const r = (s%60).toString().padStart(2,'0');
+            return `${m}:${r}`;
+        }
+
+        function resetUI(){
+            activeToken = null;
+            counting = false;
+            countdown = 20;
+            timerEl.textContent = fmt(countdown);
+            startBtn.disabled = false;
+            collectBtn.disabled = true;
+            screen.classList.remove('is-playing','is-done');
+        }
+
+        async function refreshStatus(){
+            try{
+            const res = await fetch('/user/rewards/ads/status', { credentials:'include' });
+            const data = await res.json();
+            if (!data.ok) throw new Error(data.error || 'status');
+            doneEl.textContent = data.completed ?? 0;
+            limitEl.textContent = data.limit ?? 2;
+            if (typeof data.coins === 'number') {
+                balEl.textContent = data.coins;
+                const navbar = document.getElementById('navbarCoinCount');
+                if (navbar) navbar.textContent = data.coins;
+            }
+            // If reached limit, disable start
+            if ((data.completed ?? 0) >= (data.limit ?? 2)) {
+                startBtn.disabled = true;
+                noteEl.textContent = 'Daily ad limit reached';
+            } else {
+                startBtn.disabled = false;
+                noteEl.textContent = 'Ads per day reset at 00:00 UTC';
+            }
+            }catch(e){
+            noteEl.textContent = 'Unable to load ad status';
+            }
+        }
+
+        function openModal(){
+            overlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            resetUI();
+            refreshStatus();
+        }
+        function closeModal(){
+            overlay.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        watchTile.addEventListener('click', openModal);
+        closeBtn.addEventListener('click', (e)=>{ e.preventDefault(); closeModal(); });
+        overlay.addEventListener('click', (e)=>{ if (e.target === overlay) closeModal(); });
+        document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape' && overlay.classList.contains('show')) closeModal(); });
+
+        startBtn.addEventListener('click', async ()=>{
+            try{
+            startBtn.disabled = true;
+            collectBtn.disabled = true;
+            noteEl.textContent = 'Starting ad...';
+            // Request server token
+            const res = await fetch('/user/rewards/ads/start', { method:'POST', credentials:'include' });
+            const data = await res.json();
+            if (!data.ok || data.allowed === false || !data.token) {
+                noteEl.textContent = data.message || data.error || 'Cannot start';
+                startBtn.disabled = true;
+                return;
+            }
+            activeToken = data.token;
+            countdown = Math.max(20, data.minWatchSec || 20);
+            timerEl.textContent = fmt(countdown);
+            screen.classList.add('is-playing');
+            counting = true;
+            noteEl.textContent = 'Ad playing...';
+
+            // Fake ad playback countdown
+            const tick = () => {
+                if (!counting) return;
+                countdown -= 1;
+                timerEl.textContent = fmt(countdown);
+                if (countdown <= 0) {
+                counting = false;
+                screen.classList.remove('is-playing');
+                screen.classList.add('is-done');
+                collectBtn.disabled = false;
+                noteEl.textContent = 'Ad complete. Collect your reward.';
+                return;
+                }
+                setTimeout(tick, 1000);
+            };
+            setTimeout(tick, 1000);
+            }catch(e){
+            noteEl.textContent = 'Failed to start ad';
+            startBtn.disabled = false;
+            }
+        });
+
+        collectBtn.addEventListener('click', async ()=>{
+            if (!activeToken) return;
+            collectBtn.disabled = true;
+            noteEl.textContent = 'Validating...';
+            try{
+            const res = await fetch('/user/rewards/ads/complete', {
+                method:'POST',
+                headers: { 'Content-Type':'application/json' },
+                credentials:'include',
+                body: JSON.stringify({ token: activeToken })
+            });
+            const data = await res.json();
+            if (!data.ok) {
+                noteEl.textContent = data.error || 'Completion error';
+                collectBtn.disabled = false;
+                return;
+            }
+            if (data.paid) {
+                // Update balances and counters
+                if (typeof data.coins === 'number') {
+                balEl.textContent = data.coins;
+                const navbar = document.getElementById('navbarCoinCount');
+                if (navbar) navbar.textContent = data.coins;
+                }
+                if (typeof data.completed === 'number') doneEl.textContent = data.completed;
+                noteEl.textContent = 'Reward granted!';
+                // Prevent repeat collect
+                activeToken = null;
+                setTimeout(()=>{ closeModal(); }, 900);
+            } else {
+                noteEl.textContent = data.message || 'Not eligible';
+                collectBtn.disabled = false;
+            }
+            }catch(e){
+            noteEl.textContent = 'Network error';
+            collectBtn.disabled = false;
+            }
+        });
+        })();
+    </script> --}}
+
+</body>
+</html>

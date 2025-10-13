@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Readora-Novel:{{this.title}}</title>
+  
+</head>
+<body>
+  <div class="bg-user-home ">
+    <div class="container-home">
+      <nav class="navbar">
+        <!-- Left Section - Home Icon -->
+        <div class="nav-home">
+          <a href="/" class="icon-navbar">
+            <i class="fas fa-home"></i>
+          </a>
+        </div>
+        
+        <!-- Middle Section - Search Bar -->
+        <div class="nav-search">
+          <input type="text" class="search-bar-navbar " placeholder="Search for novels..." />
+          <i class="fa-solid fa-filter icon-navbar"></i>
+        </div>
+        
+        <!-- Right Section - Buttons (visible on laptop) -->
+        <div class="nav-buttons">
+          <div class="navbar-coins">
+            <i class="fa-duotone fa-solid fa-coins" style="color:#ffca0a;"></i>
+            <span id="navbarCoinCount">{{coinCount}}</span>
+          </div>
+          <button class="icon-navbar"  id="theme-switch">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/></svg>
+          </button>
+          <button class="icon-navbar" onclick="window.open('/user-shop')"><i class="fa-solid fa-cart-shopping"></i></button>
+          <button class="icon-navbar"><i class="fab fa-discord"></i></button>
+          <button class="icon-navbar" onclick="window.location.href='/user/bookmarks'">
+            <i class="fa-solid fa-book-bookmark"></i>
+          </button>
+          <button class="icon-navbar" onclick="window.location.href='/staffs/list'"><i class="fa-solid fa-users"></i></button>
+          <div class="profile-button">
+            {{#if user}}
+            <div class="user-dropdown">
+              <div class="user-avatar" style="position:relative;display:inline-block;width:48px;height:48px;" onclick="toggleUserCarddesktop()">
+                  {{#if profileFrame}}
+                      <img class="avatar-frame" src="/frames/{{profileFrame}}.png" alt="Frame">
+                  {{/if}}
+                  {{#if profileImageUrl}}
+                      <img class="avatar-img" src="{{profileImageUrl}}" alt="Profile">
+                  {{else}}
+                      <div class="avatar-initial">{{user.Username.[0]}}</div>
+                  {{/if}}
+              </div>
+              <div id="userCarddesktop" class="user-card">
+                  <div class="user-card-header">
+                      <div class="user-avatar-large">
+                          {{#if profileImageUrl}}
+                              <img src="{{profileImageUrl}}?{{now}}" alt="Profile" style="width:65px;height:65px;border-radius:50%;object-fit:cover;">
+                          {{else}}
+                              {{user.Username.[0]}}
+                          {{/if}}
+                      </div>
+                  <div>
+                      <div class="user-name">{{user.Username}}</div>
+                  </div>
+              </div>
+              <div class="user-card-actions">
+                  <a href="/user/profile" class="user-card-link"><i class="fa-solid fa-user"></i> Profile</a>
+                  <a href="/logout" class="user-card-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+              </div>
+          </div>
+            </div>
+            {{else}}
+            <button class="btn-navnar d-flex align-items-center gap-1" onclick="window.open('/user/login')">
+              <i class="fas fa-user"></i> Sign in/up
+            </button>
+            {{/if}}
+          </div>
+        </div>
+        
+        <!-- Mobile Right Section (hidden on laptop) -->
+        <div class="mobile-right">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+          </button>
+          <div class="profile-button">
+            {{#if user}}
+            <div class="user-dropdown">
+              <div class="user-avatar" style="position:relative;display:inline-block;width:48px;height:48px;" onclick="toggleUserCardmobile()">
+                  {{#if profileFrame}}
+                      <img class="avatar-frame" src="/frames/{{profileFrame}}.png" alt="Frame">
+                  {{/if}}
+                  {{#if profileImageUrl}}
+                      <img class="avatar-img" src="{{profileImageUrl}}" alt="Profile">
+                  {{else}}
+                      <div class="avatar-initial">{{user.Username.[0]}}</div>
+                  {{/if}}
+              </div>
+              <div id="userCardmobile" class="user-card">
+                <div class="user-card-header">
+                  <div class="user-avatar-large">
+                      {{#if profileImageUrl}}
+                          <img src="{{profileImageUrl}}?{{now}}" alt="Profile" style="width:65px;height:65px;border-radius:50%;object-fit:cover;">
+                      {{else}}
+                          {{user.Username.[0]}}
+                      {{/if}}
+                  </div>
+                  <div>
+                    <div class="user-name">{{user.Username}}</div>
+                  </div>
+                </div>
+                <div class="user-card-actions">
+                  <a href="/user/profile" class="user-card-link"><i class="fa-solid fa-user"></i> Profile</a>
+                  <a href="/logout" class="user-card-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                </div>
+              </div>
+            </div>
+            {{else}}
+            <button class="btn-navnar d-flex align-items-center gap-1" onclick="window.open('/user/login')">
+              <i class="fas fa-user"></i> Sign in/up
+            </button>
+            {{/if}}
+          </div>
+        </div>
+        <!-- Mobile Dropdown Menu Content -->
+        <div class="mobile-menu" id="mobileMenu">
+          <div class="mobile-menu-row">
+            <div class="navbar-coins">
+            <i class="fa-duotone fa-solid fa-coins" style="color:#ffca0a;"></i>
+            <span id="navbarCoinCount">{{coinCount}}</span>
+          </div>
+            <button class="icon-navbar" id="theme-switch">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                <path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                <path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/>
+              </svg>
+            </button>
+            <button class="icon-navbar" onclick="window.open('/user-shop')"><i class="fa-solid fa-cart-shopping"></i></button>
+            <button class="icon-navbar"><i class="fab fa-discord"></i></button>
+            <button class="icon-navbar" onclick="window.location.href='/user/bookmarks'"><i class="fa-solid fa-book-bookmark"></i></button>
+            <button class="icon-navbar" onclick="window.location.href='/staffs/list'"><i class="fa-solid fa-users"></i></button>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Novel Detail -->
+    <section class="rd-detail">
+        <div class="rd-detail-wrap">
+            <div class="rd-detail-cover">
+            <div class="rd-cover-img" style="--cover:url('{{this.imageUrl}}')" role="img" aria-label="{{this.title}} cover"></div>
+            <button class="rd-btn rd-btn-primary rd-detail-read" onclick="window.location.href='/novel/{{_id}}/read'">
+              <i class="fa-solid fa-book-open"></i> Read Now
+            </button>
+            </div>
+
+            <div class="rd-detail-body">
+            <h1 class="rd-detail-title">{{this.title}}</h1>
+
+            <div class="rd-detail-meta">
+                <span class="rd-badge">Author: {{this.author}}</span>
+                <span class="rd-badge">Category: {{this.categ}}</span>
+                <form method="POST" action="/user/bookmark" style="display:inline;">
+                  <input type="hidden" name="novelId" value="{{_id}}">
+                  <button class="rd-btn rd-btn-ghost" type="submit">
+                    <i class="fa-regular fa-bookmark"></i>
+                  </button>
+                </form>
+            </div>
+
+            <div class="rd-detail-stats">
+                <span class="rd-chip">{{chapters}} Chapters</span>
+                <span class="rd-chip">{{this.status}}</span>
+                <span class="rd-chip">{{this.audience}}</span>
+                
+
+                <div class="rd-chip">Tl: <a href="">{{this.staff}}</a></div>
+                <span class="rd-chip">{{this.orglang}}</span>
+                <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                <span class="rd-chip">{{this.tralang}}</span>
+            </div>
+
+            <div class="rd-detail-desc" id="rdDesc">
+                {{this.description}}
+            </div>
+            <button class="rd-btn rd-btn-ghost rd-desc-toggle" id="rdDescToggle" aria-expanded="false" aria-controls="rdDesc">
+                Show more
+            </button>
+            </div>
+        </div>
+    </section>
+    <section class="rd-comments" id="rd-comments">
+      <div class="rd-comments-wrap">
+
+        {{#if canComment}}
+        <form class="rd-cform" method="POST" action="/novel/{{_id}}/comments">
+          <div class="rd-cform-head">
+            <div class="user-avatar" style="position:relative;display:inline-block;width:48px;height:48px;" onclick="toggleUserCarddesktop()">
+              {{#if this.profileFrame}}
+                  <img class="avatar-frame" src="/frames/{{profileFrame}}.png" alt="Frame">
+              {{/if}}
+              {{#if profileImageUrl}}
+                  <img class="avatar-img" src="{{profileImageUrl}}" alt="Profile">
+              {{else}}
+                  <div class="avatar-initial">{{user.Username.[0]}}</div>
+              {{/if}}
+            </div>
+            <div class="rd-cform-meta">
+              <div class="rd-cform-name">{{user.Username}}</div>
+              <div class="rd-cform-hint">Share thoughts about this novel</div>
+            </div>
+          </div>
+
+          <div class="rd-cform-field">
+            <textarea name="content" id="rdCContent" rows="4" maxlength="2000" placeholder="Write a comment..." required></textarea>
+            <div class="rd-cform-tools">
+              <span class="rd-cform-count" id="rdCCount">0/2000</span>
+              <button type="submit" class="rd-btn rd-btn-primary" id="rdCSubmit" disabled>
+                <i class="fa-solid fa-paper-plane"></i> Post
+              </button>
+            </div>
+          </div>
+        </form>
+        {{else}}
+          <div class="rd-cform-guest">
+            <i class="fa-solid fa-user-lock"></i>
+            <span>Sign in to post a comment.</span>
+            <button class="rd-btn rd-btn-ghost" onclick="window.location.href='/user/login'">Sign in</button>
+          </div>
+        {{/if}}
+
+        <div class="rd-clist">
+          <h3 class="rd-clist-title">Comments</h3>
+
+          {{#if comments.length}}
+            <ul class="rd-clist-items">
+              {{#each comments}}
+                <li class="rd-clist-item">
+                  <div class="user-avatar" style="position:relative;display:inline-block;width:48px;height:48px;" onclick="toggleUserCarddesktop()">
+                    {{#if this.profileFrame}}
+                        <img class="avatar-frame" src="/frames/{{profileFrame}}.png" alt="Frame">
+                    {{/if}}
+                    {{#if profileImageUrl}}
+                        <img class="avatar-img" src="{{profileImageUrl}}" alt="Profile">
+                    {{else}}
+                        <div class="avatar-initial">{{user.Username.[0]}}</div>
+                    {{/if}}
+                  </div>
+                  <div class="rd-citem-body">
+                    <div class="rd-citem-head">
+                      <span class="rd-citem-name">{{this.username}}</span>
+                      <span class="rd-citem-dot">•</span>
+                      <time class="rd-citem-date">{{this.createdDate}}</time>
+
+                      {{#if this.canDelete}}
+                      <div class="rd-citem-menu">
+                        <button class="rd-icon-btn" aria-haspopup="menu" aria-expanded="false">
+                          <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </button>
+                        <div class="rd-menu" role="menu">
+                          <form method="POST" action="/novel/{{../_id}}/comments/{{this._id}}/delete" onsubmit="return confirm('Delete this comment?');">
+                            <button type="submit" class="rd-menu-item rd-danger">
+                              <i class="fa-solid fa-trash"></i> Delete
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                      {{/if}}
+                    </div>
+                    <div class="rd-citem-content">{{this.content}}</div>
+                  </div>
+                </li>
+
+              {{/each}}
+            </ul>
+          {{else}}
+            <div class="rd-clist-empty">
+              <p>No comments yet. Be the first to share your thoughts.</p>
+            </div>
+          {{/if}}
+        </div>
+
+      </div>
+    </section>
+
+    </div>
+    <div class=" bottom-card">
+      <div class="sec-1-bottom-card">
+        <div class="logo-bottom"></div>
+        <div>
+          <h4>Explore books, embrace stories</h4>
+          <p>
+            REDORA is a user-friendly book translation platform designed to make global reading accessible.
+          </p>
+        </div>
+        {{!-- <div class="d-flex flex-row  sub-card-sec-1-bottom " >
+            <a href="https://www.instagram.com/"> <ion-icon name="logo-instagram"></ion-icon> </a>
+            <a href="https://www.facebook.com/"> <ion-icon name="logo-facebook"></ion-icon> </a>
+            <a href="https://x.com/"> <ion-icon name="logo-twitter"></ion-icon> </a>
+        </div> --}}
+      </div>
+      <div class="d-flex flex-column sec-2-bottom-card">
+          <h5>Quick Links</h5>
+          <a href="/">Home</a>
+          <a href="about.html">About</a>
+      </div>
+      <div class="d-flex flex-column sec-2-bottom-card">
+          <h5>Policies</h5>
+          <a href="/terms/privacy policy.pdf" target="_blank">Privacy Policy</a>
+          <a href="/terms/terms and service.pdf" target="_blank">Terms of Service</a>
+          <a href="/terms/Translation Policy READORA.pdf" target="_blank">Translation Policy</a>
+      </div>
+      <div class="d-flex flex-column sec-2-bottom-card">
+          <h5>Help</h5>
+          <a href="mailto:readoraofficial@gmail.com">Support</a>
+      </div>
+      <!-- Footer -->
+    </div>
+    <div class="footer-bottom ">
+      <small>
+        © 2025 READORA LLC, an Expedia Group company. All rights reserved.
+      </small>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+        const desc = document.getElementById('rdDesc');
+        const btn  = document.getElementById('rdDescToggle');
+        if (!desc || !btn) return;
+
+        // If description is short, hide toggle
+        const isClamped = () => {
+        // crude check: compare scrollHeight to clientHeight after initial clamp
+        return desc.scrollHeight > desc.clientHeight + 4;
+        };
+
+        const init = () => {
+        // Give layout a tick to compute line-clamp
+        requestAnimationFrame(() => {
+            if (!isClamped()) {
+            btn.style.display = 'none';
+            }
+        });
+        };
+
+        btn.addEventListener('click', () => {
+        const expanded = desc.classList.toggle('is-expanded');
+        btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        btn.textContent = expanded ? 'Show less' : 'Show more';
+        });
+
+        init();
+    })();
+  </script>
+
+  <script>
+    function toggleUserCarddesktop() {
+      const card = document.getElementById('userCarddesktop');
+      card.style.display = card.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function toggleUserCardmobile() {
+      const card = document.getElementById('userCardmobile');
+      card.style.display = card.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Close BOTH cards if clicked outside
+    document.addEventListener('click', function(event) {
+      const avatarDesktop = document.querySelector('#userCarddesktop')?.previousElementSibling;
+      const cardDesktop = document.getElementById('userCarddesktop');
+
+      const avatarMobile = document.querySelector('#userCardmobile')?.previousElementSibling;
+      const cardMobile = document.getElementById('userCardmobile');
+
+      const clickedInsideDesktop = cardDesktop?.contains(event.target) || avatarDesktop?.contains(event.target);
+      const clickedInsideMobile = cardMobile?.contains(event.target) || avatarMobile?.contains(event.target);
+
+      if (!clickedInsideDesktop && cardDesktop) cardDesktop.style.display = 'none';
+      if (!clickedInsideMobile && cardMobile) cardMobile.style.display = 'none';
+    });
+  </script>
+
+  <script>
+    (() => {
+      const ta = document.getElementById('rdCContent');
+      const cnt = document.getElementById('rdCCount');
+      const btn = document.getElementById('rdCSubmit');
+      if (!ta || !cnt || !btn) return;
+
+      function update() {
+        const len = ta.value.trim().length;
+        cnt.textContent = len + "/2000";
+        btn.disabled = len < 2;
+      }
+      ta.addEventListener('input', update);
+      update();
+    })();
+  </script>
+
+  <script> 
+    (() => { 
+      document.addEventListener('click', (e) => { 
+        const btn = e.target.closest('.rd-icon-btn'); 
+        const anyMenu = document.querySelectorAll('.rd-menu'); 
+        if (!btn) { 
+          anyMenu.forEach(m => m.classList.remove('show')); 
+          return; 
+        } 
+        const wrapper = btn.closest('.rd-citem-menu'); 
+        const menu = wrapper?.querySelector('.rd-menu'); 
+        if (!menu) return; 
+        e.preventDefault(); 
+        e.stopPropagation(); 
+        const isOpen = menu.classList.contains('show'); 
+        anyMenu.forEach(m => m.classList.remove('show')); 
+        if (!isOpen) menu.classList.add('show'); 
+      }); 
+    })(); 
+  </script>
+
+  <script>
+    let darkmode = localStorage.getItem('darkmode')
+    const themeSwitches = document.querySelectorAll('#theme-switch')
+
+    const enableDarkmode = () => {
+      document.body.classList.add('darkmode') 
+      localStorage.setItem('darkmode', 'active')
+    }
+
+    const disableDarkmode = () => {
+      document.body.classList.remove('darkmode')
+      localStorage.setItem('darkmode', null)
+    }
+
+    if (darkmode === "active") enableDarkmode()
+
+    themeSwitches.forEach(btn => {
+      btn.addEventListener("click", () => {
+        darkmode = localStorage.getItem('darkmode')
+        darkmode !== "active" ? enableDarkmode() : disableDarkmode()
+      })
+    })
+  </script>
+
+  <script>
+    // Toggle mobile menu
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    mobileMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent immediate closing
+      mobileMenu.classList.toggle('active');
+    });
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!mobileMenu.contains(e.target) && e.target !== mobileMenuBtn) {
+        mobileMenu.classList.remove('active');
+      }
+    });
+    
+    // Prevent mobile menu from closing when clicking inside it
+    mobileMenu.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+  </script>
+</body>
+</html>

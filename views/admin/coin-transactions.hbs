@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Staffs | Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Ionicons SVG CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ionicons@7.1.0/dist/ionicons.min.css" />
+  <style>
+    body {
+      background-color: #070b1d;
+      color: #fff;
+    }
+    @media (max-width:900px) {
+      body{
+        height: auto;
+        width: 100%;
+      }
+    }
+    .gift-modal {
+      display: none;
+      position: fixed;
+      z-index: 99999;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(10,10,25, 0.75);
+      align-items: center; justify-content: center;
+    }
+    .gift-modal.show { display: flex; }
+    .gift-modal-inner {
+      background: #181829;
+      border-radius: 15px;
+      padding: 2rem 2.2rem;
+      max-width: 350px;
+      width: 95vw;
+      box-shadow: 0 10px 32px #00000091;
+      display: flex;
+      flex-direction: column;
+    }
+    .gift-modal-close {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #f44336;
+      cursor: pointer;
+      user-select: none;
+    }
+    .gift-modal-close:hover {
+      color: #ff5252;
+    }
+    .gift-modal label {
+      color: #ececec;
+      margin-bottom: 6px;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    .gift-modal input[type=number] {
+      padding: 0.7rem 1rem;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      margin-bottom: 0.9rem;
+      background: #232341;
+      color: #fff;
+      box-shadow: inset 0 0 8px #4a00e013;
+    }
+    .gift-modal button {
+      font-weight: 600;
+      background: linear-gradient(90deg, #4801fc, #a033ff);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.7rem 0;
+      cursor: pointer;
+      box-shadow: 0 3px 12px #4a00e033;
+      transition: background 0.2s ease;
+      margin-bottom: 1rem;
+    }
+    .gift-modal button:hover {
+      background: linear-gradient(90deg, #a033ff, #fa0000);
+    }
+    #giftStatus {
+      min-height: 24px;
+      font-weight: 600;
+      color: #4ef272;
+      word-break: break-word;
+      text-align: center;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container-all-users">
+    <button class="back-button" onclick="window.location.href='/admin/home'"><i class="fas fa-arrow-left"></i></button>
+    <div class="page-header-all-users">Transactions</div>
+    <div class="users-grid-all-users">
+      {{#if history.length}}
+        {{#each history}}
+            <div class="card-all-users">
+            <div><strong>Type:</strong> {{type}}</div>
+            <div><strong>Amount:</strong> {{amount}}</div>
+            <div><strong>Status:</strong> {{status}}</div>
+            <div><strong>Date:</strong> {{createdAt}}</div>
+            {{#if paymentMethod}}<div><strong>Payment Method:</strong> {{paymentMethod}}</div>{{/if}}
+            </div>
+            <hr>
+        {{/each}}
+        {{else}}
+        <p>No transaction history found.</p>
+      {{/if}}
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Forgot password page for user account recovery.">
+    <title>forgot-user</title>
+
+</head>
+<body>
+    <div class="background-login container-fluid min-vh-100 d-flex flex-column align-items-center justify-content-center">
+        <div class="login-container">
+            <div class="card-box-login shadow-lg">
+                <form method="post" action="/update-password-user" >
+                    <h2 class="head-card-forgot-user">Forgot password</h2>
+                    <input type="hidden" name="token" value="{{token}}">
+
+                    <div class="inputbox-forgot-user"> 
+                        <ion-icon name="eye-outline" id="eyetogglepassuser"></ion-icon>
+                        <input type="password" name="newPassword" id="passwordtoggleuser" required>
+                        <label for="userEmail">New Password</label>
+                    </div>
+                    <div class="inputbox-forgot-user"> 
+                        <input type="password" id="conpass">
+                        <label for="userEmail">Confirm Password</label>
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                    </div>
+                    <button type="submit" class="button-forgot-user" id="send-button">Submit</button>
+                </form>     
+                
+            </div>
+        </div>
+    </div>
+    <script>
+        let eyetogglepassuser = document.getElementById('eyetogglepassuser');
+        let passwordtoggleuser = document.getElementById('passwordtoggleuser');
+
+        eyetogglepassuser.onclick = function()
+         {
+            if (passwordtoggleuser.type === "password")
+             {   
+                passwordtoggleuser.type = "text";
+                eyetogglepassuser.setAttribute("name", "eye-outline"); // Change to closed eye
+            } 
+            else
+             {
+                passwordtoggleuser.type = "password";
+                eyetogglepassuser.setAttribute("name", "eye-off-outline"); // Change to open eye
+             }
+         };//this is used for to toggle the password on and off
+    </script>
+   
+</body>
+</html>

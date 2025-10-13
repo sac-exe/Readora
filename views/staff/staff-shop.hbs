@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Readora-shop: {{staff.Username}}</title>
+</head>
+<body>
+  <div class="bg-shop">
+    <div class="container-home" style="overflow: visible;">
+      <nav class="navbar">
+        <!-- Left Section - Home Icon -->
+        <div class="nav-home">
+          <a href="/staff" class="icon-navbar">
+            <i class="fas fa-home"></i>
+          </a>
+        </div>
+        
+        <!-- Right Section - Buttons (visible on laptop) -->
+        <div class="nav-buttons">
+          <div class="navbar-coins">
+            <i class="fa-duotone fa-solid fa-coins" style="color:#ffca0a;"></i>
+            <span id="navbarCoinCount">{{coinCount}}</span>
+          </div>
+          <button class="icon-navbar"  id="theme-switch">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/></svg>
+          </button>
+          <button class="icon-navbar" onclick="window.open('/staff-shop')"><i class="fa-solid fa-cart-shopping"></i></button>
+          <button class="icon-navbar"><i class="fab fa-discord"></i></button>
+          <button class="icon-navbar" onclick="window.location.href='/staff/bookmarks'"><i class="fa-solid fa-book-bookmark"></i></button>
+          <button class="icon-navbar" onclick="window.location.href='/staff/list'"><i class="fa-solid fa-users"></i></button>
+          <div class="profile-button">
+            {{#if staff}}
+            <div class="user-dropdown">
+              <div class="user-avatar" style="position:relative;display:inline-block;width:48px;height:48px;" onclick="toggleStaffCarddesktop()">
+                  {{#if profileFrame}}
+                      <img class="avatar-frame" src="/frames/{{profileFrame}}.png" alt="Frame">
+                  {{/if}}
+                  {{#if profileImageUrl}}
+                      <img class="avatar-img" src="{{profileImageUrl}}" alt="Profile">
+                  {{else}}
+                      <div class="avatar-initial">{{staff.Username.[0]}}</div>
+                  {{/if}}
+              </div>
+              <div id="userCarddesktop" class="user-card">
+                <div class="user-card-header">
+                  <div class="user-avatar-large">
+                      {{#if profileImageUrl}}
+                          <img src="{{profileImageUrl}}?{{now}}" alt="Profile" style="width:65px;height:65px;border-radius:50%;object-fit:cover;">
+                      {{else}}
+                          {{staff.Username.[0]}}
+                      {{/if}}
+                  </div>
+                  <div>
+                    <div class="user-name">{{staff.Username}}</div>
+                  </div>
+                </div>
+                <div class="user-card-actions">
+                  <a href="/staff/profile" class="user-card-link"><i class="fa-solid fa-user"></i> Profile</a>
+                  <a href="/staff/dash" class="user-card-link"><i class="fa-solid fa-pen-fancy"></i> Author Dashboard</a>
+                  <a href="/staff/logout" class="user-card-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                </div>
+              </div>
+            </div>
+            {{else}}
+            <button class="btn-navnar d-flex align-items-center gap-1" onclick="window.open('/staff/login')">
+              <i class="fas fa-user"></i> Sign in/up
+            </button>
+            {{/if}}
+          </div>
+        </div>
+        
+        <!-- Mobile Right Section (hidden on laptop) -->
+        <div class="mobile-right">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+          </button>
+          <div class="profile-button">
+            {{#if staff}}
+
+            <div class="user-dropdown">
+              <div class="user-avatar" style="position:relative;display:inline-block;width:48px;height:48px;" onclick="toggleStaffCardmobile()">
+                  {{#if profileFrame}}
+                      <img class="avatar-frame" src="/frames/{{profileFrame}}.png" alt="Frame">
+                  {{/if}}
+                  {{#if profileImageUrl}}
+                      <img class="avatar-img" src="{{profileImageUrl}}" alt="Profile">
+                  {{else}}
+                      <div class="avatar-initial">{{staff.Username.[0]}}</div>
+                  {{/if}}
+              </div>
+              <div id="userCardmobile" class="user-card">
+                <div class="user-card-header">
+                  <div class="user-avatar-large">
+                      {{#if profileImageUrl}}
+                          <img src="{{profileImageUrl}}?{{now}}" alt="Profile" style="width:65px;height:65px;border-radius:50%;object-fit:cover;">
+                      {{else}}
+                          {{staff.[0]}}
+                      {{/if}}
+                  </div>
+                  <div>
+                    <div class="user-name">{{staff.Username}}</div>
+                  </div>
+                </div>
+                <div class="user-card-actions">
+                  <a href="/staff/profile" class="user-card-link"><i class="fa-solid fa-user"></i> Profile</a>
+                  <a href="/staff/dash" class="user-card-link"><i class="fa-solid fa-pen-fancy"></i> Author Dashboard</a>
+                  <a href="/logout" class="user-card-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                </div>
+              </div>
+            </div>
+            {{else}}
+            <button class="btn-navnar d-flex align-items-center gap-1" onclick="window.open('/staff/login')">
+              <i class="fas fa-user"></i> Sign in/up
+            </button>
+            {{/if}}
+          </div>
+        </div>
+        <!-- Mobile Dropdown Menu Content -->
+        <div class="mobile-menu" id="mobileMenu">
+          <div class="mobile-menu-row">
+            <button class="icon-navbar" id="theme-switch">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                <path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z"/>
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                <path d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/>
+              </svg>
+            </button>
+            <button class="icon-navbar" onclick="window.open('/staff-shop')"><i class="fa-solid fa-cart-shopping"></i></button>
+            <button class="icon-navbar"><i class="fab fa-discord"></i></button>
+            <button class="icon-navbar" onclick="window.location.href='/staff/bookmarks'"><i class="fa-solid fa-book-bookmark"></i></button>
+            <button class="icon-navbar" onclick="window.location.href='/staff/list'"><i class="fa-solid fa-users"></i></button>
+          </div>
+        </div>
+      </nav>
+
+      <div class=" d-flex flex-colomn justify-content-center gap-5">
+        <div class="shop-container">
+          <!-- Tab Slider -->
+          <div class="tab-slider-shop">
+            <div class="tab-slider-shop-container">
+              <div class="tab-slider-shop-bg"></div>
+              <div class="tab-slider-shop-options">
+                <div class="tab-slider-shop-option active" data-tab="coins">Coins</div>
+                <div class="tab-slider-shop-option" data-tab="membership">Membership</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Cards Container -->
+          <div class="cards-container-shop">
+            <!-- Coins Section -->
+            <div class="cards-section-shop coins active">
+              <!-- Card 1 -->
+              <div class="shop-card">
+                <div class="shop-card-content">
+                  <h3 class="shop-card-title">
+                    <i class="fa-duotone fa-solid fa-coins fa-2xs" style="--fa-primary-color: #ffca0a; --fa-secondary-color: #ffca0a;"></i>
+                    <span>20</span> Coins
+                  </h3>
+                  <div class="shop-card-price" data-price="2.00">$2</div>
+                  <!-- PayPal button renders here -->
+                  <div class="paypal-button-container"></div>
+                </div>
+              </div>
+
+              <!-- Card 2 -->
+              <div class="shop-card">
+                <div class="shop-card-content">
+                  <h3 class="shop-card-title">
+                    <i class="fa-duotone fa-solid fa-coins fa-2xs" style="--fa-primary-color: #ffca0a; --fa-secondary-color: #ffca0a;"></i>
+                    <span>50</span> Coins
+                  </h3>
+                  <div class="shop-card-price" data-price="5.00">$5</div>
+                  <div class="paypal-button-container"></div>
+                </div>
+              </div>
+
+              <!-- Card 3 -->
+              <div class="shop-card">
+                <div class="shop-card-content">
+                  <h3 class="shop-card-title">
+                    <i class="fa-duotone fa-solid fa-coins fa-2xs" style="--fa-primary-color: #ffca0a; --fa-secondary-color: #ffca0a;"></i>
+                    <span>100</span> Coins
+                  </h3>
+                  <div class="shop-card-price" data-price="10.00">$10</div>
+                  <div class="paypal-button-container"></div>
+                </div>
+              </div>
+
+              <!-- Second Row of Coins -->
+              <div class="shop-card">
+                <div class="shop-card-content">
+                  <h3 class="shop-card-title">
+                    <i class="fa-duotone fa-solid fa-coins fa-2xs" style="--fa-primary-color: #ffca0a; --fa-secondary-color: #ffca0a;"></i>
+                    <span>300</span> Coins
+                  </h3>
+                  <div class="shop-card-price" data-price="25.00">$25</div>
+                  <div class="paypal-button-container"></div>
+                </div>
+              </div>
+
+              <div class="shop-card">
+                <div class="shop-card-content">
+                  <h3 class="shop-card-title">
+                    <i class="fa-duotone fa-solid fa-coins fa-2xs" style="--fa-primary-color: #ffca0a; --fa-secondary-color: #ffca0a;"></i>
+                    <span>500</span> Coins
+                  </h3>
+                  <div class="shop-card-price" data-price="50.00">$50</div>
+                  <div class="paypal-button-container"></div>
+                </div>
+              </div>
+
+              <div class="shop-card special-card-shop">
+                <div class="shop-card-content">
+                  <h6>Best Value</h6>
+                  <h3 class="shop-card-title">
+                    <i class="fa-duotone fa-solid fa-coins fa-2xs" style="--fa-primary-color: #ffca0a; --fa-secondary-color: #ffca0a;"></i>
+                    <span>2000</span> Coins
+                  </h3>
+                  <div class="shop-card-price" data-price="160.00">$160</div>
+                  <div class="paypal-button-container"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Membership Section -->
+            <div class="cards-section-shop membership">
+              <!-- Membership Card 1 -->
+              <div class="shop-card">
+                <div class="shop-card-content">
+                  <h3 class="shop-card-title-member">Silver Quill</h3>
+                  <div class="shop-card-price" data-price="5.00">5$/month</div>
+                  <div class="shop-card-details">
+                    <p><i class="fa-solid fa-feather-pointed"></i> Weekly name change option</p>
+                    <p><i class="fa-solid fa-feather-pointed"></i> Exclusive silver frame</p>
+                    <p><i class="fa-solid fa-feather-pointed"></i> 60 Coins</p>
+                  </div>
+                  <div class="paypal-button-container"></div>
+                </div>
+              </div>
+
+              <!-- Membership Card 2 -->
+              <div class="shop-card">
+                <div class="shop-card-content">
+                  <h3 class="shop-card-title-member">Golden Tome</h3>
+                  <div class="shop-card-price" data-price="10.00">10$/month</div>
+                  <div class="shop-card-details">
+                    <p><i class="fa-solid fa-feather-pointed"></i> Weekly name change option</p>
+                    <p><i class="fa-solid fa-feather-pointed"></i> Exclusive Golden badge</p>
+                    <p><i class="fa-solid fa-feather-pointed"></i> 120 Coins</p>
+                  </div>
+                  <div class="paypal-button-container"></div>
+                </div>
+              </div>
+
+              <!-- Membership Card 3 -->
+              <div class="shop-card">
+                <div class="shop-card-content">
+                  <h3 class="shop-card-title-member">Obsedian Edition</h3>
+                  <div class="shop-card-price" data-price="25.00">25$/month</div>
+                  <div class="shop-card-details">
+                    <p><i class="fa-solid fa-feather-pointed"></i> Weekly name change option</p>
+                    <p><i class="fa-solid fa-feather-pointed"></i> Exclusive Obsedian badge</p>
+                    <p><i class="fa-solid fa-feather-pointed"></i> 300 Coins</p>
+                  </div>
+                  <div class="paypal-button-container"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.paypal.com/sdk/js?client-id=AXZC9P8gnV7V5rVZhurg7jlio82ULpgiT3Ag68sdBuuZHcA2O5LbdeNIvht9h641m1RB8hi4BSDcPMW2&currency=USD"></script>
+  <script>
+    document.querySelectorAll('.shop-card').forEach((card, index) => {
+      const priceElement = card.querySelector('.shop-card-price');
+      const price = priceElement.getAttribute('data-price');
+      const container = card.querySelector('.paypal-button-container');
+      const isMembership = !!card.querySelector('.shop-card-title-member');
+
+      paypal.Buttons({
+        createOrder: (data, actions) => {
+          return actions.order.create({
+            purchase_units: [{
+              amount: { value: price }
+            }]
+          });
+        },
+        onApprove: (data, actions) => {
+          return actions.order.capture().then(async details => {
+            alert("Payment successful by " + details.payer.name.given_name);
+
+            if (isMembership) {
+              // Membership purchase
+              let endpoint = '';
+              if (price === '5.00') endpoint = '/membership/silver/grantstaff';
+              else if (price === '10.00') endpoint = '/membership/gold/grantstaff';
+              else if (price === '25.00') endpoint = '/membership/obsidian/grantstaff';
+
+              if (endpoint) {
+                const response = await fetch(endpoint, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ orderID: data.orderID || null }),
+                  credentials: 'include'
+                });
+                const result = await response.json();
+                if (result.ok) {
+                  alert('Membership purchased successfully!');
+                  location.reload();
+                } else {
+                  alert('Error purchasing membership: ' + (result.msg || 'Unknown error'));
+                }
+              }
+            } else {
+              // Coin purchase
+              let coinAmount = 0;
+              if (price === '2.00') coinAmount = 20;
+              else if (price === '5.00') coinAmount = 50;
+              else if (price === '10.00') coinAmount = 100;
+              else if (price === '25.00') coinAmount = 300;
+              else if (price === '50.00') coinAmount = 500;
+              else if (price === '160.00') coinAmount = 2000;
+
+              if (coinAmount > 0) {
+                const response = await fetch('/staff/coins/purchase', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ amount: coinAmount }),
+                  credentials: 'include'
+                });
+                const result = await response.json();
+                if (result.success) {
+                  alert('Coins purchased successfully!');
+                  location.reload();
+                } else {
+                  alert('Error purchasing coins: ' + (result.message || 'Unknown error'));
+                }
+              }
+            }
+          });
+        }
+      }).render(container);
+    });
+    </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const tabOptions = document.querySelectorAll('.tab-slider-shop-option');
+      const tabBg = document.querySelector('.tab-slider-shop-bg');
+      const coinsSection = document.querySelector('.cards-section-shop.coins');
+      const membershipSection = document.querySelector('.cards-section-shop.membership');
+      
+      tabOptions.forEach(option => {
+        option.addEventListener('click', function() {
+          // Update active tab
+          tabOptions.forEach(opt => opt.classList.remove('active'));
+          this.classList.add('active');
+          
+          // Move background
+          if (this.dataset.tab === 'coins') {
+            tabBg.style.transform = 'translateX(0)';
+            coinsSection.classList.add('active');
+            coinsSection.style.transform = 'translateX(0)';
+            membershipSection.classList.remove('active');
+            membershipSection.style.transform = 'translateX(100%)';
+          } else {
+            tabBg.style.transform = 'translateX(100%)';
+            coinsSection.classList.remove('active');
+            coinsSection.style.transform = 'translateX(-100%)';
+            membershipSection.classList.add('active');
+            membershipSection.style.transform = 'translateX(0)';
+          }
+        });
+      });
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  {{#if loginSuccess}}
+  <div id="loginSuccessPopup" class="popup-message show">
+    <i class="fa-solid fa-circle-check" style="color:#28a745; font-size:22px; margin-right:8px;"></i>
+    {{loginSuccess}}
+  </div>
+  <script>
+    setTimeout(() => {
+      const popup = document.getElementById('loginSuccessPopup');
+      if (popup) {
+        popup.classList.remove('show');
+        popup.classList.add('hide');
+      }
+    }, 2000);
+  </script>
+  {{/if}}
+
+  {{#if signinSuccess}}
+  <div id="signinSuccessPopup" class="popup-message show">
+    <i class="fa-solid fa-circle-check" style="color:#28a745; font-size:22px; margin-right:8px;"></i>
+    {{signinSuccess}}
+  </div>
+  <script>
+    setTimeout(() => {
+      const popup = document.getElementById('signinSuccessPopup');
+      if (popup) {
+        popup.classList.remove('show');
+        popup.classList.add('hide');
+      }
+    }, 2000);
+  </script>
+  {{/if}}
+
+  <script>
+    function toggleStaffCarddesktop() {
+      const card = document.getElementById('userCarddesktop');
+      card.style.display = card.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function toggleStaffCardmobile() {
+      const card = document.getElementById('userCardmobile');
+      card.style.display = card.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Close BOTH cards if clicked outside
+    document.addEventListener('click', function(event) {
+      const avatarDesktop = document.querySelector('#userCarddesktop')?.previousElementSibling;
+      const cardDesktop = document.getElementById('userCarddesktop');
+
+      const avatarMobile = document.querySelector('#userCardmobile')?.previousElementSibling;
+      const cardMobile = document.getElementById('userCardmobile');
+
+      const clickedInsideDesktop = cardDesktop?.contains(event.target) || avatarDesktop?.contains(event.target);
+      const clickedInsideMobile = cardMobile?.contains(event.target) || avatarMobile?.contains(event.target);
+
+      if (!clickedInsideDesktop && cardDesktop) cardDesktop.style.display = 'none';
+      if (!clickedInsideMobile && cardMobile) cardMobile.style.display = 'none';
+    });
+  </script>
+
+  <script>
+    let darkmode = localStorage.getItem('darkmode')
+    const themeSwitches = document.querySelectorAll('#theme-switch')
+
+    const enableDarkmode = () => {
+      document.body.classList.add('darkmode') 
+      localStorage.setItem('darkmode', 'active')
+    }
+
+    const disableDarkmode = () => {
+      document.body.classList.remove('darkmode')
+      localStorage.setItem('darkmode', null)
+    }
+
+    if (darkmode === "active") enableDarkmode()
+
+    themeSwitches.forEach(btn => {
+      btn.addEventListener("click", () => {
+        darkmode = localStorage.getItem('darkmode')
+        darkmode !== "active" ? enableDarkmode() : disableDarkmode()
+      })
+    })
+  </script>
+
+  <script>
+    // Toggle mobile menu
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    mobileMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent immediate closing
+      mobileMenu.classList.toggle('active');
+    });
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!mobileMenu.contains(e.target) && e.target !== mobileMenuBtn) {
+        mobileMenu.classList.remove('active');
+      }
+    });
+    
+    // Prevent mobile menu from closing when clicking inside it
+    mobileMenu.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>READORA — 404</title>
+  <style>
+    :root{
+      --card-varient:#111113;
+      --base-color:#070b1d;
+      --base-varient:#101425;
+      --text-color:#f9fafb;
+      --secondary-text:#a4a5bd;
+      --accent-color:#fa0000;
+      --primary-color:#6b4af6;
+      --secondary-color:#a033ff;
+      --hr-color:#6f86c5;
+
+      --shadow-sm:0 1px 2px rgba(0,0,0,.25);
+      --shadow-md:0 4px 12px rgba(0,0,0,.35);
+      --shadow-lg:0 12px 30px rgba(0,0,0,.5);
+
+      --panel:#0e1424;
+      --panel-2:#0b111c;
+      --muted:#6b7280;
+      --accent-2:#61d0a8;
+      --danger:#ff0000;
+      --border:#233244;
+    }
+
+    /* ============= Reset ============= */
+    *,*::before,*::after{ box-sizing:border-box }
+    html,body{ height:auto }
+    body{
+      margin:0;
+      font-family:Inter,system-ui,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;
+      background:
+        radial-gradient(1500px 800px at 70% 10%, rgba(107,74,246,.18),transparent 60%),
+        radial-gradient(900px 600px at 20% 90%, rgba(160,51,255,.14),transparent 60%),
+        var(--base-color);
+      color:var(--text-color);
+      overflow-x:hidden;
+    }
+    button{ font:inherit; cursor:pointer }
+    img{ max-width:100%; display:block }
+
+    /* ============= Scene ============= */
+    .rd-404-scene{
+      position:relative;
+      min-height:100dvh; /* safe viewport height for mobile address bar dynamics */
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:32px;
+      isolation:isolate;
+    }
+
+    /* Film grain + bloom layers */
+    .rd-404-grain{
+      position:fixed; inset:0; pointer-events:none; opacity:.08; mix-blend-mode:screen; z-index:0;
+      background-size:cover;
+      animation:grainShift 6s linear infinite;
+    }
+    @keyframes grainShift{
+      0%{ transform:translate(0,0) }
+      50%{ transform:translate(-10px,5px) }
+      100%{ transform:translate(0,0) }
+    }
+    .rd-404-bloom{
+      position:fixed; inset:-10% -10% auto -10%; height:60%;
+      background:radial-gradient(closest-side, rgba(107,74,246,.25), transparent 70%);
+      filter:blur(60px); z-index:0; pointer-events:none;
+    }
+
+    /* ============= Card ============= */
+    .rd-404-card{
+      position:relative;
+      width:min(1100px,100%);
+      display:grid;
+      grid-template-columns: 1.1fr 1fr; /* desktop unchanged */
+      gap:28px;
+      background:linear-gradient(180deg, rgba(16, 20, 37, 0.902), #0b111ceb);
+      border:1px solid var(--border);
+      border-radius:20px;
+      box-shadow:var(--shadow-lg);
+      backdrop-filter: blur(10px) saturate(120%);
+      z-index:1;
+      overflow:hidden;
+    }
+    @media (max-width: 980px){
+      .rd-404-card{ grid-template-columns:1fr } /* stack on tablet and below */
+    }
+
+    /* Left: message */
+    .rd-404-pane{
+      padding:36px 32px 28px 32px;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      border-right:1px solid rgba(99,120,170,.18);
+    }
+    @media (max-width: 980px){
+      .rd-404-pane{ 
+        border-right:0; 
+        border-bottom:1px solid rgba(99,120,170,.18) 
+      }
+    }
+
+    .rd-404-brand{ 
+      display:flex; 
+      align-items:center; 
+      gap:10px; 
+      margin-bottom:6px 
+    }
+    .rd-404-logo{
+      width:42px; 
+      height:42px; 
+      border-radius:10px;
+      align-items: center;
+      padding: 0.8rem;
+      box-shadow:0 0 0 2px rgba(107,74,246,.25), 0 8px 30px rgba(160,51,255,.18);
+    }
+    .rd-404-name{ 
+      letter-spacing:.12em; 
+      font-weight:800; 
+      font-size:18px; color:#eae9ff; 
+      text-transform:uppercase 
+    }
+
+    .rd-404-title{
+      font-size:48px; line-height:1.05; 
+      letter-spacing:-.02em; 
+      margin:4px 0 6px;
+      text-shadow:0 6px 25px rgba(160,51,255,.25);
+    }
+    .rd-404-sub{ 
+      color:var(--secondary-text); 
+      font-size:16px; 
+      line-height:1.6; 
+      max-width:54ch 
+    }
+
+    /* Slightly scale down large heading on small screens to keep both sections visible */
+    @media (max-width: 720px){
+      .rd-404-title{ font-size: clamp(28px, 7vw, 40px) }
+      .rd-404-sub{ font-size: clamp(14px, 3.8vw, 16px) }
+    }
+
+    .rd-404-status{
+      display:inline-flex; align-items:center; gap:10px; margin:8px 0 4px;
+      padding:10px 14px; border-radius:12px; border:1px solid rgba(250,0,0,.28);
+      background:linear-gradient(180deg, rgba(250,0,0,.07), rgba(107,74,246,.06));
+      color:#ffbdbd;
+    }
+    .rd-404-status .dot{
+      width:10px; height:10px; border-radius:50%;
+      background:radial-gradient(circle at 30% 30%, #ff6b6b, #fa0000);
+      box-shadow:0 0 12px #fa0000;
+    }
+
+    .rd-404-actions{ display:flex; gap:12px; margin-top:12px; flex-wrap:wrap }
+    .rd-404-btn{
+      padding:12px 16px; border-radius:12px; border:1px solid var(--border);
+      background:linear-gradient(180deg, #121a2d, #0c1322);
+      color:var(--text-color); box-shadow:var(--shadow-md);
+      transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+      text-decoration:none; display:inline-flex; align-items:center; gap:10px
+    }
+    .rd-404-btn:hover{ transform:translateY(-1px); box-shadow:0 10px 30px rgba(0,0,0,.55); border-color:#32507a }
+    .rd-404-btn--primary{
+      background:linear-gradient(180deg, rgba(107,74,246,.95), rgba(160,51,255,.9));
+      border-color:rgba(131,98,255,.8)
+    }
+    .rd-404-btn--ghost{ background:linear-gradient(180deg, #0d1423, #0a0f1b) }
+
+    .rd-404-hr{
+      height:1px; background:linear-gradient(90deg, transparent, var(--hr-color), transparent);
+      border:none; margin:10px 0 2px
+    }
+
+    /* Right: word search */
+    .rd-ws-pane{
+      padding:24px 24px 30px 24px; display:flex; flex-direction:column; gap:16px;
+      background:
+        radial-gradient(600px 350px at 70% 0%, rgba(107,74,246,.25), transparent),
+        linear-gradient(180deg, rgba(20,26,48,.55), rgba(11,17,28,.85));
+    }
+    .rd-ws-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px }
+    .rd-ws-title{ font-weight:700; letter-spacing:.04em }
+    .rd-ws-meta{ color:var(--secondary-text); font-size:14px }
+
+    .rd-ws-grid{
+      --size: 12; /* letters per row */
+      --cell: clamp(26px, 3.2vw, 44px);
+      display:grid; grid-template-columns:repeat(var(--size), var(--cell));
+      gap:6px;
+      user-select:none;
+      -webkit-user-select:none;
+      touch-action:none; /* ensure reliable drag on touch */
+      align-self:center;
+      padding:10px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:linear-gradient(180deg, rgba(13,19,34,.8), rgba(9,14,24,.9));
+      box-shadow: inset 0 0 0 1px rgba(130,145,200,.08), var(--shadow-sm);
+      position:relative;
+      overflow:hidden;
+    }
+
+    /* Better sizing for phones and small tablets */
+    @media (max-width: 600px) {
+  .rd-404-scene {
+    padding: 8px;
+  }
+ 
+  .rd-404-pane,
+  .rd-ws-pane {
+    padding: 16px 8px;
+    min-width: 0;
+    
+    box-sizing: border-box;
+  }
+}
+    @media (max-width: 720px){
+      .rd-ws-grid{ --cell: clamp(26px, 7.8vw, 40px) }
+      .rd-404-pane{ padding: 28px 22px }
+      .rd-ws-pane{ padding: 18px }
+    }
+    @media (min-width: 721px) and (max-width: 980px){
+      .rd-ws-grid{ --cell: clamp(28px, 5.6vw, 44px) }
+    }
+
+    .rd-ws-cell{
+      width:var(--cell); height:var(--cell);
+      display:flex; align-items:center; justify-content:center;
+      font-weight:700; letter-spacing:.08em;
+      color:#cfd7ff; background:linear-gradient(180deg, #0c1324, #0a101d);
+      border:1px solid rgba(63,94,155,.25); border-radius:8px;
+      transition:background .12s ease, transform .08s ease, color .12s ease, border-color .12s ease;
+      position:relative;
+    }
+    .rd-ws-cell:hover{ transform:translateY(-1px); border-color:#4b6aa5 }
+    .rd-ws-cell--active{ background:linear-gradient(180deg, rgba(107,74,246,.25), rgba(160,51,255,.22)); color:#ffffff; border-color:#825eff }
+    .rd-ws-cell--found{ background:linear-gradient(180deg, rgba(97,208,168,.3), rgba(97,208,168,.22)); color:#eafff5; border-color:#61d0a8 }
+
+    .rd-ws-words{ display:flex; flex-wrap:wrap; gap:8px; margin-top:8px }
+    .rd-ws-chip{
+      font-size:13px; color:#d7defa; background:#0b1222; border:1px solid #28395a;
+      padding:8px 10px; border-radius:999px; letter-spacing:.04em
+    }
+    .rd-ws-chip--found{ background:rgba(97,208,168,.12); border-color:#61d0a8; color:#c9ffe8 }
+
+    .rd-ws-toolbar{ display:flex; gap:10px; align-items:center; margin-top:4px; flex-wrap:wrap }
+    .rd-ws-tool{
+      padding:10px 12px; border-radius:10px;
+      background:linear-gradient(180deg, #0f172a, #0b1221);
+      border:1px solid #233044; color:#cbd5f7
+    }
+    .rd-ws-tool:hover{ border-color:#3a5177 }
+
+    /* 404 Cinematic digits */
+    .rd-hero-404{
+      position:absolute; right:-10px; bottom:-24px; opacity:.07; font-weight:900;
+      font-size: clamp(120px, 22vw, 260px); line-height:.8;
+      letter-spacing:-.04em; color:#c6caff;
+      filter:blur(2px); pointer-events:none; user-select:none;
+      text-shadow: 0 10px 40px rgba(131,98,255,.25);
+    }
+
+    /* Confetti */
+    .rd-confetti{ position:absolute; inset:0; pointer-events:none }
+
+    /* Focus */
+    .rd-sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0 }
+  </style>
+</head>
+<body>
+  <div class="rd-404-scene">
+    <div class="rd-404-grain"></div>
+    <div class="rd-404-bloom"></div>
+
+    <div class="rd-404-card" role="group" aria-label="READORA 404 panel">
+      <!-- Left: message -->
+      <section class="rd-404-pane">
+        <div class="rd-404-brand" aria-label="READORA">
+          <div class="rd-404-logo" aria-hidden="true"><img src="/images/logo/logo_tab.png" alt="" style="transform:scale(2.3)"></div>
+          <div class="rd-404-name">READORA</div>
+        </div>
+
+        <div class="rd-404-status">
+          <span class="dot" aria-hidden="true"></span>
+          <span>404 — Page lost in the stacks</span>
+        </div>
+
+        <h1 class="rd-404-title">This chapter is missing.</h1>
+        <p class="rd-404-sub">
+          The page searched for has slipped between the pages of our archive. While the librarians hunt it down, solve the word search to unlock a portal back.
+        </p>
+
+        <hr class="rd-404-hr" />
+
+        <div class="rd-404-actions">
+          <button class="rd-404-btn rd-404-btn--ghost" id="rd-go-back" aria-label="Go back">
+            ↩ Go Back
+          </button>
+        </div>
+
+        <canvas class="rd-confetti" id="rd-confetti" aria-hidden="true"></canvas>
+        <div class="rd-hero-404">404</div>
+      </section>
+
+      <!-- Right: Word Search -->
+      <section class="rd-ws-pane">
+        <div class="rd-ws-head">
+          <div>
+            <div class="rd-ws-title">Word Search</div>
+            <div class="rd-ws-meta"><span id="rd-ws-found-count">0</span>/<span id="rd-ws-total">0</span> found</div>
+          </div>
+          <div class="rd-ws-toolbar">
+            <button class="rd-ws-tool" id="rd-ws-shuffle" aria-label="New puzzle">New Puzzle</button>
+            <button class="rd-ws-tool" id="rd-ws-reveal" aria-label="Reveal words">Reveal</button>
+            <button class="rd-ws-tool" id="rd-ws-clear" aria-label="Clear selections">Clear</button>
+          </div>
+        </div>
+
+        <div class="rd-ws-grid" id="rd-ws-grid" aria-label="Word search grid" role="grid"></div>
+
+        <div class="rd-ws-words" id="rd-ws-words" aria-live="polite"></div>
+
+        <span class="rd-sr-only" id="rd-ws-aria"></span>
+      </section>
+    </div>
+  </div>
+
+  <script>
+  ;(() => {
+    // ====== Config
+    const GRID_SIZE = 12;             // 12x12 grid
+    const DIAGONALS = true;           // allow diagonals
+    const WORD_BANK = [
+      "READORA","NOVEL","CHAPTER","LIBRARY","AUTHOR","PLOT","VERSE","PAGES",
+      "STORY","SCENE","EDITION","MYSTERY","FABLE","DRAMA","POETRY","INDEX",
+      "ARC","PROLOGUE","EPILOGUE","SCRIBE","PARCHMENT","QUILL","SCROLL","TOME"
+    ];
+
+    // ====== Elements
+    const gridEl   = document.getElementById('rd-ws-grid');
+    const wordsEl  = document.getElementById('rd-ws-words');
+    const foundEl  = document.getElementById('rd-ws-found-count');
+    const totalEl  = document.getElementById('rd-ws-total');
+    const ariaLive = document.getElementById('rd-ws-aria');
+    const btnNew   = document.getElementById('rd-ws-shuffle');
+    const btnReveal= document.getElementById('rd-ws-reveal');
+    const btnClear = document.getElementById('rd-ws-clear');
+    const goBack   = document.getElementById('rd-go-back');
+
+    // ====== State
+    let grid = [];
+    let words = [];
+    let placements = {};   // word -> array of {r,c}
+    let found = new Set();
+    let drag = {active:false, trail:[], last:null};
+
+    // ====== Utils
+    const rand = (n) => Math.floor(Math.random()*n);
+    const pick = (arr) => arr[rand(arr.length)];
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    function inBounds(r,c){ return r>=0 && c>=0 && r<GRID_SIZE && c<GRID_SIZE; }
+
+    function shuffle(arr){
+      for(let i=arr.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]]=[arr[j],arr[i]];
+      }
+      return arr;
+    }
+
+    function dirs(){
+      const base = [
+        [1,0],[0,1],[-1,0],[0,-1],
+      ];
+      if(DIAGONALS) base.push([1,1],[1,-1],[-1,1],[-1,-1]);
+      return base;
+    }
+
+    // Try place a word on empty/compatible cells
+    function tryPlace(word){
+      const D = dirs();
+      const tries = GRID_SIZE*GRID_SIZE*D.length;
+      for(let t=0;t<tries;t++){
+        const r0 = rand(GRID_SIZE), c0 = rand(GRID_SIZE);
+        const [dr,dc] = pick(D);
+        let r=r0,c=c0, ok=true, path=[];
+        for(let i=0;i<word.length;i++){
+          if(!inBounds(r,c)) { ok=false; break; }
+          const ch = grid[r][c];
+          if(ch!=='' && ch!==word[i]) { ok=false; break; }
+          path.push({r,c});
+          r+=dr; c+=dc;
+        }
+        if(ok){
+          path.forEach((p,i)=> grid[p.r][p.c]=word[i]);
+          placements[word]=path;
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function buildGrid(){
+      grid = Array.from({length:GRID_SIZE},()=>Array.from({length:GRID_SIZE},()=>'' ));
+      placements = {};
+      found.clear();
+
+      // choose 8-10 words including READORA if possible
+      const pool = Array.from(new Set(WORD_BANK.map(w=>w.toUpperCase())));
+      shuffle(pool);
+      const count = 9;
+      // Ensure READORA present
+      const ensured = ["READORA"];
+      const rest = pool.filter(w=>w!=="READORA").slice(0, count-ensured.length);
+      words = shuffle([...ensured, ...rest]);
+
+      words.forEach(w=>{
+        if(!tryPlace(w)){
+          // fallback: ignore if cannot place
+        }
+      });
+
+      // fill empties
+      for(let r=0;r<GRID_SIZE;r++){
+        for(let c=0;c<GRID_SIZE;c++){
+          if(grid[r][c]==='') grid[r][c]=pick(letters);
+        }
+      }
+
+      render();
+      updateMeta();
+    }
+
+    function render(){
+      gridEl.style.setProperty('--size', GRID_SIZE);
+      gridEl.innerHTML='';
+      for(let r=0;r<GRID_SIZE;r++){
+        for(let c=0;c<GRID_SIZE;c++){
+          const cell=document.createElement('div');
+          cell.className='rd-ws-cell';
+          cell.setAttribute('role','gridcell');
+          cell.setAttribute('data-r', r);
+          cell.setAttribute('data-c', c);
+          cell.textContent=grid[r][c];
+          gridEl.appendChild(cell);
+        }
+      }
+      wordsEl.innerHTML='';
+      words.forEach(w=>{
+        const chip=document.createElement('div');
+        chip.className='rd-ws-chip';
+        chip.setAttribute('data-word', w);
+        chip.textContent=w;
+        wordsEl.appendChild(chip);
+      });
+    }
+
+    function updateMeta(){
+      totalEl.textContent=words.length;
+      foundEl.textContent=found.size;
+      // mark chips
+      words.forEach(w=>{
+        const chip = wordsEl.querySelector(`[data-word="${w}"]`);
+        if(!chip) return;
+        chip.classList.toggle('rd-ws-chip--found', found.has(w));
+      });
+      if(found.size===words.length && words.length>0){
+        celebrate();
+        ariaLive.textContent='All words found. Portal unlocked.';
+      }
+    }
+
+    // Selection helpers
+    function cellFromPoint(clientX, clientY){
+      const el = document.elementFromPoint(clientX, clientY);
+      if(!el) return null;
+      const target = el.closest('.rd-ws-cell');
+      if(!target) return null;
+      return {
+        r: +target.getAttribute('data-r'),
+        c: +target.getAttribute('data-c'),
+        el: target
+      };
+    }
+
+    function setActive(el, on){
+      el.classList.toggle('rd-ws-cell--active', on);
+    }
+    function setFound(path, on){
+      path.forEach(({r,c})=>{
+        const el = gridEl.querySelector(`.rd-ws-cell[data-r="${r}"][data-c="${c}"]`);
+        if(el) el.classList.toggle('rd-ws-cell--found', on);
+      });
+    }
+
+    function sameLine(trail){
+      if(trail.length<2) return {ok:true,dr:0,dc:0};
+      const dr = trail[1].r - trail[0].r;
+      const dc = trail[1].c - trail[0].c;
+      for(let i=2;i<trail.length;i++){
+        const r = trail[i].r - trail[i-1].r;
+        const c = trail[i].c - trail[i-1].c;
+        if(Math.sign(r)!==Math.sign(dr) || Math.sign(c)!==Math.sign(dc)) return {ok:false,dr,dc};
+        if(!(r===0||c===0||Math.abs(r)===Math.abs(c))) return {ok:false,dr,dc};
+      }
+      return {ok:true,dr:Math.sign(dr),dc:Math.sign(dc)};
+    }
+
+    function trailToWord(trail){
+      return trail.map(p=>grid[p.r][p.c]).join('');
+    }
+
+    function checkTrail(trail){
+      const w1 = trailToWord(trail);
+      const w2 = w1.split('').reverse().join('');
+      const hit = words.find(w=>w===w1 || w===w2);
+      if(hit){
+        found.add(hit);
+        setFound(placements[hit]||trail, true);
+        // deactivate selection cells
+        trail.forEach(p=>{
+          const el = gridEl.querySelector(`.rd-ws-cell[data-r="${p.r}"][data-c="${p.c}"]`);
+          if(el) el.classList.remove('rd-ws-cell--active');
+        });
+        updateMeta();
+        ariaLive.textContent=`Found ${hit}`;
+        return true;
+      }
+      return false;
+    }
+
+    function clearActive(){
+      gridEl.querySelectorAll('.rd-ws-cell--active').forEach(el=>el.classList.remove('rd-ws-cell--active'));
+    }
+
+    // Unified Pointer handlers with elementFromPoint
+    function start(e){
+      gridEl.setPointerCapture?.(e.pointerId);
+      const p = cellFromPoint(e.clientX, e.clientY);
+      if(!p) return;
+      drag.active=true;
+      drag.trail=[{r:p.r,c:p.c}];
+      drag.last=p;
+      setActive(p.el, true);
+      e.preventDefault?.();
+    }
+    function move(e){
+      if(!drag.active) return;
+      const p = cellFromPoint(e.clientX, e.clientY);
+      if(!p) return;
+      if(drag.last && (p.r!==drag.last.r || p.c!==drag.last.c)){
+        // enforce straight lines
+        const candidate=[...drag.trail, {r:p.r,c:p.c}];
+        const {ok} = sameLine(candidate);
+        if(ok){
+          drag.trail.push({r:p.r,c:p.c});
+          setActive(p.el, true);
+          drag.last=p;
+        }
+      }
+      e.preventDefault?.();
+    }
+    function end(e){
+      if(!drag.active) return;
+      const {ok} = sameLine(drag.trail);
+      if(ok) checkTrail(drag.trail);
+      clearActive();
+      drag={active:false, trail:[], last:null};
+      e.preventDefault?.();
+    }
+
+    // Bind unified pointer listeners
+    gridEl.onpointerdown = start;
+    gridEl.onpointermove = move;
+    window.onpointerup = end;
+
+    // Buttons
+    btnNew.addEventListener('click', ()=> {
+      buildGrid();              // instant feedback
+      window.location.reload(); // and reload page as requested
+    });
+    btnClear.addEventListener('click', ()=> {
+      clearActive();
+      window.location.reload();
+    });
+    btnReveal.addEventListener('click', ()=>{
+      words.forEach(w=>{
+        if(found.has(w)) return;
+        found.add(w);
+        if(placements[w]) setFound(placements[w], true);
+      });
+      updateMeta();
+      celebrate();
+    });
+
+    goBack.addEventListener('click', ()=>{
+      if(document.referrer){ history.back(); }
+      else window.location.href = '/';
+    });
+
+    // Confetti
+    function celebrate(){
+      const canvas = document.getElementById('rd-confetti');
+      const ctx = canvas.getContext('2d');
+      const DPR = Math.min(window.devicePixelRatio||1, 2);
+      function resize(){
+        canvas.width = Math.floor(canvas.clientWidth*DPR);
+        canvas.height= Math.floor(canvas.clientHeight*DPR);
+      }
+      resize();
+      const colors = ['#6b4af6','#a033ff','#61d0a8','#fa0000','#f9fafb'];
+      const pieces = Array.from({length:120},()=>({
+        x: Math.random()*canvas.width,
+        y: -20 - Math.random()*canvas.height*0.5,
+        r: 4 + Math.random()*6,
+        c: colors[rand(colors.length)],
+        v: 1 + Math.random()*2.5,
+        w: (Math.random()*1.5)+0.5,
+        a: Math.random()*Math.PI*2
+      }));
+      let t=0, maxT=160;
+      function tick(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        for(const p of pieces){
+          p.y += p.v*DPR*1.3;
+          p.x += Math.sin((t*0.05)+p.a)*p.w;
+          ctx.fillStyle=p.c;
+          ctx.beginPath();
+          ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+          ctx.fill();
+        }
+        t++;
+        if(t<maxT) requestAnimationFrame(tick);
+      }
+      tick();
+    }
+
+    // Boot
+    buildGrid();
+  })();
+  </script>
+</body>
+</html>

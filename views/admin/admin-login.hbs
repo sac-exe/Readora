@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdminLogin</title>
+
+</head>
+<body>
+    <div class="background-login container-fluid min-vh-100 d-flex flex-column align-items-center justify-content-center">
+        <div class="login-container">
+            <div class="card-box-login shadow-lg">
+                <form action="/admin/login" method="post">
+                
+                    <h2 class="head-card-login-user">Login</h2>
+                    <div class="selection-login-admin d-flex justify-content-between flex-nowrap gap-2">
+                        <a href="/user/login">User</a>
+                        <a href="/staff/login">Author</a>
+                        <a href="/admin/login" class="active">Admin</a>
+                    </div>
+
+                    <div class="inputbox-login-user"> 
+                        <ion-icon name="person-circle-outline" ></ion-icon>
+                                    {{#if Loginerr}}
+                <p class="error" style="color: red; font-weight: 400;">{{Loginerr}}</p>
+                {{/if}}
+                        <input type="text" required id="username" name="Username" >
+                
+                        <label for="username">Username or Email</label>
+                    </div>                                        
+                    <div class="inputbox-login-user "> 
+                        <ion-icon name="eye-outline" id="eyetogglelogin"></ion-icon>
+                        <input type="password" name="Password" required id="passwordtogglelogin"> 
+                        <label for="passwordtogglelogin">Password</label>
+                    </div>
+                    <button class="button-login-user" onclick="window.location.href=''">Log In</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let eyetogglelogin = document.getElementById('eyetogglelogin');
+        let passwordtogglelogin = document.getElementById('passwordtogglelogin');
+
+        eyetogglelogin.onclick = function()
+         {
+            if (passwordtogglelogin.type === "password")
+             {   
+                passwordtogglelogin.type = "text";
+                eyetogglelogin.setAttribute("name", "eye-outline"); // Change to closed eye
+            } 
+            else
+             {
+                passwordtogglelogin.type = "password";
+                eyetogglelogin.setAttribute("name", "eye-off-outline"); // Change to open eye
+             }
+         };//this is used for to toggle the password on and off
+    </script>
+   
+</body>
+
+</html>

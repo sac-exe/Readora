@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{currentChapter.title}} – {{novel.title}} | READORA</title>
+</head>
+<body>
+  <div class="rd-reader">
+    <!-- Top controls -->
+    <nav class="rd-reader-top" role="navigation" aria-label="Chapter navigation">
+      <a href="/novelS/{{novel._id}}" class="rd-top-back" aria-label="Back to novel details">
+        <i class="fa-solid fa-arrow-left"></i>
+      </a>
+      <div class="rd-top-meta">
+        <span class="rd-top-novel">{{novel.title}}</span>
+        <span class="rd-top-sep">•</span>
+        <div class="rd-top-nav">
+          {{#if prevChapter}}
+            {{#if prevChapter.locked}}
+              <button class="rd-top-btn" disabled aria-label="Previous chapter locked">
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+            {{else}}
+              <a href="/novelS/{{novel._id}}/read/{{prevChapter._id}}" class="rd-top-btn" aria-label="Previous chapter">
+                <i class="fa-solid fa-chevron-left"></i>
+              </a>
+            {{/if}}
+          {{else}}
+            <button class="rd-top-btn" disabled aria-label="No previous chapter">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+          {{/if}}
+
+          <span class="rd-top-ch">Ch {{currentChapter.chapterNumber}}</span>
+
+          {{#if nextChapter}}
+            {{#if nextChapter.locked}}
+              <button class="rd-top-btn" disabled aria-label="Next chapter locked">
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+            {{else}}
+              <a href="/novelS/{{novel._id}}/read/{{nextChapter._id}}" class="rd-top-btn" aria-label="Next chapter">
+                <i class="fa-solid fa-chevron-right"></i>
+              </a>
+            {{/if}}
+          {{else}}
+            <button class="rd-top-btn" disabled aria-label="No next chapter">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          {{/if}}
+        </div>
+
+      </div>
+      
+    </nav>
+
+    <!-- Reading canvas -->
+    <article class="rd-canvas" aria-labelledby="rd-ch-title">
+      <header class="rd-ch-head">
+        <h1 id="rd-ch-title" class="rd-ch-title">{{currentChapter.title}}</h1>
+        <div class="rd-ch-num">Chapter {{currentChapter.chapterNumber}}</div>
+      </header>
+
+      {{#if currentChapter.locked}}
+        <section class="rd-locked">
+          <div class="rd-locked-icon"><i class="fa-solid fa-lock"></i></div>
+          <h3 class="rd-locked-title">Chapter locked</h3>
+          {{#if currentChapter.unlockDate}}
+            <p class="rd-locked-msg">This chapter will unlock on <strong>{{currentChapter.unlockDate}}</strong>.</p>
+          {{else}}
+            <p class="rd-locked-msg">This chapter is currently unavailable.</p>
+          {{/if}}
+          <div class="rd-locked-actions">
+            <a class="rd-btn rd-btn-secondary" href="/novelS/{{novel._id}}">Back to details</a>
+            <button class="rd-btn rd-btn-primary rd-unlock-now" data-chapter-id="{{currentChapter._id}}" data-cost="{{currentChapter.unlockCost}}">
+              <i class="fa-solid fa-coins"></i> Unlock for {{currentChapter.unlockCost}}
+            </button>
+          </div>
+        </section>
+      {{else}}
+        <div class="rd-ch-body">
+          {{{currentChapter.content}}}
+        </div>
+      {{/if}}
+
+      <footer class="rd-ch-foot">
+        {{#if nextChapter}}
+          {{#if nextChapter.locked}}
+            <button class="rd-bm-empty-cta discover novels" disabled title="Next chapter locked">
+              <i class="fa-solid fa-arrow-right"></i> Next Chapter
+            </button>
+          {{else}}
+            <button onclick="window.location.href='/novelS/{{novel._id}}/read/{{nextChapter._id}}';" class="rd-bm-empty-cta discover novels">
+              <i class="fa-solid fa-arrow-right"></i> Next Chapter
+            </button>
+          {{/if}}
+        {{else}}
+          <span class="rd-ch-end">End of novel</span>
+        {{/if}}
+      </footer>
+    </article>
+
+
+    <!-- Bottom controls -->
+    <nav class="rd-reader-bot" role="navigation" aria-label="Reader controls">
+      <button class="rd-bot-btn" id="rd-bot-chlist" aria-label="Chapters list">
+        <i class="fa-solid fa-list"></i>
+        <span>Chapters</span>
+      </button>
+      <button class="rd-bot-btn" id="rd-bot-settings" aria-label="Reader settings">
+        <i class="fa-solid fa-sliders"></i>
+        <span>Settings</span>
+      </button>
+      <button class="rd-bot-btn" id="rd-bot-theme" aria-label="Toggle theme">
+        <i class="fa-solid fa-circle-half-stroke"></i>
+        <span>Theme</span>
+      </button>
+    </nav>
+
+    <!-- Chapters list overlay -->
+    <aside class="rd-overlay" id="rd-chlist-overlay" hidden>
+      <div class="rd-overlay-inner">
+        <header class="rd-overlay-head">
+          <h2 class="rd-overlay-title">Chapters</h2>
+          <button class="rd-overlay-close" aria-label="Close chapters list">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </header>
+        <div class="rd-overlay-body">
+          {{#each allChapters}}
+            {{#if this.locked}}
+              <div class="rd-chlist-item rd-chlist-item--locked" aria-disabled="true" title="Unlocks on {{this.scheduleDate}}">
+                <span class="rd-chlist-num">{{this.chapterNumber}}</span>
+                <span class="rd-chlist-title">{{this.title}}</span>
+                <span class="rd-chlist-lock"><i class="fa-solid fa-lock"></i> {{this.scheduleDate}}</span>
+                <div class="rd-chlist-action">
+                  <button class="rd-unlock-btn" data-chapter-id="{{this._id}}" data-cost="10" type="button">
+                    <i class="fa-solid fa-coins"></i> Unlock for 10
+                  </button>
+                </div>
+              </div>
+           {{else}}
+              <a href="/novelS/{{../novel._id}}/read/{{this._id}}"
+                class="rd-chlist-item {{#if this.current}}rd-chlist-item--active{{/if}}"
+                {{#if this.current}}aria-current="page"{{/if}}>
+                <span class="rd-chlist-num">{{this.chapterNumber}}</span>
+                <span class="rd-chlist-title">{{this.title}}</span>
+              </a>
+            {{/if}}
+          {{/each}}
+        </div>
+      </div>
+    </aside>
+
+
+    <!--settings list overlay-->
+    <aside class="rd-overlay" id="rd-settings-overlay" hidden>
+      <div class="rd-overlay-inner">
+        <header class="rd-overlay-head">
+          <h2 class="rd-overlay-title">Reader Settings</h2>
+          <button class="rd-overlay-close" id="rd-settings-close" aria-label="Close settings">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </header>
+        <div class="rd-overlay-body">
+          <!-- Font Family Picker -->
+          <div class="rd-setting-group">
+            <label class="rd-setting-label">Font Family</label>
+            <div class="rd-font-grid">
+              <button class="rd-font-btn" data-font="opensans" aria-pressed="false">
+                <span style="font-family:'Open Sans',sans-serif;">Aa</span>
+                <span>Open Sans</span>
+              </button>
+              <button class="rd-font-btn" data-font="roboto" aria-pressed="false">
+                <span style="font-family:'Roboto',sans-serif;">Aa</span>
+                <span>Roboto</span>
+              </button>
+              <button class="rd-font-btn" data-font="inter" aria-pressed="true">
+                <span style="font-family:'Inter',sans-serif;">Aa</span>
+                <span>Inter</span>
+              </button>
+              <button class="rd-font-btn" data-font="merriweather" aria-pressed="false">
+                <span style="font-family:'Merriweather',serif;">Aa</span>
+                <span>Merriweather</span>
+              </button>
+              <button class="rd-font-btn" data-font="lora" aria-pressed="false">
+                <span style="font-family:'Lora',serif;">Aa</span>
+                <span>Lora</span>
+              </button>
+              <button class="rd-font-btn" data-font="georgia" aria-pressed="false">
+                <span style="font-family:Georgia,serif;">Aa</span>
+                <span>Georgia</span>
+              </button>
+            </div>
+          </div>
+
+
+          <!-- Font Size Slider -->
+          <div class="rd-setting-group">
+            <label class="rd-setting-label" for="rd-font-size">Font Size</label>
+            <div class="rd-slider-wrap">
+              <button class="rd-slider-btn" id="rd-size-dec" aria-label="Decrease font size">
+                <i class="fa-solid fa-minus"></i>
+              </button>
+              <input 
+                type="range" 
+                id="rd-font-size" 
+                class="rd-slider" 
+                min="14" 
+                max="24" 
+                value="16" 
+                step="1"
+                role="slider"
+                aria-valuemin="14"
+                aria-valuemax="24"
+                aria-valuenow="16"
+                aria-valuetext="16 pixels"
+              />
+              <button class="rd-slider-btn" id="rd-size-inc" aria-label="Increase font size">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+            <div class="rd-size-display" id="rd-size-display">16px</div>
+          </div>
+
+          <!-- Reset Button -->
+          <button class="rd-btn rd-btn-secondary rd-reset-btn" id="rd-reset-settings">
+            <i class="fa-solid fa-rotate-left"></i> Reset to Default
+          </button>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <script>//prevent rightclick and shortcuts
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+    document.addEventListener('keydown', function(e) {
+      // Disable Ctrl+C, Ctrl+X, Ctrl+V, Ctrl+U, Ctrl+S, F12
+      if (
+        (e.ctrlKey && ['c','x','v','u','s'].includes(e.key.toLowerCase())) ||
+        e.key === 'F12'
+      ) {
+        e.preventDefault();
+      }
+    });
+  </script>
+
+    <script>
+        const STORAGE_KEY = 'readora.reader.prefs';
+        const canvas = document.querySelector('.rd-canvas');
+        const settingsBtn = document.getElementById('rd-bot-settings');
+        const settingsOverlay = document.getElementById('rd-settings-overlay');
+        const settingsClose = document.getElementById('rd-settings-close');
+        const fontBtns = document.querySelectorAll('.rd-font-btn');
+        const fontSizeSlider = document.getElementById('rd-font-size');
+        const sizeDisplay = document.getElementById('rd-size-display');
+        const sizeInc = document.getElementById('rd-size-inc');
+        const sizeDec = document.getElementById('rd-size-dec');
+        const resetBtn = document.getElementById('rd-reset-settings');
+
+        // Default preferences
+        const defaults = { fontFamily: 'inter', fontSize: 16 };
+
+        // Load preferences from localStorage
+        function loadPrefs() {
+            try {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            return stored ? JSON.parse(stored) : defaults;
+            } catch {
+            return defaults;
+            }
+        }
+
+        // Save preferences to localStorage
+        function savePrefs(prefs) {
+            try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+            } catch {}
+        }
+
+        // Apply preferences to canvas
+        function applyPrefs(prefs) {
+            if (prefs.fontFamily) {
+            let fontStack = 'system-ui, -apple-system, "Segoe UI", sans-serif'; // default
+            
+            if (prefs.fontFamily === 'serif') {
+                fontStack = 'Georgia, Cambria, "Times New Roman", serif';
+            } else if (prefs.fontFamily === 'merriweather') {
+                fontStack = '"Merriweather", Georgia, serif';
+            } else if (prefs.fontFamily === 'lora') {
+                fontStack = '"Lora", Georgia, serif';
+            } else if (prefs.fontFamily === 'opensans') {
+                fontStack = '"Open Sans", system-ui, sans-serif';
+            } else if (prefs.fontFamily === 'roboto') {
+                fontStack = '"Roboto", system-ui, sans-serif';
+            } else if (prefs.fontFamily === 'inter') {
+                fontStack = '"Inter", system-ui, sans-serif';
+            }
+            
+            document.documentElement.style.setProperty('--rd-reader-font', fontStack);
+            }
+            
+            if (prefs.fontSize) {
+            const size = Math.max(14, Math.min(26, prefs.fontSize));
+            document.documentElement.style.setProperty('--rd-reader-size', size + 'px');
+            fontSizeSlider.value = size;
+            fontSizeSlider.setAttribute('aria-valuenow', size);
+            fontSizeSlider.setAttribute('aria-valuetext', size + ' pixels');
+            sizeDisplay.textContent = size + 'px';
+            }
+        }
+
+        // Update font family buttons aria-pressed
+        function updateFontButtons(family) {
+            fontBtns.forEach(btn => {
+            btn.setAttribute('aria-pressed', btn.dataset.font === family ? 'true' : 'false');
+            });
+        }
+
+        // Initialize on load
+        let prefs = loadPrefs();
+        applyPrefs(prefs);
+        updateFontButtons(prefs.fontFamily);
+
+        // Open/close settings overlay
+        settingsBtn.addEventListener('click', () => {
+            settingsOverlay.hidden = false;
+        });
+        settingsClose.addEventListener('click', () => {
+            settingsOverlay.hidden = true;
+        });
+
+        // Font family selection
+        fontBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+            const family = btn.dataset.font;
+            prefs.fontFamily = family;
+            applyPrefs(prefs);
+            updateFontButtons(family);
+            savePrefs(prefs);
+            });
+        });
+
+        // Font size slider
+        fontSizeSlider.addEventListener('input', (e) => {
+            const size = parseInt(e.target.value, 10);
+            prefs.fontSize = size;
+            applyPrefs(prefs);
+            savePrefs(prefs);
+        });
+
+        // Increment/decrement size
+        sizeInc.addEventListener('click', () => {
+            const newSize = Math.min(24, prefs.fontSize + 1);
+            prefs.fontSize = newSize;
+            applyPrefs(prefs);
+            savePrefs(prefs);
+        });
+        sizeDec.addEventListener('click', () => {
+            const newSize = Math.max(14, prefs.fontSize - 1);
+            prefs.fontSize = newSize;
+            applyPrefs(prefs);
+            savePrefs(prefs);
+        });
+
+        // Reset to defaults
+        resetBtn.addEventListener('click', () => {
+            prefs = { ...defaults };
+            applyPrefs(prefs);
+            updateFontButtons(prefs.fontFamily);
+            savePrefs(prefs);
+        });
+
+        // Theme toggle (existing)
+        const themeBtn = document.getElementById('rd-bot-theme');
+        const storedMode = localStorage.getItem('darkmode');
+        if (storedMode === 'active') document.body.classList.add('darkmode');
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('darkmode');
+            localStorage.setItem('darkmode', document.body.classList.contains('darkmode') ? 'active' : null);
+        });
+
+        // Chapters list overlay (existing)
+        const chlistBtn = document.getElementById('rd-bot-chlist');
+        const chlistOverlay = document.getElementById('rd-chlist-overlay');
+        const closeChlist = chlistOverlay.querySelector('.rd-overlay-close');
+        chlistBtn.addEventListener('click', () => {
+            chlistOverlay.hidden = false;
+        });
+        closeChlist.addEventListener('click', () => {
+            chlistOverlay.hidden = true;
+        });
+    </script>
+
+
+    <script>
+        // Theme toggle
+        const themeBtn = document.getElementById('rd-bot-theme');
+        const storedMode = localStorage.getItem('darkmode');
+        if (storedMode === 'active') document.body.classList.add('darkmode');
+
+        themeBtn.addEventListener('click', () => {
+        document.body.classList.toggle('darkmode');
+        localStorage.setItem('darkmode', document.body.classList.contains('darkmode') ? 'active' : null);
+        });
+
+        // Chapters list overlay
+        const chlistBtn = document.getElementById('rd-bot-chlist');
+        const chlistOverlay = document.getElementById('rd-chlist-overlay');
+        const closeOverlay = chlistOverlay.querySelector('.rd-overlay-close');
+
+        chlistBtn.addEventListener('click', () => {
+        chlistOverlay.hidden = false;
+        });
+        closeOverlay.addEventListener('click', () => {
+        chlistOverlay.hidden = true;
+        });
+    </script>
+    <script>
+      document.addEventListener('click', async (e) => {
+        // Handle both unlock buttons
+        const btn = e.target.closest('.rd-unlock-now, .rd-unlock-btn');
+        if (!btn) return;
+        const chapterId = btn.dataset.chapterId;
+        const cost = Number(btn.dataset.cost || 10);
+        btn.disabled = true;
+        const orig = btn.innerHTML;
+        btn.innerHTML = 'Processing...';
+
+        try {
+          const res = await fetch('/staff/chapters/' + chapterId + '/unlock', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cost })
+          });
+          const data = await res.json().catch(()=>({ ok: false, msg: 'Invalid response' }));
+          if (res.ok && data.ok) {
+            window.location.reload();
+          } else if (res.status === 401) {
+            alert('Login required to unlock chapters.');
+            window.location.href = '/staff/login';
+          } else {
+            alert(data.msg || data.error || 'Unlock failed');
+            btn.disabled = false;
+            btn.innerHTML = orig;
+          }
+        } catch (err) {
+          console.error('Unlock error', err);
+          alert('Network or server error');
+          btn.disabled = false;
+          btn.innerHTML = orig;
+        }
+      });
+    </script>
+</body>
+</html>

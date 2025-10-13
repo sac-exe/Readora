@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UserLogin</title>
+
+</head>
+<body >
+    <div class="background-login container-fluid min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="row justify-content-center w-100">
+            <div class="col-11 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+              {{#if signupMessage}}
+                <div id="signupAlert" class="alert alert-success" style="z-index: 1000; ">
+                  {{signupMessage}}
+                </div>
+              {{/if}}
+            <div class="card-box-signup shadow-lg">
+                <div class="card-value">
+                    <form action="/user/signup" method="post">
+                        <h2 class="head-card-login-user">Signup</h2>
+                        <div class="inputbox-signup-user"> 
+                          <ion-icon name="person-circle-outline" type="button"></ion-icon>
+                          {{#if Exist}}
+                            <p class="error" style="color: red; font-weight: 400;">{{Exist}}</p>
+                          {{/if}}
+                          <input type="text" required id="username" name="Username"  >
+                          <label for="username">Username</label>
+                        </div>   
+                        <div class="inputbox-signup-user"> 
+                        
+                          <ion-icon name="mail-outline"></ion-icon>
+                          {{#if Email}}
+                            <p class="error" style="color: rgb(0, 185, 0); font-weight: 500;padding:5px;">{{Email}}</p>
+                          {{/if}}
+                        
+                          <input type="email" name="Email" required >
+                          
+                          <label>Email</label>
+                        </div>
+                        <div class="inputbox-signup-user"> 
+                          <ion-icon name="eye-outline" id="eyetogglesignup"></ion-icon>
+                          <input type="password" name="Password" required id="passwordtogglesignup" placeholder="Enter your password"> 
+                          <p id="passworderror" class="error" style="font-weight: 400; color: red; display: none;"></p>
+                          <label>Password</label>
+                        </div>
+                        <div class="inputbox-signup-user"> 
+                          <ion-icon name="lock-closed-outline"></ion-icon>
+                          <input type="password" name="confirmPassword" required id="confirmPassword"> 
+                          <p id="passwordError" class="error" style="font-weight: 400; color: red; display: none;"></p>
+                          <label>Confirm Password</label>
+                        </div>
+                        <div class="forget-login-user">
+                            <label>
+                              <input id="pripolicyCheckbox" type="checkbox" required> By checking this you accept our <br><a href="">Privacy Policy</a> and <a href="">Terms and conditions</a>
+                            </label>
+                        </div> 
+                        <button class="button-login-user ml-3" onclick="window.location.href=''">Sign up</button>
+                        <div class="register-login-user ml-3">
+                            <p>Already have an account? <a href="/user/login">Log in</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let eyetogglesignup =     document.getElementById('eyetogglesignup');
+        let passwordtogglesignup = document.getElementById('passwordtogglesignup');
+
+        eyetogglesignup.onclick = function()
+         {
+            if (passwordtogglesignup.type === "password")
+             {   
+                passwordtogglesignup.type = "text";
+                eyetogglesignup.setAttribute("name", "eye-outline"); // Change to closed eye
+            } 
+            else
+             {
+                passwordtogglesignup.type = "password";
+                eyetogglesignup.setAttribute("name", "eye-off-outline"); // Change to open eye
+             }
+         };//this is used for to toggle the password on and off
+    </script>
+  
+    <script>
+        document.getElementById('signupButton').addEventListener('click', function (event) {
+          const password = document.getElementById('passwordtogglesignup').value;
+          const confirmPassword = document.getElementById('confirmPassword').value;
+          const errorElement = document.getElementById('passwordError');
+          // Check if the password is at least 8 characters long
+          // Check if the passwords match
+          if (password !== confirmPassword && confirmPassword.length > 0) {
+              errorElement.textContent = 'Passwords do not match.';
+              errorElement.style.display = 'block';
+              event.preventDefault(); // Prevent form submission
+              return;
+          }
+          else if (!(password.length >= 8 && /[0-9]/.test(password) && /[!@#$%^&*(),.?":{}|<>]/.test(password) && password.length > 0)) {
+            errorElement.textContent = 'Password must be at least 8 characters long,'/n'contain at least one number and one special symbol.';
+            errorElement.style.display = 'block';
+            event.preventDefault(); // Prevent form submission
+            return;
+          }
+          // If validation passes, show the alert modal
+          errorElement.style.display = 'none';
+        });
+
+    </script>
+    <script>
+      // Select all input fields
+      const inputs = document.querySelectorAll('.inputbox-signup-user input');
+      // Add event listeners to each input field
+      inputs.forEach((input) => {
+        input.addEventListener('input', () => {
+          if (input.value.trim() !== '') {
+            input.classList.add('has-value');
+          } else {
+            input.classList.remove('has-value');
+          }
+        });
+      });
+    </script>
+    <script>
+      // After 5 seconds, fade out and remove the alert
+      setTimeout(function() {
+        var alert = document.getElementById('signupAlert');
+        if(alert) {
+          alert.style.transition = "opacity 0.5s";
+          alert.style.opacity = 0;
+          setTimeout(function() { alert.remove(); }, 500); // Remove from DOM after fade out
+        }
+      }, 5000);
+    </script>
+
+</body>
+</html>
+

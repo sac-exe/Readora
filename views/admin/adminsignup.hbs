@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adminsignup</title>
+
+</head>
+<body>
+    <div class="background-login container-fluid min-vh-100 d-flex flex-column align-items-center justify-content-center">
+        <div class="login-container">
+            <div class="card-box-login shadow-lg">
+                <form action="/admin/signup" method="post">
+                    <div class="inputbox-login-user">
+                        <input type="text" required id="Username" name="Username">
+                        <label for="Username">Username</label>
+                    </div>
+                    <div class="inputbox-login-user">
+                        <input type="password" required id="passwordtogglelogin" name="Password">
+                        <label for="passwordtogglelogin">Password</label>
+                    </div>
+                    <button type="submit" class="button-login-user">Signup</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let eyetogglelogin = document.getElementById('eyetogglelogin');
+        let passwordtogglelogin = document.getElementById('passwordtogglelogin');
+
+        eyetogglelogin.onclick = function()
+         {
+            if (passwordtogglelogin.type === "password")
+             {   
+                passwordtogglelogin.type = "text";
+                eyetogglelogin.setAttribute("name", "eye-outline"); // Change to closed eye
+            } 
+            else
+             {
+                passwordtogglelogin.type = "password";
+                eyetogglelogin.setAttribute("name", "eye-off-outline"); // Change to open eye
+             }
+         };//this is used for to toggle the password on and off
+    </script>
+   
+</body>
+<style>
+    .selection-login-user a,
+.selection-login-admin a,
+.selection-login-staff a {
+  position: relative;
+  color: #a0d8ffcc;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 8px 15px;
+  border-radius: 10px;
+  transition: color 0.3s ease;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+}
+
+.selection-login-user a::after,
+.selection-login-admin a::after,
+.selection-login-staff a::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  transform: translateX(-50%);
+  width: 0%;
+  height: 3px;
+  background: #00e1ff;
+  border-radius: 5px;
+  transition: width 0.4s ease;
+  z-index: 10;
+}
+
+.selection-login-user a:hover::after,
+.selection-login-admin a:hover::after,
+.selection-login-staff a:hover::after {
+  width: 60%;
+}
+
+.selection-login-user a.active,
+.selection-login-admin a.active,
+.selection-login-staff a.active {
+  color: #00e1ff;
+  font-weight: 700;
+}
+
+.selection-login-user a.active::after,
+.selection-login-admin a.active::after,
+.selection-login-staff a.active::after {
+  width: 60%;
+  background: linear-gradient(90deg, #00e1ff, #00b6ff);
+  box-shadow: 0 0 8px #00e1ffaa;
+}
+
+</style>
+</html>

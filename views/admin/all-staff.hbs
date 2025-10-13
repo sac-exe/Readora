@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Staffs | Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Ionicons SVG CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ionicons@7.1.0/dist/ionicons.min.css" />
+  <style>
+    body {
+      background-color: #070b1d;
+      color: #fff;
+    }
+    @media (max-width:900px) {
+      body{
+        height: auto;
+        width: 100%;
+      }
+    }
+    .gift-modal {
+      display: none;
+      position: fixed;
+      z-index: 99999;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(10,10,25, 0.75);
+      align-items: center; justify-content: center;
+    }
+    .gift-modal.show { display: flex; }
+    .gift-modal-inner {
+      background: #181829;
+      border-radius: 15px;
+      padding: 2rem 2.2rem;
+      max-width: 350px;
+      width: 95vw;
+      box-shadow: 0 10px 32px #00000091;
+      display: flex;
+      flex-direction: column;
+    }
+    .gift-modal-close {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #f44336;
+      cursor: pointer;
+      user-select: none;
+    }
+    .gift-modal-close:hover {
+      color: #ff5252;
+    }
+    .gift-modal label {
+      color: #ececec;
+      margin-bottom: 6px;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    .gift-modal input[type=number] {
+      padding: 0.7rem 1rem;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      margin-bottom: 0.9rem;
+      background: #232341;
+      color: #fff;
+      box-shadow: inset 0 0 8px #4a00e013;
+    }
+    .gift-modal button {
+      font-weight: 600;
+      background: linear-gradient(90deg, #4801fc, #a033ff);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.7rem 0;
+      cursor: pointer;
+      box-shadow: 0 3px 12px #4a00e033;
+      transition: background 0.2s ease;
+      margin-bottom: 1rem;
+    }
+    .gift-modal button:hover {
+      background: linear-gradient(90deg, #a033ff, #fa0000);
+    }
+    #giftStatus {
+      min-height: 24px;
+      font-weight: 600;
+      color: #4ef272;
+      word-break: break-word;
+      text-align: center;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container-all-users">
+    <button class="back-button" onclick="window.location.href='/admin/home'"><i class="fas fa-arrow-left"></i></button>
+    <div class="page-header-all-users">All Staffs</div>
+    <div class="users-grid-all-users">
+      {{#each staff}}
+      <div class="card-all-users">
+        <div>
+          <img class="avatar-all-users" src="{{this.profileImage}}" alt="Avatar" onerror="this.src='/default-profile.png'"/>
+        </div>
+        <div class="details-card-all-user">
+          <div class="desc-all-users">Name: <span>{{this.Username}}</span></div>
+          <div class="desc-all-users">Coins: <span>{{this.coins}}</span></div>
+          <div class="desc-all-users">Email: <span>{{this.Email}}</span></div>
+          <div class="desc-all-users">Joined: <span>{{this.createdAt}}</span></div>
+          <div class="gift-button">
+              <a href="#" class="gift-coins-btn" data-username="{{Username}}" data-id="{{_id}}">
+              <i class="fa-solid fa-gifts"></i> &nbsp; Gift or Take Coins
+            </a>
+          </div>
+        </div>
+        <div class="u-actions-all-users">
+          {{!-- <button class="btn-action-all-users" onclick="viewStaff('{{this._id}}')">Details</button> --}}
+          <button class="btn-action-all-users ban-all-users" onclick="banStaff('{{this._id}}', '{{this.Username}}')">Ban</button>
+          <button class="btn-action-all-users kick-all-users" onclick="kickStaff('{{this._id}}', '{{this.Username}}')">Kick</button>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+
+  <!-- Gift Coins Popup -->
+<div id="giftCoinsModal" class="gift-modal">
+  <div class="gift-modal-inner">
+    <span class="gift-modal-close" id="giftModalCloseBtn">&times;</span>
+    <div style="margin-bottom:1rem; font-weight:bold; font-size:1.2rem;">
+      Gift Coins to <span id="giftUsername"></span>
+    </div>
+    <label>Send Coins:</label>
+    <input id="sendCoinsInput" type="number" min="0" placeholder="Enter coins to send" />
+    <button id="sendCoinsBtn">Send Coins</button>
+
+    <label style="margin-top:1.5rem;">Take Back Coins:</label>
+    <input id="takeBackCoinsInput" type="number" min="0" placeholder="Enter coins to take back" />
+    <button id="takeBackCoinsBtn">Take Back Coins</button>
+
+    <div id="giftStatus" style="margin-top:12px; font-weight:600;"></div>
+  </div>
+</div>
+
+<script>
+  // Elements
+  const giftModal = document.getElementById('giftCoinsModal');
+  const giftCloseBtn = document.getElementById('giftModalCloseBtn');
+  const giftUsernameSpan = document.getElementById('giftUsername');
+  const sendCoinsInput = document.getElementById('sendCoinsInput');
+  const takeBackCoinsInput = document.getElementById('takeBackCoinsInput');
+  const sendCoinsBtn = document.getElementById('sendCoinsBtn');
+  const takeBackCoinsBtn = document.getElementById('takeBackCoinsBtn');
+  const giftStatus = document.getElementById('giftStatus');
+
+  let currentUserId = null;
+  let currentUsername = "";
+
+  // Open Gift Coins modal and set username & id
+  document.querySelectorAll('.gift-coins-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+
+      currentUserId = btn.dataset.id;
+      currentUsername = btn.dataset.username;
+
+      giftUsernameSpan.textContent = currentUsername;
+      sendCoinsInput.value = '';
+      takeBackCoinsInput.value = '';
+      giftStatus.textContent = '';
+      giftStatus.style.color = '#4ef272';
+
+      giftModal.classList.add('show');
+      sendCoinsInput.focus();
+    });
+  });
+
+  // Close modal handlers
+  giftCloseBtn.addEventListener('click', () => giftModal.classList.remove('show'));
+  window.addEventListener('keydown', e => { if (e.key === 'Escape') giftModal.classList.remove('show'); });
+
+  // Helper POST
+  async function postJSON(url, data) {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return res.json();
+  }
+
+  // Send coins button click
+  sendCoinsBtn.addEventListener('click', async () => {
+    const coins = Number(sendCoinsInput.value);
+    if (isNaN(coins) || coins <= 0) {
+      giftStatus.style.color = '#ff4c4c';
+      giftStatus.textContent = "Enter a valid positive number of coins.";
+      return;
+    }
+    if (!confirm(`Are you sure to send ${coins} coins to ${currentUsername}?`)) return;
+
+    giftStatus.style.color = '#a4a5bd';
+    giftStatus.textContent = 'Processing...';
+
+    try {
+      const result = await postJSON('/admin/gift-coins-staff', { userId: currentUserId, coins });
+      if (result.success) {
+        giftStatus.style.color = '#4ef272';
+        giftStatus.textContent = `Sent ${coins} coins to ${currentUsername}!`;
+        setTimeout(() => giftModal.classList.remove('show'), 1200);
+      } else {
+        giftStatus.style.color = '#ff4c4c';
+        giftStatus.textContent = result.message || 'Failed to send coins.';
+      }
+    } catch {
+      giftStatus.style.color = '#ff4c4c';
+      giftStatus.textContent = 'Server error. Try again.';
+    }
+  });
+
+  // Take back coins button click
+  takeBackCoinsBtn.addEventListener('click', async () => {
+    const coins = Number(takeBackCoinsInput.value);
+    if (isNaN(coins) || coins <= 0) {
+      giftStatus.style.color = '#ff4c4c';
+      giftStatus.textContent = "Enter a valid positive number to take back.";
+      return;
+    }
+    if (!confirm(`Are you sure to take back ${coins} coins from ${currentUsername}?`)) return;
+
+    giftStatus.style.color = '#a4a5bd';
+    giftStatus.textContent = 'Processing...';
+
+    try {
+      const result = await postJSON('/admin/takeback-coins-staff', { userId: currentUserId, coins });
+      if (result.success) {
+        giftStatus.style.color = '#4ef272';
+        giftStatus.textContent = `Took back ${coins} coins from ${currentUsername}!`;
+        setTimeout(() => giftModal.classList.remove('show'), 1200);
+      } else {
+        giftStatus.style.color = '#ff4c4c';
+        giftStatus.textContent = result.message || 'Failed to take back coins.';
+      }
+    } catch {
+      giftStatus.style.color = '#ff4c4c';
+      giftStatus.textContent = 'Server error. Try again.';
+    }
+  });
+</script>
+<script>
+  function banStaff(id, staff) {
+    if(confirm(`Ban staff ${staff}?`)){
+      fetch(`/admin/ban-staff/${id}`, {method:"POST"})
+        .then(r => r.json()).then(res => {
+          alert(res.message || 'Staff banned');
+          location.reload();
+        });
+    }
+  }
+  function kickStaff(id, staff) {
+    if(confirm(`Kick staff ${staff}?`)){
+      fetch(`/admin/kick-staff/${id}`, {method:"POST"})
+        .then(r => r.json()).then(res => {
+          alert(res.message || 'Staff kicked');
+          location.reload();
+        });
+    }
+  }
+  function viewUser(id) {
+    location = `/admin/user/${id}`;
+  }
+</script>
+</body>
+</html>
