@@ -1266,6 +1266,24 @@ router.post("/user/rewards/daily", async (req, res) => {
 //   }
 // });
 
+//user about
+router.get("/user/about-user", async (req, res) => {
+  if (!req.session.userId) {
+    return res.redirect("/user/login-user");
+  }
+
+  const user = await db.get().collection("user").findOne({ _id: new ObjectId(req.session.userId) });
+  if (!user) return res.status(404).send("User not found");
+
+  let profileFrame = user.profileFrame || null;
+  res.render("user/about-user", {
+    user,
+    profileImageUrl: user.profileImage || null,
+    profileFrame,
+    coinCount: user.coins || 0
+  });
+});
+
 // Logout (only current session)
 router.get("/user/logout", (req, res) => {
   if (!req.session) {
