@@ -6,24 +6,32 @@
   <title>About • Readora</title>
 </head>
 <style>
-    /* Shell */
+/* ========== About: Readora (full block) ========== */
+
+/* Shell */
+:root{
+  --ab-pad: clamp(16px, 3.2vw, 28px);
+  --ab-gap: clamp(10px, 2vw, 16px);
+}
 .ab-wrap{
-  max-width: 1100px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: clamp(14px, 2.5vw, 24px);
+  padding: var(--ab-pad);
   color: var(--text-color);
 }
 
 /* Hero */
 .ab-hero{
   position: relative;
-  border: 1px solid var(--border);
-  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  border-radius: 22px;
   overflow: hidden;
   background: linear-gradient(180deg,
     color-mix(in srgb, var(--panel) 92%, transparent),
     color-mix(in srgb, var(--panel-2) 90%, transparent));
-  box-shadow: var(--shadow-sm);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.25),
+    inset 0 1px 0 color-mix(in srgb, #fff 10%, transparent);
   margin-bottom: 16px;
 }
 .ab-hero-bg{
@@ -43,17 +51,22 @@
 }
 .ab-hero-inner{
   position: relative; z-index: 1;
-  padding: clamp(24px, 5vw, 50px);
+  padding: clamp(36px, 7vw, 72px);
   text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
 }
 .ab-title{
   margin: 0 0 8px 0; font-weight: 900;
-  font-size: clamp(26px, 4vw, 40px);
+  font-size: clamp(30px, 5vw, 46px);
+  letter-spacing: .2px;
+  line-height: 1.15;
 }
 .ab-sub{
-  margin: 0 auto;
+  margin: 8px auto 0;
   max-width: 720px;
   color: var(--secondary-text);
+  font-size: clamp(14px, 1.6vw, 16px);
 }
 .ab-cta{
   margin-top: 12px; display:flex; gap: 10px; justify-content:center; flex-wrap: wrap;
@@ -61,56 +74,72 @@
 
 /* Buttons */
 .ab-btn{
-  height: 40px; border-radius: 12px; padding: 0 14px;
+  height: 42px; border-radius: 12px; padding: 0 16px;
   border: 1px solid var(--border);
   background: var(--panel-2); color: var(--text-color);
   font-weight: 800; text-decoration: none; display:inline-flex; align-items:center; justify-content:center; gap: 8px;
+  transition: transform .06s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+  box-shadow: var(--shadow-sm);
 }
+.ab-btn:hover{ transform: translateY(-1px) }
+.ab-btn:active{ transform: translateY(0) }
 .ab-btn-primary{
   border-color: color-mix(in srgb, var(--primary-color) 45%, var(--border));
   background: linear-gradient(180deg,
     color-mix(in srgb, var(--primary-color) 24%, var(--panel)),
     color-mix(in srgb, var(--secondary-color) 16%, var(--panel)));
+  box-shadow:
+    0 6px 14px color-mix(in srgb, var(--primary-color) 22%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #fff 6%, transparent);
 }
 .ab-btn-ghost{ background: transparent }
 .ab-btn-link{ background: transparent; border: none; padding: 0; height: auto; color: var(--text-color) }
 
 /* Sections */
-.ab-section{ margin-top: 16px }
+.ab-section{ margin-top: clamp(16px, 3.2vw, 24px) }
 .ab-card{
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 14px;
   box-shadow: var(--shadow-sm);
-  padding: clamp(12px, 2vw, 18px);
+  padding: clamp(14px, 2.2vw, 22px);
+  backdrop-filter: saturate(1.1) blur(4px);
 }
 .ab-h2{
-  margin: 0 0 8px 0; font-weight: 900; font-size: clamp(18px, 2.6vw, 22px);
+  margin: 0 0 8px 0; font-weight: 900; font-size: clamp(18px, 2.4vw, 24px);
+  line-height: 1.2;
 }
-.ab-p{ margin: 6px 0 0 0; line-height: 1.8 }
+.ab-p{ margin: 6px 0 0 0; line-height: 1.85; font-size: clamp(14px, 1.5vw, 16px); color: var(--text-color) }
 .ab-muted{ color: var(--secondary-text) }
 .ab-list{ margin: 10px 0 0; padding-left: 16px }
 .ab-list li{ margin: 4px 0 }
 
 /* Grid */
-.ab-grid-2{ display:grid; gap: 12px; grid-template-columns: 1fr; }
+.ab-grid-2{ display:grid; gap: var(--ab-gap); grid-template-columns: 1fr; }
 @media (min-width: 860px){ .ab-grid-2{ grid-template-columns: 1.2fr .8fr } }
 
-.ab-grid-3{ display:grid; gap: 12px; grid-template-columns: 1fr; }
+.ab-grid-3{ display:grid; gap: var(--ab-gap); grid-template-columns: 1fr; }
 @media (min-width: 860px){ .ab-grid-3{ grid-template-columns: 1fr 1fr 1fr } }
 
 /* Stats */
 .ab-stats{
-  display:grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+  display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: var(--ab-gap);
 }
 .ab-stat{
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 12px;
+  padding: 14px;
   text-align: center;
+  backdrop-filter: saturate(1.1) blur(4px);
+  transition: transform .08s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
 }
-.ab-stat-num{ font-size: 24px; font-weight: 900 }
+.ab-stat:hover{
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--primary-color) 30%, var(--border));
+  box-shadow: 0 10px 24px rgba(0,0,0,.18);
+}
+.ab-stat-num{ font-size: clamp(20px, 3.4vw, 26px); font-weight: 900 }
 .ab-stat-lbl{ color: var(--secondary-text); font-size: 12px }
 
 /* Values */
@@ -119,30 +148,38 @@
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 12px; text-align:center; display:grid; gap: 6px; justify-items:center;
+  backdrop-filter: saturate(1.1) blur(4px);
+  transition: transform .08s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
 }
-.ab-value-icon{ font-size: 24px; color: var(--secondary-text) }
+.ab-value:hover{
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--primary-color) 30%, var(--border));
+  box-shadow: 0 10px 24px rgba(0,0,0,.18);
+}
+.ab-value-icon{ font-size: 28px; color: color-mix(in srgb, var(--primary-color) 60%, var(--secondary-text)) }
 .ab-value-title{ margin: 0; font-weight: 900 }
 .ab-value-text{ margin: 0; color: var(--text-color) }
 .ab-center{ text-align: center }
 
 /* Timeline */
 .ab-timeline{
-  list-style: none; 
-  margin: 0; 
-  padding: 0;
-  position: relative;
+  list-style: none; margin: 0; padding: 0; position: relative;
 }
 .ab-timeline::before{
-  content: ""; position: absolute; left: 14px; top: 0; bottom: 0; width: 2px; background: var(--border);
+  content: ""; position: absolute; left: 18px; top: 0; bottom: 0; width: 2px;
+  background: color-mix(in srgb, var(--border) 80%, transparent);
 }
-.ab-time{ display:flex; gap: 10px; position: relative; padding-left: 28px; margin: 10px 0 }
+.ab-time{ display:flex; gap: 10px; position: relative; padding-left: 34px; margin: 10px 0 }
 .ab-dot{
-  position: absolute; left: 7px; width: 14px; height: 14px; border-radius: 50%;
+  position: absolute; left: 12px; width: 16px; height: 16px; border-radius: 50%;
   background: color-mix(in srgb, var(--primary-color) 45%, var(--panel));
   border: 2px solid var(--panel);
   box-shadow: 0 0 0 2px var(--border);
 }
-.ab-time-body{ background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 10px }
+.ab-time-body{
+  background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 12px;
+  backdrop-filter: saturate(1.1) blur(4px);
+}
 .ab-time-title{ margin: 0; font-weight: 900 }
 .ab-time-text{ margin: 4px 0 0 }
 
@@ -154,9 +191,16 @@
 .ab-person{
   background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 12px;
   display:grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center;
+  backdrop-filter: saturate(1.1) blur(4px);
+  transition: transform .08s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
 }
-.ab-avatar{ position: relative; width: 64px; height: 64px; border-radius: 50% }
-.ab-frame{ position: absolute; inset: -6px; width: calc(100% + 12px); height: calc(100% + 12px); border-radius: 50%; pointer-events:none; background: radial-gradient(circle, rgba(255,255,255,.2), transparent) }
+.ab-person:hover{
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--primary-color) 30%, var(--border));
+  box-shadow: 0 10px 24px rgba(0,0,0,.18);
+}
+.ab-avatar{ position: relative; width: 68px; height: 68px; border-radius: 50%; box-shadow: var(--shadow-sm) }
+.ab-frame{ position: absolute; inset: -5px; width: calc(100% + 10px); height: calc(100% + 10px); border-radius: 50%; pointer-events:none; background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.25), transparent 60%) }
 .ab-photo{ position: absolute; inset: 0; border-radius: 50%; background: var(--panel-2) url('/images/profile/ph-avatar.png') center/cover no-repeat; border: 1px solid var(--border) }
 .ab-person-meta{ display:flex; flex-direction:column; gap: 4px }
 .ab-person-name{ font-weight: 900 }
@@ -164,11 +208,12 @@
 
 /* CTA card */
 .ab-cta-card{
-  border: 1px solid var(--border); border-radius: 14px; padding: 14px;
+  border: 1px solid var(--border); border-radius: 16px; padding: clamp(14px, 2.6vw, 24px);
   background: linear-gradient(180deg,
     color-mix(in srgb, var(--panel) 92%, transparent),
     color-mix(in srgb, var(--panel-2) 92%, transparent));
   text-align:center;
+  backdrop-filter: saturate(1.1) blur(4px);
 }
 
 /* Footer note */
@@ -179,6 +224,13 @@
   padding: 10px;
   text-align: center;
   color: var(--secondary-text);
+  backdrop-filter: saturate(1.1) blur(4px);
+}
+
+/* Mobile padding trims */
+@media (max-width: 540px){
+  .ab-hero-inner{ padding: 26px }
+  .ab-card{ padding: 14px }
 }
 
 </style>
