@@ -57,8 +57,6 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-router.use("/admin", requireAdmin);
-
 router.post("/admin/login", (req, res, next) => {
   adminhelper.adminLogin(req.body)
     .then((result) => {
@@ -84,6 +82,10 @@ router.post("/admin/login", (req, res, next) => {
     })
     .catch(next);
 });
+
+// Keep this after the public login route. Registering it earlier intercepts
+// POST /admin/login and redirects before credentials can be checked.
+router.use("/admin", requireAdmin);
 
 // Handle login POST
 // router.post("/admin/login", (req, res) => {

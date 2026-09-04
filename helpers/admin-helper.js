@@ -10,7 +10,12 @@ module.exports = {
         let Admin = await db
           .get()
           .collection("admin")
-          .findOne({Username: Admindata.Username });
+          .findOne({
+            $or: [
+              { Username: Admindata.Username },
+              { Email: Admindata.Username }
+            ]
+          });
          
           
 
@@ -30,7 +35,7 @@ module.exports = {
           resolve(false);
         }
       } catch (err) {
-        res.status(400).json("Error ocuured ", err);
+        reject(err);
       }
     });
   },
