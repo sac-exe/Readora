@@ -274,6 +274,97 @@ router.post("/admin/books/:id/cover", async (req, res) => {
   return res.redirect("/admin/books");
 });
 
+// Admin novel management: admins are not limited to the novel's staffId.
+router.get("/admin/books/:id/edit", async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) return res.redirect("/admin/books");
+  const novel = await db.get().collection("novels").findOne({ _id: new ObjectId(req.params.id) });
+  if (!novel) return res.redirect("/admin/books");
+  const chapters = await db.get().collection("chapters")
+    .find({ novelId: novel._id }).sort({ chapterNumber: 1 }).toArray();
+  res.render("admin/edit-novel", {
+    novel: { ...novel, imageUrl: novel.imageUrl || DEFAULT_COVER_URL },
+    chapters,
+    message: req.session.adminNovelMessage
+  });
+  delete req.session.adminNovelMessage;
+});
+
+router.post("/admin/books/:id/edit", async (req, res) => {
+  try {
+    if (!ObjectId.isValid(req.params.id)) throw new Error("Invalid novel.");
+    const novelId = new ObjectId(req.params.id);
+    const existing = await db.get().collection("novels").findOne({ _id: novelId });
+    if (!existing) throw new Error("Novel not found.");
+    const update = {
+      title: String(req.body.title || "").trim() || existing.title,
+      author: String(req.body.author || "").trim() || existing.author,
+      description: String(req.body.description || "").trim() || existing.description,
+      status: req.body.status || existing.status,
+      categ: String(req.body.category || "").trim(),
+      audience: req.body.audience || existing.audience,
+      orglang: String(req.body.originalLanguage || "").trim(),
+      tralang: String(req.body.translatedLanguage || "").trim(),
+      tag: String(req.body.hashtags || "").trim(),
+      updatedAt: new Date()
+    };
+    if (req.files?.cover) {
+      const coverId = await uploadNovelCover(req.files.cover);
+      update.imageUrl = `/images/novel-images/${coverId}`;
+    }
+    await db.get().collection("novels").updateOne({ _id: novelId }, { $set: update });
+    req.session.adminNovelMessage = "Novel updated.";
+  } catch (error) {
+    req.session.adminNovelMessage = error.message || "Could not update novel.";
+  }
+  res.redirect(`/admin/books/${req.params.id}/edit`);
+});
+
+router.post("/admin/books/:id/delete", async (req, res) => {
+  if (ObjectId.isValid(req.params.id)) {
+    const novelId = new ObjectId(req.params.id);
+    await Promise.all([
+      db.get().collection("novels").deleteOne({ _id: novelId }),
+      db.get().collection("chapters").deleteMany({ novelId }),
+      db.get().collection("comments").deleteMany({ novelId })
+    ]);
+  }
+  res.redirect("/admin/books");
+});
+
+router.post("/admin/books/:id/chapters", async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) return res.redirect("/admin/books");
+  const novelId = new ObjectId(req.params.id);
+  await db.get().collection("chapters").insertOne({
+    novelId,
+    chapterNumber: Number(req.body.chapterNumber) || 1,
+    title: String(req.body.title || "No title").trim(),
+    content: String(req.body.content || "").trim(),
+    createdAt: new Date(),
+    updatedAt: new Date()
+  });
+  res.redirect(`/admin/books/${req.params.id}/edit`);
+});
+
+router.post("/admin/chapters/:id/edit", async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) return res.redirect("/admin/books");
+  const chapterId = new ObjectId(req.params.id);
+  const chapter = await db.get().collection("chapters").findOne({ _id: chapterId });
+  if (!chapter) return res.redirect("/admin/books");
+  await db.get().collection("chapters").updateOne({ _id: chapterId }, { $set: {
+    chapterNumber: Number(req.body.chapterNumber) || chapter.chapterNumber,
+    title: String(req.body.title || "No title").trim(),
+    content: String(req.body.content || ""),
+    updatedAt: new Date()
+  }});
+  res.redirect(`/admin/books/${chapter.novelId}/edit`);
+});
+
+router.post("/admin/chapters/:id/delete", async (req, res) => {
+  if (!ObjectId.isValid(req.params.id)) return res.redirect("/admin/books");
+  const chapter = await db.get().collection("chapters").findOneAndDelete({ _id: new ObjectId(req.params.id) });
+  res.redirect(chapter?.novelId ? `/admin/books/${chapter.novelId}/edit` : "/admin/books");
+});
+
 
 // Ban a user
 router.post("/admin/ban-user/:id", async (req, res) => {

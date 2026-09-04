@@ -92,11 +92,12 @@
             <div class="novel-author-staff-dash">Translation done by: {{this.staff}}</div>
           </div>
           <div class="novel-actions-staff-dash">
+            <a href="/admin/books/{{this._id}}/edit" class="cover-upload-admin"><button type="button"><i class="fa-solid fa-pen"></i> Edit novel</button></a>
             <form action="/admin/books/{{this._id}}/cover" method="POST" enctype="multipart/form-data" class="cover-upload-admin">
               <input type="file" name="cover" accept=".jpg,.jpeg,.png,.webp" required>
               <button type="submit"><i class="fa-solid fa-image"></i> Upload cover</button>
             </form>
-            <form action="/staff/novels/{{this._id}}/delete" method="POST" class="inline-form" onsubmit="return confirm('Are you sure you want to delete this novel?');">
+            <form action="/admin/books/{{this._id}}/delete" method="POST" class="inline-form" onsubmit="return confirm('Delete this novel, its chapters, and comments?');">
               <button type="submit" class="icon-delete">
                 <i class="fa-solid fa-trash-can"></i>
               </button>
