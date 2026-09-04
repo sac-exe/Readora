@@ -50,18 +50,53 @@ router.get("/admin/login", (req, res) => {
   }
 });
 
-// Handle login POST
-router.post("/admin/login", (req, res) => {
-  adminhelper.adminLogin(req.body).then((status) => {
-    if (status) {
-      res.redirect("/admin/home");
-    } else {
-      req.session.NotLog = true;
-      req.session.Loginerr = "*Invalid Username or Password*";
-      res.redirect("/admin/login");
-    }
-  });
+function requireAdmin(req, res, next) {
+  if (!req.session?.admin?.id || req.session.admin.role !== "admin") {
+    return res.redirect("/admin/login");
+  }
+  next();
+}
+
+router.use("/admin", requireAdmin);
+
+router.post("/admin/login", (req, res, next) => {
+  adminhelper.adminLogin(req.body)
+    .then((result) => {
+      if (!result?.status) {
+        req.session.NotLog = true;
+        req.session.Loginerr = "*Invalid Username or Password*";
+        return res.redirect("/admin/login");
+      }
+
+      req.session.regenerate((err) => {
+        if (err) return next(err);
+
+        req.session.admin = {
+          id: result.admin._id.toString(),
+          role: "admin"
+        };
+
+        req.session.save((err) => {
+          if (err) return next(err);
+          res.redirect("/admin/home");
+        });
+      });
+    })
+    .catch(next);
 });
+
+// Handle login POST
+// router.post("/admin/login", (req, res) => {
+//   adminhelper.adminLogin(req.body).then((status) => {
+//     if (status) {
+//       res.redirect("/admin/home");
+//     } else {
+//       req.session.NotLog = true;
+//       req.session.Loginerr = "*Invalid Username or Password*";
+//       res.redirect("/admin/login");
+//     }
+//   });
+// });
 
 const logCoinTransaction = async ({
   userType, // "user" or "staff"
@@ -378,9 +413,12 @@ router.get("/admin/coin-transactions", async (req, res) => {
 });
 
 // Logout
-router.get("/logout", (req, res) => {
-  req.session.destroy();
-    res.render("admin/admin-login");
+router.get("/logout", (req, res, next) => {
+  req.session.destroy((err) => {
+    if (err) return next(err);
+    res.clearCookie("readora.sid");
+    res.redirect("/admin/login");
+  });
 });
 
 module.exports = router;
