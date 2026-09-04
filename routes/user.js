@@ -8,6 +8,8 @@ const fs = require("fs");
 const db = require("../config/connection");
 const crypto = require("crypto");
 
+const DEFAULT_COVER_URL = "/images/novel-images/novel_dummy.png";
+
 function startOfUTCDay(d){
   return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
 }
@@ -34,7 +36,7 @@ router.get("/api/search", async (req, res) => {
       _id: n._id.toString(),
       title: n.title,
       author: n.author,
-      imageUrl: n.imageUrl || '',
+      imageUrl: n.imageUrl || DEFAULT_COVER_URL,
       categ: n.categ || ''
     })));
   } catch (err) {
@@ -219,7 +221,7 @@ router.get("/staffs/list", async (req, res) => {
         novels: novels.map(n => ({
           id: n._id.toString(),
           title: n.title || "Untitled",
-          imageUrl: n.imageUrl || null
+          imageUrl: n.imageUrl || DEFAULT_COVER_URL
         }))
       });
     }
@@ -302,7 +304,7 @@ router.get("/staffs/profile/:id", async (req, res) => {
       profileFrame: staffDoc.profileFrame || null,
       kofi: staffDoc.kofi || null,
       patreon: staffDoc.patreon || null,
-      novels: novelsRaw.map(n => ({ id: n._id.toString(), title: n.title, imageUrl: n.imageUrl || null, chapters: n.chapters || 0 })),
+      novels: novelsRaw.map(n => ({ id: n._id.toString(), title: n.title, imageUrl: n.imageUrl || DEFAULT_COVER_URL, chapters: n.chapters || 0 })),
       staffId: id,
       novelCount,
       coinCount: viewer?.coins || 0,
@@ -376,7 +378,7 @@ router.get("/novel/:id", async (req, res) => {
       audience: novel.audience,
       orglang: novel.orglang,
       tralang: novel.tralang,
-      imageUrl: novel.imageUrl,
+      imageUrl: novel.imageUrl || DEFAULT_COVER_URL,
       staff: novel.staff,
       comments: viewComments,
       canComment: Boolean(user?._id)

@@ -8,6 +8,7 @@ const db = require("../config/connection");
 const crypto = require("crypto");
 
 const NOVEL_COVERS_BUCKET = "novelCovers";
+const DEFAULT_COVER_URL = "/images/novel-images/novel_dummy.png";
 
 function uploadNovelCover(image) {
   const extension = path.extname(image.name || "").toLowerCase();
@@ -51,6 +52,11 @@ router.get("/images/novel-images/:coverId", async (req, res, next) => {
 
     if (!file) return next();
 
+    // Covers are immutable after upload, so let browsers cache GridFS reads.
+    res.set({
+      "Cache-Control": "public, max-age=31536000, immutable",
+      "Content-Length": String(file.length)
+    });
     res.type(file.contentType || "application/octet-stream");
     bucket.openDownloadStream(file._id)
       .on("error", next)
@@ -82,7 +88,7 @@ router.get("/api/search", async (req, res) => {
       _id: n._id.toString(),
       title: n.title,
       author: n.author,
-      imageUrl: n.imageUrl || '',
+      imageUrl: n.imageUrl || DEFAULT_COVER_URL,
       categ: n.categ || ''
     })));
   } catch (err) {
@@ -388,7 +394,7 @@ router.get("/staff/list", async (req, res) => {
         novels: novels.map(n => ({
           id: n._id.toString(),
           title: n.title || "Untitled",
-          imageUrl: n.imageUrl || null
+          imageUrl: n.imageUrl || DEFAULT_COVER_URL
         }))
       });
     }
@@ -469,7 +475,7 @@ router.get("/staff/profile/:id", async (req, res) => {
       profileFrame: staffDoc.profileFrame || null,
       kofi: staffDoc.kofi || null,
       patreon: staffDoc.patreon || null,
-      novels: novelsRaw.map(n => ({ id: n._id.toString(), title: n.title, imageUrl: n.imageUrl || null, chapters: n.chapters || 0 })),
+      novels: novelsRaw.map(n => ({ id: n._id.toString(), title: n.title, imageUrl: n.imageUrl || DEFAULT_COVER_URL, chapters: n.chapters || 0 })),
       staffId: id,
       novelCount,
       coinCount: viewer?.coins || 0,
@@ -543,7 +549,7 @@ router.get("/novelS/:id", async (req, res) => {
       audience: novel.audience,
       orglang: novel.orglang,
       tralang: novel.tralang,
-      imageUrl: novel.imageUrl,
+      imageUrl: novel.imageUrl || DEFAULT_COVER_URL,
       staffName: novel.staff,
       comments: viewComments,
       canComment: Boolean(staff?._id)
@@ -1162,7 +1168,7 @@ router.get("/staff/dash", async (req, res) => {
           byNovel[nid] = {
             novelId: nid,
             title: nov.title || "Untitled",
-            imageUrl: nov.imageUrl || null,
+            imageUrl: nov.imageUrl || DEFAULT_COVER_URL,
             comments: []
           };
         }
