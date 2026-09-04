@@ -16,6 +16,8 @@ const helmet = require('helmet');
 const compression = require('compression');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+const { ObjectId, GridFSBucket } = require('mongodb');
+const { PROFILE_IMAGES_BUCKET } = require('./helpers/profile-image-storage');
 
 const app = express();
 
@@ -61,6 +63,24 @@ app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Existing profile files are served by express.static above. New uploads are
+// stored in GridFS so they survive server restarts and deployments.
+app.get('/images/profile-images/:imageId', async (req, res, next) => {
+  if (!ObjectId.isValid(req.params.imageId)) return next();
+  try {
+    const bucket = new GridFSBucket(get(), { bucketName: PROFILE_IMAGES_BUCKET });
+    const file = await get().collection(`${PROFILE_IMAGES_BUCKET}.files`).findOne({
+      _id: new ObjectId(req.params.imageId)
+    });
+    if (!file) return next();
+    res.set({ 'Cache-Control': 'public, max-age=31536000, immutable', 'Content-Length': String(file.length) });
+    res.type(file.contentType || 'application/octet-stream');
+    bucket.openDownloadStream(file._id).on('error', next).pipe(res);
+  } catch (error) {
+    next(error);
+  }
+});
 
 // Compatibility for image URLs that were historically stored as
 // "../public/images/...". `public` is a server folder, not part of a browser
@@ -118,9 +138,6 @@ app.use((req, res, next) => {
   const applyImageDefaults = (value, visited = new WeakSet()) => {
     if (!value || typeof value !== 'object' || visited.has(value)) return;
     visited.add(value);
-    if (Object.prototype.hasOwnProperty.call(value, 'profileImageUrl') && !value.profileImageUrl) {
-      value.profileImageUrl = '/images/default-profile.png';
-    }
     // A number of older novel documents do not have an imageUrl key at all.
     // Novel-shaped view models always have a title or novelId, so supply the
     // shared cover even when the key is missing.

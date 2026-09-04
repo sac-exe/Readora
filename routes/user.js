@@ -7,7 +7,8 @@ const path = require("path");
 const fs = require("fs");
 const db = require("../config/connection");
 const crypto = require("crypto");
-const { hydrateCommentProfiles, DEFAULT_PROFILE_URL } = require("../helpers/comment-profiles");
+const { hydrateCommentProfiles } = require("../helpers/comment-profiles");
+const { uploadProfileImage } = require("../helpers/profile-image-storage");
 
 const DEFAULT_COVER_URL = "/images/novel-images/novel_dummy.png";
 
@@ -356,7 +357,7 @@ router.get("/novel/:id", async (req, res) => {
       return {
         _id: c._id.toString(),
         username: c.username || "Reader",
-        profileImageUrl: c.profileImageUrl || DEFAULT_PROFILE_URL,
+        profileImageUrl: c.profileImageUrl || null,
         profileFrame: c.profileFrame || null,
         content: c.content,
         createdDate: new Date(c.createdAt).toLocaleString(),
@@ -1036,12 +1037,8 @@ router.post('/user/profile/edit', async (req, res) => {
 
     if (req.files && req.files.profileImage) {
       const image = req.files.profileImage;
-      const uploadsDir = path.join(__dirname, '../public/images/profile-images/');
-      if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
-      const filename = Date.now() + '-' + image.name.replace(/\s+/g, '_');
-      const uploadPath = path.join(uploadsDir, filename);
-      await image.mv(uploadPath);
-      update.profileImage = `/images/profile-images/${filename}`;
+      const imageId = await uploadProfileImage(db.get(), image);
+      update.profileImage = `/images/profile-images/${imageId}`;
     }
 
     if (Object.keys(update).length === 0) {

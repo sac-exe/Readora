@@ -1,6 +1,5 @@
 const { ObjectId } = require("mongodb");
 
-const DEFAULT_PROFILE_URL = "/images/default-profile.png";
 
 // Older comments only contain a profile-image snapshot (or no image at all).
 // Resolve the author from the account collections so every comment reflects the
@@ -27,10 +26,10 @@ async function hydrateCommentProfiles(database, comments) {
     return {
       ...comment,
       username: author?.Username || comment.username || "Reader",
-      profileImageUrl: author?.profileImage || comment.profileImageUrl || DEFAULT_PROFILE_URL,
+      profileImageUrl: author?.profileImage || comment.profileImageUrl || null,
       profileFrame: author?.profileFrame || comment.profileFrame || null
     };
   });
 }
 
-module.exports = { DEFAULT_PROFILE_URL, hydrateCommentProfiles };
+module.exports = { hydrateCommentProfiles };
