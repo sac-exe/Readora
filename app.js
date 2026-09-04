@@ -121,7 +121,10 @@ app.use((req, res, next) => {
     if (Object.prototype.hasOwnProperty.call(value, 'profileImageUrl') && !value.profileImageUrl) {
       value.profileImageUrl = '/images/default-profile.png';
     }
-    if (Object.prototype.hasOwnProperty.call(value, 'imageUrl') && !value.imageUrl) {
+    // A number of older novel documents do not have an imageUrl key at all.
+    // Novel-shaped view models always have a title or novelId, so supply the
+    // shared cover even when the key is missing.
+    if ((Object.prototype.hasOwnProperty.call(value, 'imageUrl') || 'title' in value || 'novelId' in value) && !value.imageUrl) {
       value.imageUrl = '/images/novel-images/novel_dummy.png';
     }
     for (const child of Object.values(value)) applyImageDefaults(child, visited);
