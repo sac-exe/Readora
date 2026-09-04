@@ -1590,6 +1590,23 @@ router.post("/staff/chapters/:id/unlock", async (req, res) => {
   }
 });
 
+router.get("/user/about-staff", async (req, res) => {
+  if (!req.session.staffId) {
+    return res.redirect("/staff/login-staff");
+  }
+
+  const staff = await db.get().collection("staff").findOne({ _id: new ObjectId(req.session.staffId) });
+  if (!staff) return res.status(404).send("staff not found");
+
+  let profileFrame = staff.profileFrame || null;
+  res.render("staff/about-staff", {
+    staff,
+    profileImageUrl: staff.profileImage || null,
+    profileFrame,
+    coinCount: staff.coins || 0
+  });
+});
+
 // Delete Chapter
 router.post("/staff/novels/:novelId/chapters/:chapterId/delete", async (req, res) => {
   const { novelId, chapterId } = req.params;

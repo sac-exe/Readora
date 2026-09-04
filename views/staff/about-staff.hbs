@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About • Readora</title>
+</head>
+<style>
+/* ========== About: Readora (full block) ========== */
+
+/* Shell */
+:root{
+  --ab-pad: clamp(16px, 3.2vw, 28px);
+  --ab-gap: clamp(10px, 2vw, 16px);
+}
+.ab-wrap{
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: var(--ab-pad);
+  color: var(--text-color);
+}
+
+/* Hero */
+.ab-hero{
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  border-radius: 22px;
+  overflow: hidden;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--panel) 92%, transparent),
+    color-mix(in srgb, var(--panel-2) 90%, transparent));
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.25),
+    inset 0 1px 0 color-mix(in srgb, #fff 10%, transparent);
+  margin-bottom: 16px;
+}
+.ab-hero-bg{
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(1200px 300px at 0% 0%,
+      color-mix(in srgb, var(--primary-color) 22%, transparent), transparent),
+    radial-gradient(900px 260px at 100% 10%,
+      color-mix(in srgb, var(--secondary-color) 20%, transparent), transparent);
+  opacity: .35; filter: blur(20px);
+}
+.ab-hero-glow{
+  position: absolute; inset: 0;
+  background: radial-gradient(600px 160px at 50% 0%,
+    color-mix(in srgb, var(--primary-color) 18%, transparent), transparent 70%);
+  opacity: .35;
+}
+.ab-hero-inner{
+  position: relative; z-index: 1;
+  padding: clamp(36px, 7vw, 72px);
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.ab-title{
+  margin: 0 0 8px 0; font-weight: 900;
+  font-size: clamp(30px, 5vw, 46px);
+  letter-spacing: .2px;
+  line-height: 1.15;
+}
+.ab-sub{
+  margin: 8px auto 0;
+  max-width: 720px;
+  color: var(--secondary-text);
+  font-size: clamp(14px, 1.6vw, 16px);
+}
+.ab-cta{
+  margin-top: 12px; display:flex; gap: 10px; justify-content:center; flex-wrap: wrap;
+}
+
+/* Buttons */
+.ab-btn{
+  height: 42px; border-radius: 12px; padding: 0 16px;
+  border: 1px solid var(--border);
+  background: var(--panel-2); color: var(--text-color);
+  font-weight: 800; text-decoration: none; display:inline-flex; align-items:center; justify-content:center; gap: 8px;
+  transition: transform .06s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+  box-shadow: var(--shadow-sm);
+}
+.ab-btn:hover{ transform: translateY(-1px) }
+.ab-btn:active{ transform: translateY(0) }
+.ab-btn-primary{
+  border-color: color-mix(in srgb, var(--primary-color) 45%, var(--border));
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--primary-color) 24%, var(--panel)),
+    color-mix(in srgb, var(--secondary-color) 16%, var(--panel)));
+  box-shadow:
+    0 6px 14px color-mix(in srgb, var(--primary-color) 22%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #fff 6%, transparent);
+}
+.ab-btn-ghost{ background: transparent }
+.ab-btn-link{ background: transparent; border: none; padding: 0; height: auto; color: var(--text-color) }
+
+/* Sections */
+.ab-section{ margin-top: clamp(16px, 3.2vw, 24px) }
+.ab-card{
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  padding: clamp(14px, 2.2vw, 22px);
+  backdrop-filter: saturate(1.1) blur(4px);
+}
+.ab-h2{
+  margin: 0 0 8px 0; font-weight: 900; font-size: clamp(18px, 2.4vw, 24px);
+  line-height: 1.2;
+}
+.ab-p{ margin: 6px 0 0 0; line-height: 1.85; font-size: clamp(14px, 1.5vw, 16px); color: var(--text-color) }
+.ab-muted{ color: var(--secondary-text) }
+.ab-list{ margin: 10px 0 0; padding-left: 16px }
+.ab-list li{ margin: 4px 0 }
+
+/* Grid */
+.ab-grid-2{ display:grid; gap: var(--ab-gap); grid-template-columns: 1fr; }
+@media (min-width: 860px){ .ab-grid-2{ grid-template-columns: 1.2fr .8fr } }
+
+.ab-grid-3{ display:grid; gap: var(--ab-gap); grid-template-columns: 1fr; }
+@media (min-width: 860px){ .ab-grid-3{ grid-template-columns: 1fr 1fr 1fr } }
+
+/* Stats */
+.ab-stats{
+  display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: var(--ab-gap);
+}
+.ab-stat{
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+  backdrop-filter: saturate(1.1) blur(4px);
+  transition: transform .08s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.ab-stat:hover{
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--primary-color) 30%, var(--border));
+  box-shadow: 0 10px 24px rgba(0,0,0,.18);
+}
+.ab-stat-num{ font-size: clamp(20px, 3.4vw, 26px); font-weight: 900 }
+.ab-stat-lbl{ color: var(--secondary-text); font-size: 12px }
+
+/* Values */
+.ab-value{
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px; text-align:center; display:grid; gap: 6px; justify-items:center;
+  backdrop-filter: saturate(1.1) blur(4px);
+  transition: transform .08s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.ab-value:hover{
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--primary-color) 30%, var(--border));
+  box-shadow: 0 10px 24px rgba(0,0,0,.18);
+}
+.ab-value-icon{ font-size: 28px; color: color-mix(in srgb, var(--primary-color) 60%, var(--secondary-text)) }
+.ab-value-title{ margin: 0; font-weight: 900 }
+.ab-value-text{ margin: 0; color: var(--text-color) }
+.ab-center{ text-align: center }
+
+/* Timeline */
+.ab-timeline{
+  list-style: none; margin: 0; padding: 0; position: relative;
+}
+.ab-timeline::before{
+  content: ""; position: absolute; left: 18px; top: 0; bottom: 0; width: 2px;
+  background: color-mix(in srgb, var(--border) 80%, transparent);
+}
+.ab-time{ display:flex; gap: 10px; position: relative; padding-left: 34px; margin: 10px 0 }
+.ab-dot{
+  position: absolute; left: 12px; width: 16px; height: 16px; border-radius: 50%;
+  background: color-mix(in srgb, var(--primary-color) 45%, var(--panel));
+  border: 2px solid var(--panel);
+  box-shadow: 0 0 0 2px var(--border);
+}
+.ab-time-body{
+  background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 12px;
+  backdrop-filter: saturate(1.1) blur(4px);
+}
+.ab-time-title{ margin: 0; font-weight: 900 }
+.ab-time-text{ margin: 4px 0 0 }
+
+/* Team */
+.ab-team{
+  display:grid; gap: 10px; grid-template-columns: 1fr; 
+}
+@media (min-width: 740px){ .ab-team{ grid-template-columns: 1fr 1fr 1fr } }
+.ab-person{
+  background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 12px;
+  display:grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center;
+  backdrop-filter: saturate(1.1) blur(4px);
+  transition: transform .08s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.ab-person:hover{
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--primary-color) 30%, var(--border));
+  box-shadow: 0 10px 24px rgba(0,0,0,.18);
+}
+.ab-avatar{ position: relative; width: 68px; height: 68px; border-radius: 50%; box-shadow: var(--shadow-sm) }
+.ab-frame{ position: absolute; inset: -5px; width: calc(100% + 10px); height: calc(100% + 10px); border-radius: 50%; pointer-events:none; background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.25), transparent 60%) }
+.ab-photo{ position: absolute; inset: 0; border-radius: 50%; background: var(--panel-2) url('/images/profile/ph-avatar.png') center/cover no-repeat; border: 1px solid var(--border) }
+.ab-person-meta{ display:flex; flex-direction:column; gap: 4px }
+.ab-person-name{ font-weight: 900 }
+.ab-person-role{ color: var(--secondary-text); font-size: 12px }
+
+/* CTA card */
+.ab-cta-card{
+  border: 1px solid var(--border); border-radius: 16px; padding: clamp(14px, 2.6vw, 24px);
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--panel) 92%, transparent),
+    color-mix(in srgb, var(--panel-2) 92%, transparent));
+  text-align:center;
+  backdrop-filter: saturate(1.1) blur(4px);
+}
+
+/* Footer note */
+.ab-footer-note{
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  background: var(--panel);
+  padding: 10px;
+  text-align: center;
+  color: var(--secondary-text);
+  backdrop-filter: saturate(1.1) blur(4px);
+}
+
+/* Mobile padding trims */
+@media (max-width: 540px){
+  .ab-hero-inner{ padding: 26px }
+  .ab-card{ padding: 14px }
+}
+
+</style>
+<body>
+  <main class="ab-wrap">
+
+    <!-- Hero -->
+    <section class="ab-hero">
+      <div class="ab-hero-bg"></div>
+      <div class="ab-hero-glow"></div>
+      <div class="ab-hero-inner">
+        <h1 class="ab-title">Stories cross borders</h1>
+        <p class="ab-sub">Readora is where language stops being a wall and becomes a bridge — connecting authors, translators, and readers across the world.</p>
+        <div class="ab-cta">
+          <a class="ab-btn ab-btn-primary" href="/staffs/list">Meet our staff</a>
+          <a class="ab-btn ab-btn-ghost" href="/novels">Explore novels</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission + Stats -->
+    <section class="ab-section">
+      <div class="ab-grid-2">
+        <div class="ab-card">
+          <h2 class="ab-h2">Our mission</h2>
+          <p class="ab-p">To democratize access to stories by empowering community translators, ensuring creators are credited, and giving readers a clean, fast, and delightful experience across devices.</p>
+          <ul class="ab-list">
+            <li>Fair credit for translators and authors</li>
+            <li>Reader‑first performance and typography</li>
+            <li>Sane tools for moderation and curation</li>
+          </ul>
+        </div>
+        <div class="ab-stats">
+          <div class="ab-stat">
+            <div class="ab-stat-num">1500+</div>
+            <div class="ab-stat-lbl">Chapters translated</div>
+          </div>
+          <div class="ab-stat">
+            <div class="ab-stat-num">80+</div>
+            <div class="ab-stat-lbl">Active translators</div>
+          </div>
+          <div class="ab-stat">
+            <div class="ab-stat-num">25</div>
+            <div class="ab-stat-lbl">Languages touched</div>
+          </div>
+          <div class="ab-stat">
+            <div class="ab-stat-num">∞</div>
+            <div class="ab-stat-lbl">Stories to read</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Story -->
+    <section class="ab-section">
+      <div class="ab-card">
+        <h2 class="ab-h2">The Readora story</h2>
+        <p class="ab-p">Readora began with a simple frustration: great stories trapped behind language. What started as a small weekend tool for a handful of friends became a platform focused on quality translation, clear attribution, and an elegant reading experience.</p>
+        <p class="ab-p">Today, Readora blends community energy with careful curation. We keep the interface minimal, the pages fast, and the controls intuitive — so the words stay center stage.</p>
+      </div>
+    </section>
+
+    <!-- Values -->
+    <section class="ab-section">
+      <h2 class="ab-h2 ab-center">What we value</h2>
+      <div class="ab-grid-3">
+        <div class="ab-value">
+          <div class="ab-value-icon"><i class="fa-solid fa-language"></i></div>
+          <h3 class="ab-value-title">Clarity</h3>
+          <p class="ab-value-text">Readable typography and calm layouts help stories breathe and readers focus.</p>
+        </div>
+        <div class="ab-value">
+          <div class="ab-value-icon"><i class="fa-solid fa-users"></i></div>
+          <h3 class="ab-value-title">Community</h3>
+          <p class="ab-value-text">Translators, authors, and readers move together — credit visible, work respected.</p>
+        </div>
+        <div class="ab-value">
+          <div class="ab-value-icon"><i class="fa-solid fa-shield-heart"></i></div>
+          <h3 class="ab-value-title">Care</h3>
+          <p class="ab-value-text">From performance to policy, choices are deliberate and reader‑safe by default.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section class="ab-section">
+      <h2 class="ab-h2 ab-center">How we got here</h2>
+      <ol class="ab-timeline">
+        <li class="ab-time">
+          <div class="ab-dot"></div>
+          <div class="ab-time-body">
+            <h4 class="ab-time-title">Prototype</h4>
+            <p class="ab-time-text">A scrappy reader with copy‑pasted fonts and hand‑rolled dark mode. It worked — barely.</p>
+          </div>
+        </li>
+        <li class="ab-time">
+          <div class="ab-dot"></div>
+          <div class="ab-time-body">
+            <h4 class="ab-time-title">Translator tools</h4>
+            <p class="ab-time-text">Basic editor, chapter scheduling, and a clean staff dashboard arrived.</p>
+          </div>
+        </li>
+        <li class="ab-time">
+          <div class="ab-dot"></div>
+          <div class="ab-time-body">
+            <h4 class="ab-time-title">Reader happiness</h4>
+            <p class="ab-time-text">Focus mode, typography presets, and stable mobile performance shipped.</p>
+          </div>
+        </li>
+        <li class="ab-time">
+          <div class="ab-dot"></div>
+          <div class="ab-time-body">
+            <h4 class="ab-time-title">What’s next</h4>
+            <p class="ab-time-text">Richer discovery, smarter credits, and respectful ways to support creators.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- Team (hooks into your staff list route if you want) -->
+    <section class="ab-section">
+      <h2 class="ab-h2 ab-center">Faces of Readora</h2>
+      <div class="ab-team">
+        <article class="ab-person">
+          <div class="ab-avatar">
+            <div class="ab-frame"></div>
+            <div class="ab-photo"></div>
+          </div>
+          <div class="ab-person-meta">
+            <div class="ab-person-name">Core Team</div>
+            <div class="ab-person-role">Design, Platform, Community</div>
+          </div>
+        </article>
+        <article class="ab-person">
+          <div class="ab-avatar">
+            <div class="ab-frame"></div>
+            <div class="ab-photo"></div>
+          </div>
+          <div class="ab-person-meta">
+            <div class="ab-person-name">Staff Translators</div>
+            <div class="ab-person-role">Language bridges and nuance guardians</div>
+          </div>
+        </article>
+        <article class="ab-person">
+          <div class="ab-avatar">
+            <div class="ab-frame"></div>
+            <div class="ab-photo"></div>
+          </div>
+          <div class="ab-person-meta">
+            <div class="ab-person-name">You</div>
+            <div class="ab-person-role">Reader, supporter, sharer</div>
+          </div>
+        </article>
+      </div>
+      <div class="ab-center"><a class="ab-btn ab-btn-link" href="/staffs/list">See all staff →</a></div>
+    </section>
+
+    <!-- Footer line -->
+    <section class="ab-section">
+      <div class="ab-footer-note">
+        <span>Built with care. Designed for quiet reading.</span>
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>
