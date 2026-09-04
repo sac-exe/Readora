@@ -40,7 +40,7 @@ function startOfUTCDay(d){
 
 // Covers uploaded after this change live in MongoDB GridFS instead of the
 // server's temporary filesystem. Older covers remain available from /public.
-router.get("../public/images/novel-images/:coverId", async (req, res, next) => {
+router.get("/images/novel-images/:coverId", async (req, res, next) => {
   if (!ObjectId.isValid(req.params.coverId)) return next();
 
   try {
@@ -1059,7 +1059,7 @@ router.post('/staff/profile/edit', async (req, res) => {
       const filename = Date.now() + '-' + image.name.replace(/\s+/g, '_');
       const uploadPath = path.join(uploadsDir, filename);
       await image.mv(uploadPath);
-      update.profileImage = `../public/images/profile-images/${filename}`;
+      update.profileImage = `/images/profile-images/${filename}`;
     }
 
     if (Object.keys(update).length === 0) {
@@ -1275,9 +1275,9 @@ router.post("/staff/novels", async (req, res) => {
 
     if (req.files && req.files.image) {
       const coverId = await uploadNovelCover(req.files.image);
-      novelData.imageUrl = `../public/images/novel-images/${coverId}`;
+      novelData.imageUrl = `/images/novel-images/${coverId}`;
     } else {
-      novelData.imageUrl = '../public/images/novel-images/novel_dummy.png';
+      novelData.imageUrl = '/images/novel-images/novel_dummy.png';
     }
 
     await db.get().collection("novels").insertOne(novelData);
@@ -1366,7 +1366,7 @@ router.post("/staff/novels/:id", async (req, res) => {
 
     if (req.files && req.files.cover) {
       const coverId = await uploadNovelCover(req.files.cover);
-      updateData.imageUrl = `../public/images/novel-images/${coverId}`;
+      updateData.imageUrl = `/images/novel-images/${coverId}`;
     }
 
     await db.get().collection("novels").updateOne(

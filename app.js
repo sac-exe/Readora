@@ -61,6 +61,15 @@ app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Compatibility for image URLs that were historically stored as
+// "../public/images/...". `public` is a server folder, not part of a browser
+// URL, so redirect those requests to the static /images location.
+app.get(/^\/(?:[^/]+\/)*public\/images\/(.+)$/, (req, res, next) => {
+  const imagePath = req.params[0];
+  if (!imagePath || imagePath.split('/').includes('..')) return next();
+  return res.redirect(302, `/images/${imagePath}`);
+});
 app.use(fileUpload());
 
 // Session configuration

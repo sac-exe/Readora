@@ -1037,7 +1037,7 @@ router.post('/user/profile/edit', async (req, res) => {
       const filename = Date.now() + '-' + image.name.replace(/\s+/g, '_');
       const uploadPath = path.join(uploadsDir, filename);
       await image.mv(uploadPath);
-      update.profileImage = `../public/images/profile-images/${filename}`;
+      update.profileImage = `/images/profile-images/${filename}`;
     }
 
     if (Object.keys(update).length === 0) {
