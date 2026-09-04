@@ -7,6 +7,7 @@ const path = require("path");
 const fs = require("fs");
 const db = require("../config/connection");
 const crypto = require("crypto");
+const { hydrateCommentProfiles, DEFAULT_PROFILE_URL } = require("../helpers/comment-profiles");
 
 const DEFAULT_COVER_URL = "/images/novel-images/novel_dummy.png";
 
@@ -349,12 +350,13 @@ router.get("/novel/:id", async (req, res) => {
       .limit(200)
       .toArray();
 
-    const viewComments = comments.map(c => {
+    const hydratedComments = await hydrateCommentProfiles(db.get(), comments);
+    const viewComments = hydratedComments.map(c => {
       const ownerId = c.userId?.toString() || null;
       return {
         _id: c._id.toString(),
         username: c.username || "Reader",
-        profileImageUrl: c.profileImageUrl || null,
+        profileImageUrl: c.profileImageUrl || DEFAULT_PROFILE_URL,
         profileFrame: c.profileFrame || null,
         content: c.content,
         createdDate: new Date(c.createdAt).toLocaleString(),

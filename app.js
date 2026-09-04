@@ -111,6 +111,28 @@ app.use((req, res, next) => {
   next();
 });
 
+// Keep fallback images consistent in every Handlebars view. This only changes
+// render data; it never writes to an account or novel record.
+app.use((req, res, next) => {
+  const render = res.render.bind(res);
+  const applyImageDefaults = (value, visited = new WeakSet()) => {
+    if (!value || typeof value !== 'object' || visited.has(value)) return;
+    visited.add(value);
+    if (Object.prototype.hasOwnProperty.call(value, 'profileImageUrl') && !value.profileImageUrl) {
+      value.profileImageUrl = '/images/default-profile.png';
+    }
+    if (Object.prototype.hasOwnProperty.call(value, 'imageUrl') && !value.imageUrl) {
+      value.imageUrl = '/images/novel-images/novel_dummy.png';
+    }
+    for (const child of Object.values(value)) applyImageDefaults(child, visited);
+  };
+  res.render = (view, locals, callback) => {
+    if (locals && typeof locals === 'object') applyImageDefaults(locals);
+    return render(view, locals, callback);
+  };
+  next();
+});
+
 // Simple session trace
 app.use((req, res, next) => {
   try {

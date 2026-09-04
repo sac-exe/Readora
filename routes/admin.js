@@ -7,6 +7,7 @@ const db = require("../config/connection");
 const { ObjectId, GridFSBucket } = require("mongodb");
 const path = require("path");
 const crypto = require("crypto");
+const fs = require("fs");
 
 const NOVEL_COVERS_BUCKET = "novelCovers";
 const DEFAULT_COVER_URL = "/images/novel-images/novel_dummy.png";
@@ -169,6 +170,7 @@ router.get("/admin/users", async (req, res) => {
   const users = await db.get().collection("user").find().toArray();
   // Format the date for each user
   users.forEach(u => {
+    u.profileImage = u.profileImage || "/images/default-profile.png";
     if (u.createdAt) {
       u.createdAt = new Date(u.createdAt).toLocaleDateString('en-US', {
         year: 'numeric', month: 'short', day: 'numeric'
@@ -186,6 +188,7 @@ router.get("/admin/staffs", async (req, res) => {
   const staffs = await db.get().collection("staff").find().toArray();
   // Format the date for each user
   staffs.forEach(u => {
+    u.profileImage = u.profileImage || "/images/default-profile.png";
     if (u.createdAt) {
       u.createdAt = new Date(u.createdAt).toLocaleDateString('en-US', {
         year: 'numeric', month: 'short', day: 'numeric'
@@ -213,6 +216,35 @@ router.get("/admin/books", async (req, res) => {
   });
   res.render("admin/all-books", { novels, coverMessage: req.session.coverMessage });
   delete req.session.coverMessage;
+});
+
+// Shared defaults are regular public files. Replacing either file updates the
+// fallback image used by every user, staff member, and admin page.
+router.get("/admin/default-images", (req, res) => {
+  res.render("admin/default-images", { message: req.session.defaultImageMessage });
+  delete req.session.defaultImageMessage;
+});
+
+router.post("/admin/default-images/:type", async (req, res) => {
+  const targets = {
+    profile: path.join(__dirname, "../public/images/default-profile.png"),
+    cover: path.join(__dirname, "../public/images/novel-images/novel_dummy.png")
+  };
+  try {
+    const target = targets[req.params.type];
+    const image = req.files?.image;
+    if (!target || !image) throw new Error("Choose an image first.");
+    if (image.mimetype !== "image/png" || path.extname(image.name).toLowerCase() !== ".png") {
+      throw new Error("Default images must be PNG files.");
+    }
+    if (image.size > 5 * 1024 * 1024) throw new Error("Image must be 5MB or smaller.");
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    await image.mv(target);
+    req.session.defaultImageMessage = "Default image updated for the whole site.";
+  } catch (error) {
+    req.session.defaultImageMessage = error.message || "Could not update the default image.";
+  }
+  res.redirect("/admin/default-images");
 });
 
 // Replace a missing or dummy cover from the admin book-management page.

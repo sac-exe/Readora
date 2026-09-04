@@ -6,6 +6,7 @@ const path = require("path");
 const fs = require("fs");
 const db = require("../config/connection");
 const crypto = require("crypto");
+const { hydrateCommentProfiles, DEFAULT_PROFILE_URL } = require("../helpers/comment-profiles");
 
 const NOVEL_COVERS_BUCKET = "novelCovers";
 const DEFAULT_COVER_URL = "/images/novel-images/novel_dummy.png";
@@ -520,12 +521,13 @@ router.get("/novelS/:id", async (req, res) => {
       .limit(200)
       .toArray();
 
-    const viewComments = comments.map(c => {
+    const hydratedComments = await hydrateCommentProfiles(db.get(), comments);
+    const viewComments = hydratedComments.map(c => {
       const ownerId = c.userId?.toString() || c.staffId?.toString() || null;
       return {
         _id: c._id.toString(),
         username: c.username || "Reader",
-        profileImageUrl: c.profileImageUrl || null,
+        profileImageUrl: c.profileImageUrl || DEFAULT_PROFILE_URL,
         profileFrame: c.profileFrame || null, // <-- FIXED!
         content: c.content,
         createdDate: new Date(c.createdAt).toLocaleString(),
@@ -1148,6 +1150,9 @@ router.get("/staff/dash", async (req, res) => {
         { $project: {
             _id: 1,
             novelId: 1,
+            userId: 1,
+            staffId: 1,
+            "user._id": 1,
             content: 1,
             username: 1,
             profileImageUrl: 1,
@@ -1158,9 +1163,11 @@ router.get("/staff/dash", async (req, res) => {
         }}
       ]).toArray();
 
+      const hydratedComments = await hydrateCommentProfiles(db.get(), rawComments);
+
       // Group by novel
       const byNovel = {};
-      for (const c of rawComments) {
+      for (const c of hydratedComments) {
         const nid = c.novelId.toString();
         if (!byNovel[nid]) {
           // find novel from myNovelsAll fallback to lookup doc
@@ -1175,7 +1182,7 @@ router.get("/staff/dash", async (req, res) => {
         byNovel[nid].comments.push({
           _id: c._id.toString(),
           username: c.username || "Reader",
-          profileImageUrl: c.profileImageUrl || null,
+          profileImageUrl: c.profileImageUrl || DEFAULT_PROFILE_URL,
           content: c.content,
           createdDate: new Date(c.createdAt).toLocaleString()
         });

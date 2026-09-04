@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Default Images | Admin</title>
+  <style>
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #070b1d; color: #fff; font-family: Arial, sans-serif; }
+    main { width: min(92%, 760px); }
+    .back { color: #fff; text-decoration: none; display: inline-block; margin-bottom: 1rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+    .card { padding: 1.25rem; border: 1px solid #303a65; border-radius: 1rem; background: #101425; }
+    img { display: block; width: 120px; height: 150px; object-fit: cover; margin: .8rem 0; border-radius: .6rem; background: #1c2442; }
+    .profile-preview { width: 120px; height: 120px; border-radius: 50%; }
+    input, button { margin-top: .7rem; max-width: 100%; }
+    button { border: 0; border-radius: .5rem; padding: .6rem .8rem; color: #fff; background: #5865f2; cursor: pointer; }
+    .message { color: #8ef3a5; min-height: 1.2rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back" href="/admin/home">← Admin dashboard</a>
+    <h1>Default Images</h1>
+    <p>These images are shared fallbacks across Readora. Uploading a new PNG replaces the existing default immediately.</p>
+    <p class="message">{{message}}</p>
+    <div class="grid">
+      <section class="card">
+        <h2>Default profile picture</h2>
+        <img class="profile-preview" src="/images/default-profile.png" alt="Current default profile">
+        <form action="/admin/default-images/profile" method="POST" enctype="multipart/form-data">
+          <input type="file" name="image" accept=".png,image/png" required>
+          <button type="submit">Update profile default</button>
+        </form>
+      </section>
+      <section class="card">
+        <h2>Default novel cover</h2>
+        <img src="/images/novel-images/novel_dummy.png" alt="Current default novel cover">
+        <form action="/admin/default-images/cover" method="POST" enctype="multipart/form-data">
+          <input type="file" name="image" accept=".png,image/png" required>
+          <button type="submit">Update cover default</button>
+        </form>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
