@@ -60,12 +60,18 @@
       transition: color 0.3s ease;
       transform: scale(1.05);
     }
+    .cover-upload-admin { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+    .cover-upload-admin input { max-width: 185px; color: #fff; font-size: .78rem; }
+    .cover-upload-admin button { border: 0; border-radius: .45rem; padding: .45rem .7rem; background: #5865f2; color: #fff; cursor: pointer; }
+    .cover-upload-admin button:hover { background: #7480ff; }
+    .cover-message { margin: 0 auto 1rem; max-width: 900px; color: #8ef3a5; text-align: center; }
   </style>
 </head>
 <body>
   <div class="container-all-users">
     <button class="back-button" onclick="window.location.href='/admin/home'"><i class="fas fa-arrow-left"></i></button>
     <div class="page-header-all-users">All Novels</div>
+    {{#if coverMessage}}<div class="cover-message">{{coverMessage}}</div>{{/if}}
     <div class="users-grid-all-users">
       {{#each novels}}
       <div class="novel-all-admin" data-title="{{this.title}}">
@@ -86,6 +92,10 @@
             <div class="novel-author-staff-dash">Translation done by: {{this.staff}}</div>
           </div>
           <div class="novel-actions-staff-dash">
+            <form action="/admin/books/{{this._id}}/cover" method="POST" enctype="multipart/form-data" class="cover-upload-admin">
+              <input type="file" name="cover" accept=".jpg,.jpeg,.png,.webp" required>
+              <button type="submit"><i class="fa-solid fa-image"></i> Upload cover</button>
+            </form>
             <form action="/staff/novels/{{this._id}}/delete" method="POST" class="inline-form" onsubmit="return confirm('Are you sure you want to delete this novel?');">
               <button type="submit" class="icon-delete">
                 <i class="fa-solid fa-trash-can"></i>

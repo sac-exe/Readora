@@ -4,7 +4,37 @@ const adminhelper = require("../helpers/admin-helper");
 const db = require("../config/connection");
 
 // add this import once at top (you use ObjectId elsewhere)
-const { ObjectId } = require("mongodb");
+const { ObjectId, GridFSBucket } = require("mongodb");
+const path = require("path");
+const crypto = require("crypto");
+
+const NOVEL_COVERS_BUCKET = "novelCovers";
+const DEFAULT_COVER_URL = "/images/novel-images/novel_dummy.png";
+
+function uploadNovelCover(image) {
+  const extension = path.extname(image.name || "").toLowerCase();
+  const allowedTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
+  const allowedExtensions = new Set([".jpg", ".jpeg", ".png", ".webp"]);
+
+  if (!allowedTypes.has(image.mimetype) || !allowedExtensions.has(extension)) {
+    throw new Error("Cover image must be a JPG, PNG, or WEBP file.");
+  }
+  if (image.size > 5 * 1024 * 1024) {
+    throw new Error("Cover image must be 5MB or smaller.");
+  }
+
+  const bucket = new GridFSBucket(db.get(), { bucketName: NOVEL_COVERS_BUCKET });
+  const upload = bucket.openUploadStream(`${crypto.randomUUID()}${extension}`, {
+    contentType: image.mimetype,
+    metadata: { originalName: image.name, uploadedAt: new Date() }
+  });
+
+  return new Promise((resolve, reject) => {
+    upload.on("error", reject);
+    upload.on("finish", () => resolve(upload.id));
+    upload.end(image.data);
+  });
+}
 
 /*
 // TEMP: REMOVE AFTER  USE
@@ -179,8 +209,37 @@ router.get("/admin/books", async (req, res) => {
     } else {
       n.createdAt = "N/A";
     }
+    n.imageUrl = n.imageUrl || DEFAULT_COVER_URL;
   });
-  res.render("admin/all-books", { novels});
+  res.render("admin/all-books", { novels, coverMessage: req.session.coverMessage });
+  delete req.session.coverMessage;
+});
+
+// Replace a missing or dummy cover from the admin book-management page.
+router.post("/admin/books/:id/cover", async (req, res) => {
+  try {
+    if (!ObjectId.isValid(req.params.id)) {
+      req.session.coverMessage = "Invalid novel.";
+      return res.redirect("/admin/books");
+    }
+    if (!req.files?.cover) {
+      req.session.coverMessage = "Choose a JPG, PNG, or WEBP cover first.";
+      return res.redirect("/admin/books");
+    }
+
+    const coverId = await uploadNovelCover(req.files.cover);
+    const result = await db.get().collection("novels").updateOne(
+      { _id: new ObjectId(req.params.id) },
+      { $set: { imageUrl: `/images/novel-images/${coverId}`, updatedAt: new Date() } }
+    );
+    req.session.coverMessage = result.matchedCount
+      ? "Cover updated successfully."
+      : "Novel was not found.";
+  } catch (error) {
+    console.error("Admin cover upload error:", error);
+    req.session.coverMessage = error.message || "Could not upload the cover.";
+  }
+  return res.redirect("/admin/books");
 });
 
 
