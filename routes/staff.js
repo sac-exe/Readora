@@ -1590,7 +1590,7 @@ router.post("/staff/chapters/:id/unlock", async (req, res) => {
   }
 });
 
-router.get("/user/about-staff", async (req, res) => {
+router.get("/staff/about-staff", async (req, res) => {
   if (!req.session.staffId) {
     return res.redirect("/staff/login-staff");
   }
