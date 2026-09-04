@@ -1032,12 +1032,12 @@ router.post('/user/profile/edit', async (req, res) => {
 
     if (req.files && req.files.profileImage) {
       const image = req.files.profileImage;
-      const uploadsDir = path.join(__dirname, '../public/uploads/');
+      const uploadsDir = path.join(__dirname, '../public/images/profile-images/');
       if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
       const filename = Date.now() + '-' + image.name.replace(/\s+/g, '_');
       const uploadPath = path.join(uploadsDir, filename);
       await image.mv(uploadPath);
-      update.profileImage = `/uploads/${filename}`;
+      update.profileImage = `../public/images/profile-images/${filename}`;
     }
 
     if (Object.keys(update).length === 0) {

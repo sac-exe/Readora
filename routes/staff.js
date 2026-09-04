@@ -1,15 +1,64 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-const { ObjectId } = require("mongodb");
+const { ObjectId, GridFSBucket } = require("mongodb");
 const path = require("path");
 const fs = require("fs");
 const db = require("../config/connection");
 const crypto = require("crypto");
 
+const NOVEL_COVERS_BUCKET = "novelCovers";
+
+function uploadNovelCover(image) {
+  const extension = path.extname(image.name || "").toLowerCase();
+  const allowedTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
+  const allowedExtensions = new Set([".jpg", ".jpeg", ".png", ".webp"]);
+
+  if (!allowedTypes.has(image.mimetype) || !allowedExtensions.has(extension)) {
+    throw new Error("Cover image must be a JPG, PNG, or WEBP file.");
+  }
+  if (image.size > 5 * 1024 * 1024) {
+    throw new Error("Cover image must be 5MB or smaller.");
+  }
+
+  const bucket = new GridFSBucket(db.get(), { bucketName: NOVEL_COVERS_BUCKET });
+  const upload = bucket.openUploadStream(`${crypto.randomUUID()}${extension}`, {
+    contentType: image.mimetype,
+    metadata: { originalName: image.name, uploadedAt: new Date() }
+  });
+
+  return new Promise((resolve, reject) => {
+    upload.on("error", reject);
+    upload.on("finish", () => resolve(upload.id));
+    upload.end(image.data);
+  });
+}
+
 function startOfUTCDay(d){
   return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
 }
+
+// Covers uploaded after this change live in MongoDB GridFS instead of the
+// server's temporary filesystem. Older covers remain available from /public.
+router.get("../public/images/novel-images/:coverId", async (req, res, next) => {
+  if (!ObjectId.isValid(req.params.coverId)) return next();
+
+  try {
+    const bucket = new GridFSBucket(db.get(), { bucketName: NOVEL_COVERS_BUCKET });
+    const file = await db.get().collection(`${NOVEL_COVERS_BUCKET}.files`).findOne({
+      _id: new ObjectId(req.params.coverId)
+    });
+
+    if (!file) return next();
+
+    res.type(file.contentType || "application/octet-stream");
+    bucket.openDownloadStream(file._id)
+      .on("error", next)
+      .pipe(res);
+  } catch (error) {
+    next(error);
+  }
+});
 
 // Search API
 router.get("/api/search", async (req, res) => {
@@ -1005,12 +1054,12 @@ router.post('/staff/profile/edit', async (req, res) => {
     // Image upload stays the same
     if (req.files && req.files.profileImage) {
       const image = req.files.profileImage;
-      const uploadsDir = path.join(__dirname, '../public/uploads/');
+      const uploadsDir = path.join(__dirname, '../public/images/profile-images/');
       if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
       const filename = Date.now() + '-' + image.name.replace(/\s+/g, '_');
       const uploadPath = path.join(uploadsDir, filename);
       await image.mv(uploadPath);
-      update.profileImage = `/uploads/${filename}`;
+      update.profileImage = `../public/images/profile-images/${filename}`;
     }
 
     if (Object.keys(update).length === 0) {
@@ -1225,12 +1274,10 @@ router.post("/staff/novels", async (req, res) => {
     }
 
     if (req.files && req.files.image) {
-      const image = req.files.image;
-      const uploadPath = path.join(__dirname, '../public/images/novel-images', image.name);
-      await image.mv(uploadPath);
-      novelData.imageUrl = `/images/novel-images/${image.name}`;
+      const coverId = await uploadNovelCover(req.files.image);
+      novelData.imageUrl = `../public/images/novel-images/${coverId}`;
     } else {
-      novelData.imageUrl = '/images/novel-images/novel_dumy.jpg';
+      novelData.imageUrl = '../public/images/novel-images/novel_dummy.png';
     }
 
     await db.get().collection("novels").insertOne(novelData);
@@ -1318,10 +1365,8 @@ router.post("/staff/novels/:id", async (req, res) => {
     };
 
     if (req.files && req.files.cover) {
-      const image = req.files.cover;
-      const uploadPath = path.join(__dirname, '../public/images/novel-images', image.name);
-      await image.mv(uploadPath);
-      updateData.imageUrl = `/images/novel-images/${image.name}`;
+      const coverId = await uploadNovelCover(req.files.cover);
+      updateData.imageUrl = `../public/images/novel-images/${coverId}`;
     }
 
     await db.get().collection("novels").updateOne(
