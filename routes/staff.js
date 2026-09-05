@@ -854,6 +854,8 @@ router.get("/staff-shop", async (req, res) => {
 
 //coin purchase
 router.post('/staff/coins/purchase', async (req, res) => {
+  return res.status(410).json({ success: false, message: 'Use verified Razorpay checkout.' });
+  /* istanbul ignore next */
   try {
     if (!req.session.staffId) return res.status(401).json({ success: false, message: "Login required" });
     const staffId = new ObjectId(req.session.staffId);
@@ -875,7 +877,7 @@ router.post('/staff/coins/purchase', async (req, res) => {
       type: 'coin_purchase',
       amount: coins,
       status: 'success',
-      paymentMethod: 'paypal',
+      paymentMethod: 'pending',
       createdAt: new Date()
     });
 
@@ -888,6 +890,8 @@ router.post('/staff/coins/purchase', async (req, res) => {
 
 // Grant silver Quill Membership to staff
 router.post('/membership/silver/grantstaff', async (req, res) => {
+  return res.status(410).json({ ok: false, msg: 'Use verified Razorpay checkout.' });
+  /* istanbul ignore next */
   try {
     if (!req.session.staffId) return res.status(401).json({ ok: false, msg: 'Login required' });
     const staffId = new ObjectId(req.session.staffId);
@@ -912,7 +916,7 @@ router.post('/membership/silver/grantstaff', async (req, res) => {
       type: 'membership_silver_bonus',
       amount: 60,
       status: 'success',
-      paymentMethod: 'paypal',
+      paymentMethod: 'pending',
       createdAt: new Date()
     });
 
@@ -925,7 +929,8 @@ router.post('/membership/silver/grantstaff', async (req, res) => {
 
 // Grant Golden Tome Membership to staff
 router.post('/membership/gold/grantstaff', async (req, res) => {
-  console.log("Session at membership grant:", req.session);
+  return res.status(410).json({ ok: false, msg: 'Use verified Razorpay checkout.' });
+  /* istanbul ignore next */
   try {
     if (!req.session.staffId) return res.status(401).json({ ok: false, msg: 'Login required' });
     const staffId = new ObjectId(req.session.staffId);
@@ -950,7 +955,7 @@ router.post('/membership/gold/grantstaff', async (req, res) => {
       type: 'membership_gold_bonus',
       amount: 120,
       status: 'success',
-      paymentMethod: 'paypal',
+      paymentMethod: 'pending',
       createdAt: new Date()
     });
 
@@ -963,7 +968,8 @@ router.post('/membership/gold/grantstaff', async (req, res) => {
 
 // Grant Obsidian Edition Membership to staff
 router.post('/membership/obsidian/grantstaff', async (req, res) => {
-  console.log("Session at membership grant:", req.session);
+  return res.status(410).json({ ok: false, msg: 'Use verified Razorpay checkout.' });
+  /* istanbul ignore next */
   try {
     if (!req.session.staffId) return res.status(401).json({ ok: false, msg: 'Login required' });
     const staffId = new ObjectId(req.session.staffId);
@@ -993,7 +999,7 @@ router.post('/membership/obsidian/grantstaff', async (req, res) => {
       type: 'membership_obsidian_bonus',
       amount: 300,
       status: 'success',
-      paymentMethod: 'paypal',
+      paymentMethod: 'pending',
       createdAt: new Date()
     });
 

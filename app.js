@@ -173,6 +173,12 @@ async function startServer() {
     await db.listCollections({ name: 'sessions' }).next();
     console.log('✅ Sessions collection verified');
 
+    // Payment records are audit data, and these constraints prevent a Razorpay
+    // order/payment from being attached to more than one fulfillment.
+    await db.collection('payments').createIndex({ razorpayOrderId: 1 }, { unique: true });
+    await db.collection('payments').createIndex({ razorpayPaymentId: 1 }, { unique: true, sparse: true });
+    await db.collection('coin_transactions').createIndex({ razorpayPaymentId: 1 }, { unique: true, sparse: true });
+
     // Daily cleanup: unset expired memberships (if any schema uses membership.expiresAt)
     setInterval(async () => {
       try {
@@ -190,6 +196,7 @@ async function startServer() {
     app.use('/', require('./routes/user'));
     app.use('/', require('./routes/admin'));
     app.use('/', require('./routes/staff'));
+    app.use('/', require('./routes/payment'));
 
     // 404
     app.use((req, res) => res.status(404).render('404'));

@@ -33,11 +33,11 @@
     "mongoose": "^8.19.1",
     "morgan": "^1.10.1",
     "node-fetch": "^2.7.0",
-    "nodemailer": "^7.0.9",
+    "nodemailer": "^10.0.0",
     "nodemon": "^3.1.10",
     "path": "^0.12.7",
     "promise": "^8.3.0",
-    "razorpay": "^2.9.6",
+    "razorpay": "^2.9.8",
     "socket.io": "^4.8.1",
     "xss-clean": "^0.1.4"
   },
