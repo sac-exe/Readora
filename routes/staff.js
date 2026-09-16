@@ -325,6 +325,9 @@ router.get("/staff/bookmarks", async (req, res) => {
   const staffId = new ObjectId(req.session.staffId);
 
   const staff = await db.get().collection("staff").findOne({ _id: staffId });
+  if (!staff) {
+    return res.redirect("/staff/login");
+  }
 
   // Get all bookmarked novel IDs for this user
   const bookmarks = await db.get().collection('bookmarkS').find({ staffId }).toArray();
@@ -347,13 +350,24 @@ router.get("/staff/bookmarks", async (req, res) => {
     novels = novels.map(n => ({ ...n, chapters: countMap.get(String(n._id)) || 0 }));
   }
 
-  res.render("staff/staff-bookmark", {
-    staff,
-    profileImageUrl: staff?.profileImage || null,
-    profileFrame: staff?.profileFrame || null,
-    coinCount: staff?.coins || 0,
-    membership: staff?.membership || null,
-    bookmarks: novels
+  // The page is protected by staffId, so refresh that verified identity in
+  // the session store before sending links to the staff-only novel route.
+  req.session.staffId = staff._id.toString();
+  req.session.Staff = staff.Username;
+  req.session.save((saveError) => {
+    if (saveError) {
+      console.error("Staff bookmark session save error:", saveError);
+      return res.status(500).send("Could not save your session. Please log in again.");
+    }
+
+    return res.render("staff/staff-bookmark", {
+      staff,
+      profileImageUrl: staff.profileImage || null,
+      profileFrame: staff.profileFrame || null,
+      coinCount: staff.coins || 0,
+      membership: staff.membership || null,
+      bookmarks: novels
+    });
   });
 });
 
