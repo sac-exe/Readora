@@ -139,7 +139,16 @@ router.post("/staff/login", async (req, res) => {
     console.log("Session after login:", req.session);
     console.log("Session ID:", req.sessionID);
 
-    res.redirect("/staff");
+    // Persist the staff identity before redirecting. Without this, a request
+    // made immediately after login can reach a page before MongoStore has
+    // written the session, which makes that page render as signed out.
+    req.session.save((saveError) => {
+      if (saveError) {
+        console.error("Staff session save error:", saveError);
+        return res.status(500).send("Could not start your session. Please try logging in again.");
+      }
+      return res.redirect("/staff");
+    });
   } catch (err) {
     console.error("Login error:", err);
     req.session.Loginerr = "Login failed. Try again.";
