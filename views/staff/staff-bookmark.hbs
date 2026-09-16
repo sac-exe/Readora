@@ -160,7 +160,7 @@
             <div id="rd-bm-grid" class="rd-bm-grid" aria-live="polite">
             {{#each bookmarks}}
                 <article class="rd-bm-card" data-id="{{_id}}">
-                    <a class="rd-bm-cover" href="/novel/{{_id}}" style="--cover:url('{{imageUrl}}')" aria-label="Open {{title}}"></a>
+                    <a class="rd-bm-cover" href="/novelS/{{_id}}" style="--cover:url('{{imageUrl}}')" aria-label="Open {{title}}"></a>
                     <div class="rd-bm-body">
                         <h3 class="rd-bm-title-sm">{{title}}</h3>
                         <p class="rd-bm-sub">{{author}}</p>
@@ -170,7 +170,7 @@
                             <span class="rd-bm-chip">{{chapters}} Ch</span>
                         </div>
                         <div class="rd-bm-ctas">
-                        <button class="rd-bm-btn rd-bm-btn--primary" id="heroReadBtnS">
+                        <button class="rd-bm-btn rd-bm-btn--primary" type="button" onclick="window.location.href='/novelS/{{_id}}'">
                             <i class="fa-solid fa-book-open"></i> Read
                         </button>
                         <form method="POST" action="/staff/bookmark/remove" style="display:inline;">
@@ -291,38 +291,6 @@
       if (!clickedInsideDesktop && cardDesktop) cardDesktop.style.display = 'none';
       if (!clickedInsideMobile && cardMobile) cardMobile.style.display = 'none';
     });
-  </script>
-
-  <script>
-    const dataTag = document.getElementById('heroData');
-    const HERO_NOVELS = JSON.parse(dataTag.textContent || '[]');
-
-    const titleEl = document.getElementById('heroTitle');
-    const descEl  = document.getElementById('heroDesc');
-    const audEl   = document.getElementById('heroAudience');
-    const catEl   = document.getElementById('heroCateg');
-    const statusEl= document.getElementById('heroStatus');
-    const readBtnS  = document.getElementById('heroReadBtnS');
-
-    const bookmarkInput = document.getElementById('heroBookmarkNovelId');
-    if (HERO_NOVELS.length) {
-      let i = 0;
-      const show = (n) => {
-        titleEl.textContent  = n.title || '';
-        descEl.textContent   = n.description || '';
-        audEl.textContent    = n.audience || '';
-        catEl.textContent    = n.categ || '';
-        statusEl.textContent = n.status || '';
-        readBtnS.onclick = () => window.location.href = `/novelS/${n._id}`;
-        // Update the hidden input value for the bookmark form
-        if (bookmarkInput) bookmarkInput.value = n._id;
-      };
-      show(HERO_NOVELS[0]);
-      setInterval(() => {
-        i = (i + 1) % HERO_NOVELS.length;
-        show(HERO_NOVELS[i]);
-      }, 8000);
-    }
   </script>
 
   <script>
