@@ -181,7 +181,7 @@ router.post("/password-reset-staff", async (req, res) => {
     const mailer = require("../helpers/emailHelper");
     await mailer.sendResetEmail(email, token, true);
 
-    res.status(200).send("Password reset email sent successfully.");
+    res.status(200).render("staff/reset-token-show");
   } catch (err) {
     console.error("Error during sending reset email:", err);
     res.status(500).send("An error occurred while sending the email: " + err.message);
@@ -208,7 +208,7 @@ router.post("/update-password-staff", async (req, res) => {
       { _id: staff._id },
       { $set: { Password: hashedPassword }, $unset: { resetToken: "", tokenExpiration: "" } }
     );
-    res.status(200).send("Password reset successful.");
+    res.status(200).render("password-reset-success", { loginUrl: "/staff/login" });
   } catch (err) {
     console.error("Error during password update:", err.message);
     res.status(500).send("An error occurred while updating the password.");

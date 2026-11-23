@@ -3,13 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password reset</title>
+    <title>Reset token ready | Readora</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; font: 16px/1.5 system-ui, sans-serif; color: #f4f1ff; background: radial-gradient(circle at top left, #3a2865, #14121d 55%); }
+        .card { width: min(100%, 500px); padding: 36px; border: 1px solid #ffffff24; border-radius: 20px; background: #211d2bef; box-shadow: 0 24px 70px #0008; }
+        .mark { display: grid; width: 48px; height: 48px; place-items: center; color: #211d2b; background: #c5a8ff; border-radius: 50%; font-size: 1.5rem; }
+        h1 { margin: 18px 0 8px; }
+        p { color: #c5c0d0; }
+        code { display: block; overflow-wrap: anywhere; padding: 14px; color: #e5d8ff; background: #15131c; border: 1px solid #514a60; border-radius: 10px; }
+        a.button { display: block; margin-top: 20px; padding: 13px; color: #1b1428; background: #c5a8ff; border-radius: 10px; text-align: center; text-decoration: none; font-weight: 700; }
+    </style>
 </head>
 <body>
-    <div class="background-login container-fluid min-vh-100 d-flex align-items-center justify-content-center"></div>
-        <main>
-            <p><a href="{{resetUrl}}">Continue to reset password</a></p>
-        </main>
-    </div>
+    <main class="card">
+        <div class="mark" aria-hidden="true">✓</div>
+        <h1>Your reset token is ready</h1>
+        <p>For this account recovery flow, use the token below on the next page. It expires in 10 minutes.</p>
+        <code>{{token}}</code>
+        <a class="button" href="{{resetUrl}}">Continue to reset password</a>
+    </main>
 </body>
 </html>

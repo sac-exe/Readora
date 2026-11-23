@@ -816,7 +816,7 @@ router.post("/update-password-user", async (req, res) => {
         $unset: { resetTokenHash: "", tokenExpiration: "" }
       }
     );
-    res.status(200).send("Password reset successful.");
+    res.status(200).render("password-reset-success", { loginUrl: "/user/login" });
   } catch (err) {
     console.error("Error during password update:", err.message);
     res.status(500).send("An error occurred while updating the password.");

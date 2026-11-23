@@ -3,26 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Forgot password page for user account recovery.">
-    <title>forgot-user</title>
-
+    <title>Reset your password | Readora</title>
 </head>
 <body>
-    <div class="background-login container-fluid min-vh-100 d-flex align-items-center justify-content-center">
-        <div class="card-box-login shadow-lg">
-            <form action="/password-reset-user" method="post">
-                <h2 class="head-card-forgot-user">Forgot Password</h2>         
-                <div class="inputbox-login-user ml-3"> 
-                    <ion-icon name="mail-outline"></ion-icon>
-                    <input type="email" name="email" id="userEmail" required>
-                    <label for="userEmail">Email</label>
-                </div> 
-                <button class="button-login-user" type="submit" id="send-button">Send</button>
-                <div class="register-login-user">
-                    <p><a href="/user/login">Login</a> OR <a href="/user/signup">Signup</a></p>
-                </div>
-            </form>
-        </div>
-    </div>
+    <main class="card">
+        <div class="eyebrow">Account recovery</div>
+        <h1>Forgot your password?</h1>
+        <p class="hint">Enter the email address on your account to get a password reset token.</p>
+        <form action="/password-reset-user" method="post">
+            <label for="userEmail">Email address</label>
+            <input type="email" name="email" id="userEmail" autocomplete="email" required>
+            <button type="submit">Continue</button>
+        </form>
+        <p class="links"><a href="/user/login">Back to login</a></p>
+    </main>
 </body>
 </html>
